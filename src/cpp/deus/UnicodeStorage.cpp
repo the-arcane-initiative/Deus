@@ -131,4 +131,18 @@ UnicodeStorage::operator std::string() const
     return m_str;
 }
 
+//------------------------------------------------------------------------------
+//                            PUBLIC MEMBER FUNCTIONS
+//------------------------------------------------------------------------------
+
+const std::string& UnicodeStorage::get_string() const
+{
+    return m_str;
+}
+
+const UnicodeView& UnicodeStorage::get_view() const
+{
+    return *m_view;
+}
+
 } // namespace deus

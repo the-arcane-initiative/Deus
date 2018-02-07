@@ -119,6 +119,20 @@ public:
     //                          PUBLIC MEMBER FUNCTIONS
     //--------------------------------------------------------------------------
 
+    /*!
+     * \brief Returns the std::string that contains the data stored by this
+     *        object.
+     */
+    const std::string& get_string() const;
+
+    // TODO: what if someone tries to reassign data - I think UnicodeViews
+    //       should be immutable and reference counted...
+    /*!
+     * \brief Returns the dues::UnicodeView this storage is using to handle its
+     *        string data.
+     */
+    const UnicodeView& get_view() const;
+
 private:
 
     //--------------------------------------------------------------------------
@@ -127,7 +141,7 @@ private:
 
     std::string m_str;
     // TODO: should this be a pointer?
-    std::unique_ptr<deus::UnicodeView> m_view;
+    mutable std::unique_ptr<deus::UnicodeView> m_view;
 };
 
 // TODO: Hash

@@ -148,9 +148,10 @@ void UnicodeView::UTF8Impl::compute_symbol_length()
 
             // TODO: need plus operator
             // TODO: continue here - need hex converter
-            throw deus::UTF8Error(
-                "Invalid leading byte in UTF-8 string: '" + character
-            );
+            // throw deus::UTF8Error(
+            //     "Invalid leading byte in UTF-8 string: '" + character +
+            //     character.to_hex()
+            // );
         }
     }
 }

@@ -33,6 +33,8 @@
 #include "deus/UnicodeView.hpp"
 
 #include <cstring>
+#include <iomanip>
+#include <sstream>
 
 #include "deus/unicode_view_impl/EncodingImpl.hpp"
 
@@ -192,10 +194,21 @@ const char* UnicodeView::c_str() const
     return m_impl->m_data;
 }
 
-UnicodeStorage UnicodeView::concatenate(const UnicodeView& s) const
+deus::UnicodeStorage UnicodeView::concatenate(const UnicodeView& s) const
 {
     // TODO:
-    return deus::UnicodeStorage("");
+    return deus::UnicodeStorage("TODO: implement concatenate");
+}
+
+deus::UnicodeStorage UnicodeView::to_hex() const
+{
+    // this function doesn't require a encoding specific implementation
+    // TODO: can potentially write code faster than std::hex?
+    std::stringstream ss;
+    ss
+        << std::hex << std::uppercase
+        << std::string(m_impl->m_data, m_impl->m_byte_length);
+    return UnicodeView(ss.str(), deus::Encoding::kASCII);
 }
 
 } // namespace deus

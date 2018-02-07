@@ -154,8 +154,11 @@ public:
 
     // TODO: validate encoding
 
-    // TODO:
-    UnicodeStorage concatenate(const UnicodeView& s) const;
+    // TODO: DOC
+    deus::UnicodeStorage concatenate(const UnicodeView& s) const;
+
+    // TODO: DOC
+    deus::UnicodeStorage to_hex() const;
 
 private:
 
