@@ -46,10 +46,15 @@ namespace deus
 //------------------------------------------------------------------------------
 
 UnicodeView::UTF8Impl::UTF8Impl(
-        const char* s,
         std::size_t byte_length,
-        std::size_t symbol_length)
-    : UnicodeView::EncodingImpl(s, byte_length, symbol_length)
+        std::size_t symbol_length,
+        const char* s)
+    : UnicodeView::EncodingImpl(
+        deus::Encoding::kUTF8,
+        byte_length,
+        symbol_length,
+        s
+    )
 {
     // this logic needs to be done here on a per-implementation basis since
     // virtual functions (compute_byte_length) shouldn't be called from base
@@ -58,11 +63,6 @@ UnicodeView::UTF8Impl::UTF8Impl(
     {
         compute_byte_length();
     }
-}
-
-UnicodeView::UTF8Impl::UTF8Impl(const UTF8Impl& other)
-    : UnicodeView::EncodingImpl(other)
-{
 }
 
 //------------------------------------------------------------------------------
@@ -79,26 +79,27 @@ UnicodeView::UTF8Impl::~UTF8Impl()
 
 void UnicodeView::UTF8Impl::compute_byte_length()
 {
+    m_byte_length = 0;
     // null data
     if(m_data == nullptr)
     {
-        m_byte_length = 0;
         m_symbol_length = 0;
         return;
     }
 
     // even though we could just use strlen on a UTF-8 string - we should
-    // instead compute both raw length and symbol at the same time so this
+    // instead compute both byte length and symbol at the same time so this
     // iteration only has to happen once.
     const char* c = m_data;
     // TODO: this can be heavily optimized
     while(*c != 0x0)
     {
-
         // as the prophecy foretold
         c++;
+        ++m_byte_length;
     }
-    // increment the raw length
+    // increment one more time for the null terminator
+    ++m_byte_length;
 }
 
 void UnicodeView::UTF8Impl::compute_symbol_length()
@@ -115,7 +116,7 @@ void UnicodeView::UTF8Impl::compute_symbol_length()
         // TODO: need to keep this implementation for benching marking
         // TODO: can be heavily optmised
         // for(std::size_t i = 0; i < m_byte_length; ++i)
-        for(const char* c = m_data; c < m_data + m_byte_length - 1;)
+        for(const char* c = m_data; c != (m_data + m_byte_length - 1);)
         {
             // TODO: validate data
 
@@ -144,14 +145,12 @@ void UnicodeView::UTF8Impl::compute_symbol_length()
                 c += 4;
                 continue;
             }
-            deus::UnicodeView character(c, 1, deus::Encoding::kASCII);
 
-            // TODO: need plus operator
-            // TODO: continue here - need hex converter
-            // throw deus::UTF8Error(
-            //     "Invalid leading byte in UTF-8 string: '" + character +
-            //     character.to_hex()
-            // );
+            deus::UnicodeView character(c, 1, deus::Encoding::kASCII);
+            throw deus::UTF8Error(
+                "Invalid leading byte in UTF-8 string: '" + character +
+                character.to_hex()
+            );
         }
     }
 }

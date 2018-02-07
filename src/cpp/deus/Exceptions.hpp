@@ -40,6 +40,9 @@
 #include <stdexcept>
 #include <string>
 
+// TODO: REMOVE ME
+#include <iostream>
+
 
 namespace deus
 {
@@ -149,6 +152,8 @@ public:
     UTF8Error(const std::string& what_arg)
         : deus::EncodingError(what_arg)
     {
+        // TODO: REMOVE ME
+        std::cout << "UTF8Error what: " << what_arg << std::endl;
     }
 
     virtual ~UTF8Error() throw()

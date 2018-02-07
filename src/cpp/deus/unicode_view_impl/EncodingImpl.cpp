@@ -48,19 +48,15 @@ namespace deus
 //------------------------------------------------------------------------------
 
 UnicodeView::EncodingImpl::EncodingImpl(
-        const char* s,
+        deus::Encoding encoding,
         std::size_t byte_length,
-        std::size_t symbol_length)
-    : m_byte_length  (byte_length)
+        std::size_t symbol_length,
+        const char* s)
+    : m_ref_count    (1)
+    , m_encoding     (encoding)
+    , m_byte_length  (byte_length)
     , m_symbol_length(symbol_length)
     , m_data         (s)
-{
-}
-
-UnicodeView::EncodingImpl::EncodingImpl(const EncodingImpl& other)
-    : m_byte_length  (other.m_byte_length)
-    , m_symbol_length(other.m_symbol_length)
-    , m_data         (other.m_data)
 {
 }
 
@@ -78,54 +74,26 @@ UnicodeView::EncodingImpl::~EncodingImpl()
 
 deus::UnicodeView::EncodingImpl* UnicodeView::EncodingImpl::new_encoding(
         deus::Encoding encoding,
-        const char* s,
         std::size_t byte_length,
-        std::size_t symbol_length)
+        std::size_t symbol_length,
+        const char* s)
 {
     switch(encoding)
     {
         case deus::Encoding::kASCII:
         {
             return new deus::UnicodeView::ASCIIImpl(
-                s,
                 byte_length,
-                symbol_length
+                symbol_length,
+                s
             );
         }
         case deus::Encoding::kUTF8:
         {
             return new deus::UnicodeView::UTF8Impl(
-                s,
                 byte_length,
-                symbol_length
-            );
-        }
-        default:
-        {
-            throw deus::TypeError(
-                "Unrecognized Unicode encoding: " +
-                std::to_string(static_cast<unsigned>(encoding))
-            );
-        }
-    }
-}
-
-deus::UnicodeView::EncodingImpl* UnicodeView::EncodingImpl::copy_encoding(
-        deus::Encoding encoding,
-        const EncodingImpl* other)
-{
-    switch(encoding)
-    {
-        case deus::Encoding::kASCII:
-        {
-            return new deus::UnicodeView::ASCIIImpl(
-                *static_cast<const deus::UnicodeView::ASCIIImpl*>(other)
-            );
-        }
-        case deus::Encoding::kUTF8:
-        {
-            return new deus::UnicodeView::UTF8Impl(
-                *static_cast<const deus::UnicodeView::UTF8Impl*>(other)
+                symbol_length,
+                s
             );
         }
         default:

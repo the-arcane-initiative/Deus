@@ -55,20 +55,29 @@ public:
     //                                CONSTRUCTORS
     //--------------------------------------------------------------------------
 
-    // TODO:
-    UTF8Impl(
-            const char* s,
-            std::size_t byte_length,
-            std::size_t symbol_length);
-
     // TODO: DOC
-    UTF8Impl(const UTF8Impl& other);
+    UTF8Impl(
+            std::size_t byte_length,
+            std::size_t symbol_length,
+            const char* s);
+
+    UTF8Impl(const UTF8Impl&) = delete;
+    UTF8Impl(UTF8Impl&&) = delete;
 
     //--------------------------------------------------------------------------
     //                                 DESTRUCTOR
     //--------------------------------------------------------------------------
 
     virtual ~UTF8Impl();
+
+    //--------------------------------------------------------------------------
+    //                                 OPERATORS
+    //--------------------------------------------------------------------------
+
+    UTF8Impl& operator=(const UTF8Impl&) = delete;
+    UTF8Impl& operator=(UTF8Impl&&) = delete;
+    bool operator==(const UTF8Impl&) const = delete;
+    bool operator!=(const UTF8Impl&) const = delete;
 
     //--------------------------------------------------------------------------
     //                          PUBLIC MEMBER FUNCTIONS

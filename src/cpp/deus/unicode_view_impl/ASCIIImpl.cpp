@@ -45,10 +45,15 @@ namespace deus
 //------------------------------------------------------------------------------
 
 UnicodeView::ASCIIImpl::ASCIIImpl(
-        const char* s,
         std::size_t byte_length,
-        std::size_t symbol_length)
-    : UnicodeView::EncodingImpl(s, byte_length, symbol_length)
+        std::size_t symbol_length,
+        const char* s)
+    : UnicodeView::EncodingImpl(
+        deus::Encoding::kASCII,
+        byte_length,
+        symbol_length,
+        s
+    )
 {
     // this logic needs to be done here on a per-implementation basis since
     // virtual functions (compute_byte_length) shouldn't be called from base
@@ -57,11 +62,6 @@ UnicodeView::ASCIIImpl::ASCIIImpl(
     {
         compute_byte_length();
     }
-}
-
-UnicodeView::ASCIIImpl::ASCIIImpl(const ASCIIImpl& other)
-    : UnicodeView::EncodingImpl(other)
-{
 }
 
 //------------------------------------------------------------------------------

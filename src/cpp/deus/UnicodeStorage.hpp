@@ -65,7 +65,7 @@ public:
 
     // TODO: DOC
     // TODO: throw TypeError
-    UnicodeStorage(deus::Encoding encoding = deus::SOURCE_ENCODING);
+    explicit UnicodeStorage(deus::Encoding encoding = deus::SOURCE_ENCODING);
 
     // TODO: DOC
     UnicodeStorage(const deus::UnicodeView& view);
@@ -125,8 +125,6 @@ public:
      */
     const std::string& get_string() const;
 
-    // TODO: what if someone tries to reassign data - I think UnicodeViews
-    //       should be immutable and reference counted...
     /*!
      * \brief Returns the dues::UnicodeView this storage is using to handle its
      *        string data.
@@ -139,9 +137,10 @@ private:
     //                             PRIVATE ATTRIBUTES
     //--------------------------------------------------------------------------
 
+    // TODO: DOC
     std::string m_str;
-    // TODO: should this be a pointer?
-    mutable std::unique_ptr<deus::UnicodeView> m_view;
+    // TODO: DOC
+    std::unique_ptr<deus::UnicodeView> m_view;
 };
 
 // TODO: Hash

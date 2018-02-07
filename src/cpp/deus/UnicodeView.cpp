@@ -47,21 +47,19 @@ namespace deus
 //------------------------------------------------------------------------------
 
 UnicodeView::UnicodeView()
-    : m_encoding(deus::Encoding::kUTF8)
-    , m_impl    (nullptr)
+    : m_impl(nullptr)
 {
-    m_impl = EncodingImpl::new_encoding(m_encoding, nullptr, 0, 0);
+    m_impl = EncodingImpl::new_encoding(deus::Encoding::kUTF8, 0, 0, nullptr);
 }
 
 UnicodeView::UnicodeView(const char* s, deus::Encoding encoding)
-    : m_encoding(encoding)
-    , m_impl    (nullptr)
+    : m_impl(nullptr)
 {
     m_impl = EncodingImpl::new_encoding(
-        m_encoding,
-        s,
+        encoding,
         deus::NULL_POS,
-        deus::NULL_POS
+        deus::NULL_POS,
+        s
     );
 }
 
@@ -69,14 +67,13 @@ UnicodeView::UnicodeView(
         const char* s,
         std::size_t c_str_length,
         deus::Encoding encoding)
-    : m_encoding(encoding)
-    , m_impl    (nullptr)
+    : m_impl(nullptr)
 {
     m_impl = EncodingImpl::new_encoding(
-        m_encoding,
-        s,
-        c_str_length + EncodingImpl::null_terminator_size(m_encoding),
-        deus::NULL_POS
+        encoding,
+        c_str_length + EncodingImpl::null_terminator_size(encoding),
+        deus::NULL_POS,
+        s
     );
 }
 
@@ -85,42 +82,49 @@ UnicodeView::UnicodeView(
         std::size_t c_str_length,
         std::size_t symbol_length,
         deus::Encoding encoding)
-    : m_encoding(encoding)
-    , m_impl    (nullptr)
+    : m_impl(nullptr)
 {
     m_impl = EncodingImpl::new_encoding(
-        m_encoding,
-        s,
-        c_str_length + EncodingImpl::null_terminator_size(m_encoding),
-        symbol_length
+        encoding,
+        c_str_length + EncodingImpl::null_terminator_size(encoding),
+        symbol_length,
+        s
     );
 }
 
 UnicodeView::UnicodeView(const std::string& s, deus::Encoding encoding)
-    : m_encoding(encoding)
-    , m_impl    (nullptr)
+    : m_impl(nullptr)
 {
     m_impl = EncodingImpl::new_encoding(
-        m_encoding,
-        s.c_str(),
-        s.length() + EncodingImpl::null_terminator_size(m_encoding),
-        deus::NULL_POS
+        encoding,
+        s.length() + EncodingImpl::null_terminator_size(encoding),
+        deus::NULL_POS,
+        s.c_str()
     );
 }
 
-UnicodeView::UnicodeView(const UnicodeView& other)
-    : m_encoding(other.m_encoding)
-    , m_impl    (nullptr)
+UnicodeView::UnicodeView(const deus::UnicodeStorage& storage)
+    : m_impl(storage.get_view().m_impl)
 {
-    m_impl = EncodingImpl::copy_encoding(m_encoding, other.m_impl);
+    if(m_impl != nullptr)
+    {
+        ++m_impl->m_ref_count;
+    }
+}
+
+UnicodeView::UnicodeView(const UnicodeView& other)
+    : m_impl(other.m_impl)
+{
+    if(m_impl != nullptr)
+    {
+        ++m_impl->m_ref_count;
+    }
 }
 
 UnicodeView::UnicodeView(UnicodeView&& other)
-    : m_encoding  (other.m_encoding)
-    , m_impl      (other.m_impl)
+    : m_impl(other.m_impl)
 {
-    other.m_encoding   = deus::Encoding::kASCII;
-    other.m_impl       = nullptr;
+    other.m_impl = nullptr;
 }
 
 //------------------------------------------------------------------------------
@@ -131,7 +135,14 @@ UnicodeView::~UnicodeView()
 {
     if(m_impl != nullptr)
     {
-        delete m_impl;
+        if(m_impl->m_ref_count <= 1)
+        {
+            delete m_impl;
+        }
+        else
+        {
+            --m_impl->m_ref_count;
+        }
     }
 }
 
@@ -141,16 +152,19 @@ UnicodeView::~UnicodeView()
 
 UnicodeView& UnicodeView::operator=(const UnicodeView& other)
 {
-    m_encoding = other.m_encoding;
-    m_impl = EncodingImpl::copy_encoding(m_encoding, other.m_impl);
+    m_impl = other.m_impl;
+    if(m_impl != nullptr)
+    {
+        ++m_impl->m_ref_count;
+    }
 
     return *this;
 }
 
 UnicodeView& UnicodeView::operator=(UnicodeView&& other)
 {
-    m_encoding   = other.m_encoding;
-    m_impl       = other.m_impl;
+    m_impl = other.m_impl;
+    other.m_impl = nullptr;
 
     return *this;
 }
@@ -161,7 +175,7 @@ UnicodeView& UnicodeView::operator=(UnicodeView&& other)
 
 deus::Encoding UnicodeView::encoding() const
 {
-    return m_encoding;
+    return m_impl->m_encoding;
 }
 
 std::size_t UnicodeView::length() const
@@ -186,7 +200,8 @@ std::size_t UnicodeView::c_str_length() const
         return 0;
     }
     return
-        m_impl->m_byte_length - EncodingImpl::null_terminator_size(m_encoding);
+        m_impl->m_byte_length -
+        EncodingImpl::null_terminator_size(m_impl->m_encoding);
 }
 
 const char* UnicodeView::c_str() const
@@ -203,7 +218,7 @@ deus::UnicodeStorage UnicodeView::concatenate(const UnicodeView& s) const
 deus::UnicodeStorage UnicodeView::to_hex() const
 {
     // this function doesn't require a encoding specific implementation
-    // TODO: can potentially write code faster than std::hex?
+    // TODO: can potentially write code that's faster than std::hex?
     std::stringstream ss;
     ss
         << std::hex << std::uppercase

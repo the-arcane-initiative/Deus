@@ -55,20 +55,29 @@ public:
     //                                CONSTRUCTORS
     //--------------------------------------------------------------------------
 
-    // TODO:
-    ASCIIImpl(
-            const char* s,
-            std::size_t byte_length,
-            std::size_t symbol_length);
-
     // TODO: DOC
-    ASCIIImpl(const ASCIIImpl& other);
+    ASCIIImpl(
+            std::size_t byte_length,
+            std::size_t symbol_length,
+            const char* s);
+
+    ASCIIImpl(const ASCIIImpl&) = delete;
+    ASCIIImpl(ASCIIImpl&&) = delete;
 
     //--------------------------------------------------------------------------
     //                                 DESTRUCTOR
     //--------------------------------------------------------------------------
 
     virtual ~ASCIIImpl();
+
+    //--------------------------------------------------------------------------
+    //                                 OPERATORS
+    //--------------------------------------------------------------------------
+
+    ASCIIImpl& operator=(const ASCIIImpl&) = delete;
+    ASCIIImpl& operator=(ASCIIImpl&&) = delete;
+    bool operator==(const ASCIIImpl&) const = delete;
+    bool operator!=(const ASCIIImpl&) const = delete;
 
     //--------------------------------------------------------------------------
     //                          PUBLIC MEMBER FUNCTIONS

@@ -54,6 +54,10 @@ public:
     //--------------------------------------------------------------------------
 
     // TODO: DOC
+    std::size_t m_ref_count;
+    // TODO: DOC
+    deus::Encoding m_encoding;
+    // TODO: DOC
     std::size_t m_byte_length;
     // TODO: DOC
     mutable std::size_t m_symbol_length;
@@ -66,14 +70,13 @@ public:
 
     // TODO:
     EncodingImpl(
-            const char* s,
+            deus::Encoding encoding,
             std::size_t byte_length,
-            std::size_t symbol_length);
+            std::size_t symbol_length,
+            const char* s);
 
-    // TODO: DOC
-    EncodingImpl(const EncodingImpl& other);
-
-    // TODO: delete move?
+    EncodingImpl(const EncodingImpl&) = delete;
+    EncodingImpl(EncodingImpl&&) = delete;
 
     //--------------------------------------------------------------------------
     //                                 DESTRUCTOR
@@ -103,23 +106,9 @@ public:
      */
     static deus::UnicodeView::EncodingImpl* new_encoding(
             deus::Encoding encoding,
-            const char* s,
             std::size_t byte_length,
-            std::size_t symbol_length);
-
-    /*!
-     * \brief Constructs a copy of a encoding implementation from the provided
-     *        encoding type.
-     *
-     * \param encoding The encoding type to copy the implementation for.
-     * \param other The other encoding implementation to copy.
-     *
-     * \throw deus::TypeError If the given encoding type is not a recognized
-     *                        encoding.
-     */
-    static deus::UnicodeView::EncodingImpl* copy_encoding(
-            deus::Encoding encoding,
-            const EncodingImpl* other);
+            std::size_t symbol_length,
+            const char* s);
 
     /*!
      * \brief Returns the size in bytes of the given encoding's null terminator.
@@ -130,7 +119,10 @@ public:
     //                                 OPERATORS
     //--------------------------------------------------------------------------
 
-    // TODO: delete?
+    EncodingImpl& operator=(const EncodingImpl&) = delete;
+    EncodingImpl& operator=(EncodingImpl&&) = delete;
+    bool operator==(const EncodingImpl&) const = delete;
+    bool operator!=(const EncodingImpl&) const = delete;
 
     //--------------------------------------------------------------------------
     //                          PUBLIC MEMBER FUNCTIONS

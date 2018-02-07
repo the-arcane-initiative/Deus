@@ -84,11 +84,11 @@ public:
 
     // TODO:
     // TODO: throw TypeError
-    UnicodeView(
+    explicit UnicodeView(
             const std::string& s,
             deus::Encoding encoding = deus::SOURCE_ENCODING);
 
-    // TODO: storage constructor
+    explicit UnicodeView(const deus::UnicodeStorage& storage);
 
     // TODO:
     UnicodeView(const UnicodeView& other);
@@ -176,13 +176,12 @@ private:
     //--------------------------------------------------------------------------
 
     // TODO: DOC
-    deus::Encoding m_encoding;
-
-    // TODO:
     EncodingImpl* m_impl;
 };
 
 } // namespace deus
+
+// TODO: could move this to an inline file?
 
 //------------------------------------------------------------------------------
 //                               EXTERNAL OPERATORS
@@ -202,6 +201,14 @@ inline deus::UnicodeStorage operator+(
         const deus::UnicodeView& b)
 {
     return a.concatenate(b);
+}
+
+// TODO: DOC
+inline deus::UnicodeStorage operator+(
+        const deus::UnicodeStorage& a,
+        const deus::UnicodeStorage& b)
+{
+    return a.get_view().concatenate(b.get_view());
 }
 
 #endif
