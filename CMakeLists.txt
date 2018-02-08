@@ -51,7 +51,7 @@ include_directories(
 
 set(DEUS_UNIT_TESTS_SRC
     tests/unit/cpp/ASCIIImpl_TestSuite.cpp
-    tests/unit/cpp/TestsMain.cpp
+    tests/unit/cpp/TestsUnitMain.cpp
     tests/unit/cpp/UTF8Impl_TestSuite.cpp
     tests/unit/cpp/UnicodeView_TestSuite.cpp
 )
@@ -60,4 +60,26 @@ add_executable(tests ${DEUS_UNIT_TESTS_SRC})
 
 target_link_libraries(tests
     deus
+)
+
+#-----------------------P E R F O R M A N C E    T E S T S----------------------
+
+include_directories(
+    ${INCLUDE_DIRECTORIES}
+    tests/performance/cpp
+)
+
+set(DEUS_PERFORMANCE_TESTS_SRC
+    tests/performance/cpp/HelloWorld_TestSuite.cpp
+    tests/performance/cpp/Proto_TestSuite.cpp
+    tests/performance/cpp/UTF8Impl_TestSuite.cpp
+    tests/performance/cpp/TestPerformanceMain.cpp
+)
+
+add_executable(performance_tests ${DEUS_PERFORMANCE_TESTS_SRC})
+
+target_link_libraries(performance_tests
+    deus
+    benchmark
+    pthread
 )
