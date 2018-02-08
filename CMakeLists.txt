@@ -1,15 +1,26 @@
 cmake_minimum_required(VERSION 3.2)
 project(Deus)
 
-# TODO: control based on platform
-# set default build directories
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/build/linux_x86)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/build/linux_x86)
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/build/linux_x86)
+IF(WIN32)
 
-# TODO: sort out flags
-#   - might want: -Ofast (or -O3) and -msse4.1
-set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -Wall -std=c++11 -fPIC")
+    # TODO: control based on architecture?
+    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/build/win_x86)
+    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/build/win_x86)
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/build/win_x86)
+
+# TODO: linux if
+ELSE()
+
+    # TODO: control based on architecture?
+    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/build/linux_x86)
+    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/build/linux_x86)
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/build/linux_x86)
+
+    # TODO: sort out flags
+    #   - might want: -Ofast (or -O3) and -msse4.1
+    set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -Wall -std=c++11 -fPIC")
+
+ENDIF()
 
 #---------------------------------L I B R A R Y---------------------------------
 

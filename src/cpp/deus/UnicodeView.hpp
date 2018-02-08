@@ -42,6 +42,9 @@
 #include "deus/Constants.hpp"
 #include "deus/UnicodeStorage.hpp"
 
+#ifdef __clang__
+fuck
+#endif
 
 
 namespace deus
