@@ -76,20 +76,12 @@ UnicodeView::ASCIIImpl::~ASCIIImpl()
 //                            PUBLIC MEMBER FUNCTIONS
 //------------------------------------------------------------------------------
 
-void UnicodeView::ASCIIImpl::compute_byte_length()
+void UnicodeView::ASCIIImpl::compute_byte_length() const
 {
-    if(m_data == nullptr)
-    {
-        m_byte_length = 0;
-        m_symbol_length = 0;
-        return;
-    }
-    // can just use strlen here (maybe use FFS length if its faster?)
-    m_symbol_length = strlen(m_data);
-    m_byte_length = m_symbol_length + 1;
+    compute_byte_length_strlen(m_data, m_byte_length, m_symbol_length);
 }
 
-void UnicodeView::ASCIIImpl::compute_symbol_length()
+void UnicodeView::ASCIIImpl::compute_symbol_length() const
 {
     // just use raw length
     if(m_byte_length == 0)
@@ -99,6 +91,168 @@ void UnicodeView::ASCIIImpl::compute_symbol_length()
     else
     {
         m_symbol_length = m_byte_length - 1;
+    }
+}
+
+//------------------------------------------------------------------------------
+//                            PRIVATE STATIC FUNCTIONS
+//------------------------------------------------------------------------------
+
+//---------------------COMPUTE BYTE LENGTH IMPLEMENTATIONS----------------------
+
+void UnicodeView::ASCIIImpl::compute_byte_length_naive(
+        const char* in_data,
+        std::size_t& out_byte_length,
+        std::size_t& out_symbol_length)
+{
+    if(in_data == nullptr)
+    {
+        out_byte_length = 0;
+        out_symbol_length = 0;
+        return;
+    }
+    for(const char* c = in_data; (*c) != '\0'; ++c, ++out_symbol_length);
+    out_byte_length = out_symbol_length + 1;
+}
+
+void UnicodeView::ASCIIImpl::compute_byte_length_strlen(
+        const char* in_data,
+        std::size_t& out_byte_length,
+        std::size_t& out_symbol_length)
+{
+    if(in_data == nullptr)
+    {
+        out_byte_length = 0;
+        out_symbol_length = 0;
+        return;
+    }
+    out_symbol_length = strlen(in_data);
+    out_byte_length = out_symbol_length + 1;
+}
+
+void UnicodeView::ASCIIImpl::compute_byte_length_std_string(
+        const char* in_data,
+        std::size_t& out_byte_length,
+        std::size_t& out_symbol_length)
+{
+    if(in_data == nullptr)
+    {
+        out_byte_length = 0;
+        out_symbol_length = 0;
+        return;
+    }
+    std::string s(in_data);
+    out_symbol_length = s.length();
+    out_byte_length = out_symbol_length + 1;
+}
+
+void UnicodeView::ASCIIImpl::compute_byte_length_word_batching(
+        const char* in_data,
+        std::size_t& out_byte_length,
+        std::size_t& out_symbol_length)
+{
+    if(in_data == nullptr)
+    {
+        out_byte_length = 0;
+        out_symbol_length = 0;
+        return;
+    }
+
+    const char* byte_ptr = in_data;
+
+    static const std::size_t word_size = sizeof(std::size_t);
+    // naive check the first bits until we're word aligned
+    for(;((std::size_t) byte_ptr & (word_size - 1)) != 0; ++byte_ptr)
+    {
+        if(*byte_ptr == '\0')
+        {
+            out_symbol_length = static_cast<std::size_t>(byte_ptr - in_data);
+            out_byte_length = out_symbol_length + 1;
+            return;
+        }
+    }
+
+    // TODO: reinterpret?
+    // read word-aligned
+    const std::size_t* word_ptr = (std::size_t*) byte_ptr;
+
+    // TODO: sort out
+    std::size_t high_magic = 0x80808080UL;
+    std::size_t low_magic  = 0x01010101UL;
+    if(word_size > 4)
+    {
+        high_magic = 0x8080808080808080L;
+        low_magic  = 0x0101010101010101L;
+    }
+
+    // TODO: test how many misfires this performs
+
+    for(;;)
+    {
+
+        std::size_t word = *word_ptr++;
+
+        if(((word - low_magic) & high_magic) != 0)
+        {
+            const char* check = (const char*) (word_ptr - 1);
+
+            if(check[0] == 0)
+            {
+                out_symbol_length = static_cast<std::size_t>(check - in_data);
+                out_byte_length = out_symbol_length + 1;
+                return;
+            }
+            if(check[1] == 0)
+            {
+                out_symbol_length =
+                    static_cast<std::size_t>(check - in_data) + 1;
+                out_byte_length = out_symbol_length + 1;
+                return;
+            }
+            if(check[2] == 0)
+            {
+                out_symbol_length =
+                    static_cast<std::size_t>(check - in_data) + 2;
+                out_byte_length = out_symbol_length + 1;
+                return;
+            }
+            if(check[3] == 0)
+            {
+                out_symbol_length =
+                    static_cast<std::size_t>(check - in_data) + 3;
+                out_byte_length = out_symbol_length + 1;
+                return;
+            }
+            if(word_size > 4)
+            {
+                if(check[4] == 0)
+                {
+                    out_symbol_length =
+                        static_cast<std::size_t>(check - in_data) + 4;
+                    out_byte_length = out_symbol_length + 1;
+                }
+                if(check[5] == 0)
+                {
+                    out_symbol_length =
+                        static_cast<std::size_t>(check - in_data) + 5;
+                    out_byte_length = out_symbol_length + 1;
+                }
+                if(check[6] == 0)
+                {
+                    out_symbol_length =
+                        static_cast<std::size_t>(check - in_data) + 6;
+                    out_byte_length = out_symbol_length + 1;
+                }
+                if(check[7] == 0)
+                {
+                    out_symbol_length =
+                        static_cast<std::size_t>(check - in_data) + 7;
+                    out_byte_length = out_symbol_length + 1;
+                }
+            }
+
+            // misfire - continue
+        }
     }
 }
 

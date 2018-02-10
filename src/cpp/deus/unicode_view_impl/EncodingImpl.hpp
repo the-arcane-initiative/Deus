@@ -54,11 +54,11 @@ public:
     //--------------------------------------------------------------------------
 
     // TODO: DOC
-    std::size_t m_ref_count;
+    mutable std::size_t m_ref_count;
     // TODO: DOC
     deus::Encoding m_encoding;
     // TODO: DOC
-    std::size_t m_byte_length;
+    mutable std::size_t m_byte_length;
     // TODO: DOC
     mutable std::size_t m_symbol_length;
     // TODO: DOC
@@ -129,10 +129,10 @@ public:
     //--------------------------------------------------------------------------
 
     // TODO: DOC
-    virtual void compute_byte_length() = 0;
+    virtual void compute_byte_length() const = 0;
 
     // TODO: DOC
-    virtual void compute_symbol_length() = 0;
+    virtual void compute_symbol_length() const = 0;
 };
 
 } // namespace deus

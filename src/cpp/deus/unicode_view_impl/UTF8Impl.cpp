@@ -77,32 +77,12 @@ UnicodeView::UTF8Impl::~UTF8Impl()
 //                            PUBLIC MEMBER FUNCTIONS
 //------------------------------------------------------------------------------
 
-void UnicodeView::UTF8Impl::compute_byte_length()
+void UnicodeView::UTF8Impl::compute_byte_length() const
 {
-    m_byte_length = 0;
-    // null data
-    if(m_data == nullptr)
-    {
-        m_symbol_length = 0;
-        return;
-    }
-
-    // even though we could just use strlen on a UTF-8 string - we should
-    // instead compute both byte length and symbol at the same time so this
-    // iteration only has to happen once.
-    const char* c = m_data;
-    // TODO: this can be heavily optimized
-    while(*c != 0x0)
-    {
-        // as the prophecy foretold
-        c++;
-        ++m_byte_length;
-    }
-    // increment one more time for the null terminator
-    ++m_byte_length;
+    compute_byte_length_naive(m_data, m_byte_length, m_symbol_length);
 }
 
-void UnicodeView::UTF8Impl::compute_symbol_length()
+void UnicodeView::UTF8Impl::compute_symbol_length() const
 {
     // just use raw length
     if(m_byte_length == 0)
@@ -153,6 +133,42 @@ void UnicodeView::UTF8Impl::compute_symbol_length()
             );
         }
     }
+}
+
+//------------------------------------------------------------------------------
+//                            PRIVATE STATIC FUNCTIONS
+//------------------------------------------------------------------------------
+
+//---------------------COMPUTE BYTE LENGTH IMPLEMENTATIONS----------------------
+
+void UnicodeView::UTF8Impl::compute_byte_length_naive(
+        const char* in_data,
+        std::size_t& out_byte_length,
+        std::size_t& out_symbol_length)
+{
+    out_byte_length = 0;
+    out_symbol_length = 0;
+    // null data?
+    if(in_data == nullptr)
+    {
+        return;
+    }
+
+    // even though we could just use strlen on a UTF-8 string - we should
+    // instead compute both byte length and symbol at the same time so this
+    // iteration only has to happen once.
+    const char* c = in_data;
+    // TODO: this can be heavily optimized
+    while(*c != 0x0)
+    {
+        // TODO: UTF-8 shit
+
+        // as the prophecy foretold
+        c++;
+        ++out_byte_length;
+    }
+    // increment one more time for the null terminator
+    ++out_byte_length;
 }
 
 } // namespace deus

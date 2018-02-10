@@ -56,9 +56,9 @@ set(DEUS_UNIT_TESTS_SRC
     tests/unit/cpp/UnicodeView_TestSuite.cpp
 )
 
-add_executable(tests ${DEUS_UNIT_TESTS_SRC})
+add_executable(unit_tests ${DEUS_UNIT_TESTS_SRC})
 
-target_link_libraries(tests
+target_link_libraries(unit_tests
     deus
 )
 
@@ -70,10 +70,9 @@ include_directories(
 )
 
 set(DEUS_PERFORMANCE_TESTS_SRC
-    tests/performance/cpp/HelloWorld_TestSuite.cpp
-    tests/performance/cpp/Proto_TestSuite.cpp
-    tests/performance/cpp/UTF8Impl_TestSuite.cpp
-    tests/performance/cpp/TestPerformanceMain.cpp
+    tests/performance/cpp/ComputeByteLength_TestSuite.cpp
+    tests/performance/cpp/PerformanceTestsMain.cpp
+    tests/performance/cpp/PerformanceTestsUtil.cpp
 )
 
 add_executable(performance_tests ${DEUS_PERFORMANCE_TESTS_SRC})

@@ -83,9 +83,40 @@ public:
     //                          PUBLIC MEMBER FUNCTIONS
     //--------------------------------------------------------------------------
 
-    virtual void compute_byte_length() override;
+    virtual void compute_byte_length() const override;
 
-    virtual void compute_symbol_length() override;
+    virtual void compute_symbol_length() const override;
+
+private:
+
+    //--------------------------------------------------------------------------
+    //                          PRIVATE MEMBER FUNCTIONS
+    //--------------------------------------------------------------------------
+
+    //-------------------COMPUTE BYTE LENGTH IMPLEMENTATIONS--------------------
+
+    static void compute_byte_length_naive(
+            const char* in_data,
+            std::size_t& out_byte_length,
+            std::size_t& out_symbol_length);
+
+    static void compute_byte_length_strlen(
+            const char* in_data,
+            std::size_t& out_byte_length,
+            std::size_t& out_symbol_length);
+
+    static void compute_byte_length_std_string(
+            const char* in_data,
+            std::size_t& out_byte_length,
+            std::size_t& out_symbol_length);
+
+    // TODO: optimise further
+    static void compute_byte_length_word_batching(
+            const char* in_data,
+            std::size_t& out_byte_length,
+            std::size_t& out_symbol_length);
+
+    // TODO: simd batching
 };
 
 } // namespace deus
