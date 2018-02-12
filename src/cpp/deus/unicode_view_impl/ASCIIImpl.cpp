@@ -35,6 +35,7 @@
 #include <cstring>
 
 #include "deus/Constants.hpp"
+#include "deus/util/SIMDUtil.hpp"
 
 
 namespace deus
@@ -160,7 +161,7 @@ void UnicodeView::ASCIIImpl::compute_byte_length_word_batching(
 
     const char* byte_ptr = in_data;
 
-    static const std::size_t word_size = sizeof(std::size_t);
+    constexpr std::size_t word_size = sizeof(std::size_t);
     // naive check the first bits until we're word aligned
     for(;((std::size_t) byte_ptr & (word_size - 1)) != 0; ++byte_ptr)
     {
@@ -172,26 +173,29 @@ void UnicodeView::ASCIIImpl::compute_byte_length_word_batching(
         }
     }
 
-    // TODO: reinterpret?
     // read word-aligned
     const std::size_t* word_ptr = (std::size_t*) byte_ptr;
 
-    // TODO: sort out
-    std::size_t high_magic = 0x80808080UL;
-    std::size_t low_magic  = 0x01010101UL;
-    if(word_size > 4)
-    {
-        high_magic = 0x8080808080808080L;
-        low_magic  = 0x0101010101010101L;
-    }
-
-    // TODO: test how many misfires this performs
+    // set magic numbers based on word size
+    constexpr std::size_t high_magic =
+        (word_size > 4)
+        ?
+        0x8080808080808080L
+        :
+        0x80808080UL;
+    constexpr std::size_t low_magic =
+        (word_size > 4)
+        ?
+        0x0101010101010101L
+        :
+        0x01010101UL;
 
     for(;;)
     {
-
         std::size_t word = *word_ptr++;
 
+        // TODO: this can cause false positives - we might be able to use better
+        //       magic number checks
         if(((word - low_magic) & high_magic) != 0)
         {
             const char* check = (const char*) (word_ptr - 1);
@@ -249,6 +253,173 @@ void UnicodeView::ASCIIImpl::compute_byte_length_word_batching(
                         static_cast<std::size_t>(check - in_data) + 7;
                     out_byte_length = out_symbol_length + 1;
                 }
+            }
+
+            // misfire - continue
+        }
+    }
+}
+
+void UnicodeView::ASCIIImpl::compute_byte_length_simd_batching(
+        const char* in_data,
+        std::size_t& out_byte_length,
+        std::size_t& out_symbol_length)
+{
+    if(in_data == nullptr)
+    {
+        out_byte_length = 0;
+        out_symbol_length = 0;
+        return;
+    }
+
+    const char* byte_ptr = in_data;
+
+    constexpr std::size_t word_size = sizeof(std::size_t);
+    // naive check the first bits until we're word aligned
+    for(;((std::size_t) byte_ptr & (word_size - 1)) != 0; ++byte_ptr)
+    {
+        if(*byte_ptr == '\0')
+        {
+            out_symbol_length = static_cast<std::size_t>(byte_ptr - in_data);
+            out_byte_length = out_symbol_length + 1;
+            return;
+        }
+    }
+
+    // read word-aligned
+    const std::size_t* word_ptr = (std::size_t*) byte_ptr;
+
+    // set up bit-wise magic
+    deus::SimdInt64 simd_high_magic;
+    simd_high_magic.integral[0] = 0x8080808080808080L;
+    simd_high_magic.integral[1] = 0x8080808080808080L;
+    deus::SimdInt64 simd_low_magic;
+    simd_low_magic.integral[0] = 0x0101010101010101L;
+    simd_low_magic.integral[1] = 0x0101010101010101L;
+
+    for(;;)
+    {
+        deus::SimdInt64 simd_word;
+        simd_word.integral[0] = *word_ptr++;
+        simd_word.integral[1] = *word_ptr++;
+
+        __m128i s0 = _mm_sub_epi64(simd_word.simd, simd_low_magic.simd);
+        if(_mm_test_all_zeros(s0, simd_high_magic.simd) == 0)
+        {
+            // TODO: could narrow this down where to check faster
+            // could do a simd check to narrow down the region?
+            const char* check = (const char*) (word_ptr - 2);
+
+            if(check[0] == 0)
+            {
+                out_symbol_length = static_cast<std::size_t>(check - in_data);
+                out_byte_length = out_symbol_length + 1;
+                return;
+            }
+            if(check[1] == 0)
+            {
+                out_symbol_length =
+                    static_cast<std::size_t>(check - in_data) + 1;
+                out_byte_length = out_symbol_length + 1;
+                return;
+            }
+            if(check[2] == 0)
+            {
+                out_symbol_length =
+                    static_cast<std::size_t>(check - in_data) + 2;
+                out_byte_length = out_symbol_length + 1;
+                return;
+            }
+            if(check[3] == 0)
+            {
+                out_symbol_length =
+                    static_cast<std::size_t>(check - in_data) + 3;
+                out_byte_length = out_symbol_length + 1;
+                return;
+            }
+            if(check[4] == 0)
+            {
+                out_symbol_length =
+                    static_cast<std::size_t>(check - in_data) + 4;
+                out_byte_length = out_symbol_length + 1;
+                return;
+            }
+            if(check[5] == 0)
+            {
+                out_symbol_length =
+                    static_cast<std::size_t>(check - in_data) + 5;
+                out_byte_length = out_symbol_length + 1;
+                return;
+            }
+            if(check[6] == 0)
+            {
+                out_symbol_length =
+                    static_cast<std::size_t>(check - in_data) + 6;
+                out_byte_length = out_symbol_length + 1;
+                return;
+            }
+            if(check[7] == 0)
+            {
+                out_symbol_length =
+                    static_cast<std::size_t>(check - in_data) + 7;
+                out_byte_length = out_symbol_length + 1;
+                return;
+            }
+            if(check[8] == 0)
+            {
+                out_symbol_length =
+                    static_cast<std::size_t>(check - in_data) + 8;
+                out_byte_length = out_symbol_length + 1;
+                return;
+            }
+            if(check[9] == 0)
+            {
+                out_symbol_length =
+                    static_cast<std::size_t>(check - in_data) + 9;
+                out_byte_length = out_symbol_length + 1;
+                return;
+            }
+            if(check[10] == 0)
+            {
+                out_symbol_length =
+                    static_cast<std::size_t>(check - in_data) + 10;
+                out_byte_length = out_symbol_length + 1;
+                return;
+            }
+            if(check[11] == 0)
+            {
+                out_symbol_length =
+                    static_cast<std::size_t>(check - in_data) + 11;
+                out_byte_length = out_symbol_length + 1;
+                return;
+            }
+            if(check[12] == 0)
+            {
+                out_symbol_length =
+                    static_cast<std::size_t>(check - in_data) + 12;
+                out_byte_length = out_symbol_length + 1;
+                return;
+            }
+            if(check[13] == 0)
+            {
+                out_symbol_length =
+                    static_cast<std::size_t>(check - in_data) + 13;
+                out_byte_length = out_symbol_length + 1;
+                return;
+            }
+            if(check[14] == 0)
+            {
+                out_symbol_length =
+                    static_cast<std::size_t>(check - in_data) + 14;
+                out_byte_length = out_symbol_length + 1;
+                return;
+            }
+            if(check[15] == 0)
+            {
+                out_symbol_length =
+                    static_cast<std::size_t>(check - in_data) + 15;
+                out_byte_length = out_symbol_length + 1;
+                return;
             }
 
             // misfire - continue

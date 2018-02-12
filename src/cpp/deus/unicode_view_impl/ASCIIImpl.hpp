@@ -110,8 +110,12 @@ private:
             std::size_t& out_byte_length,
             std::size_t& out_symbol_length);
 
-    // TODO: optimise further
     static void compute_byte_length_word_batching(
+            const char* in_data,
+            std::size_t& out_byte_length,
+            std::size_t& out_symbol_length);
+
+    static void compute_byte_length_simd_batching(
             const char* in_data,
             std::size_t& out_byte_length,
             std::size_t& out_symbol_length);

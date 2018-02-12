@@ -18,7 +18,7 @@ ELSE()
 
     # TODO: sort out flags
     #   - might want: -Ofast (or -O3) and -msse4.1
-    set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -Wall -std=c++11 -fPIC")
+    set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -Wall -std=c++11 -fPIC -Ofast -msse4.1")
 
 ENDIF()
 
@@ -50,10 +50,8 @@ include_directories(
 )
 
 set(DEUS_UNIT_TESTS_SRC
-    tests/unit/cpp/ASCIIImpl_TestSuite.cpp
-    tests/unit/cpp/TestsUnitMain.cpp
-    tests/unit/cpp/UTF8Impl_TestSuite.cpp
-    tests/unit/cpp/UnicodeView_TestSuite.cpp
+    tests/unit/cpp/ComputeByteLength_UnitTest.cpp
+    tests/unit/cpp/UnitTestsMain.cpp
 )
 
 add_executable(unit_tests ${DEUS_UNIT_TESTS_SRC})
@@ -70,7 +68,7 @@ include_directories(
 )
 
 set(DEUS_PERFORMANCE_TESTS_SRC
-    tests/performance/cpp/ComputeByteLength_TestSuite.cpp
+    tests/performance/cpp/ComputeByteLength_PerformanceTest.cpp
     tests/performance/cpp/PerformanceTestsMain.cpp
     tests/performance/cpp/PerformanceTestsUtil.cpp
 )
