@@ -39,6 +39,7 @@
 #include <cstdint>
 #include <memory>
 #include <string>
+#include <vector>
 
 #include "deus/Constants.hpp"
 
@@ -53,7 +54,15 @@ namespace deus
 class UnicodeView;
 
 /*!
- * \brief TODO:
+ * \brief An Object used to store an Unicode string and an associated
+ *        deus::UnicodeView.
+ *
+ * UnicodeStorage can be used when constructing Unicode strings and the
+ * existence of the associated view means the any metadata that the view needs
+ * to compute for the string (such as symbol length) only needs to be done once.
+ *
+ * This object can also be used to construct encoded strings from raw code
+ * points
  */
 class UnicodeStorage
 {
@@ -63,12 +72,28 @@ public:
     //                                CONSTRUCTORS
     //--------------------------------------------------------------------------
 
-    // TODO: DOC
-    // TODO: throw TypeError
+    /*!
+     * \brief Constructs a new empty string with the given source encoding.
+     *
+     * \note While it might seem that the encoding of an empty string is
+     *       irrelevant, it affects the size of the null terminator and this
+     *       strings interaction with other strings.
+     */
     explicit UnicodeStorage(deus::Encoding encoding = deus::SOURCE_ENCODING);
 
-    // TODO: DOC
+    /*!
+     * \brief Constructs a new string by copying the string referenced by the
+     *        given deus::UnicodeView.
+     */
     UnicodeStorage(const deus::UnicodeView& view);
+
+    /*!
+     * \brief Constructs a new Unicode string in the given encoding from a list
+     *        of Unicode code points.
+     */
+    UnicodeStorage(
+            const std::vector<deus::CodePoint>& code_points,
+            deus::Encoding encoding = deus::SOURCE_ENCODING);
 
     // TODO: DOC
     UnicodeStorage(const UnicodeStorage& other);
@@ -112,7 +137,9 @@ public:
     //  */
     // bool operator!=(const UnicodeStorage& other) const;
 
-    // TODO: DOC
+    /*!
+     * \brief Implicitly converts this UnicodeStorage to a std::string.
+     */
     operator std::string() const;
 
     //--------------------------------------------------------------------------
@@ -137,14 +164,12 @@ private:
     //                             PRIVATE ATTRIBUTES
     //--------------------------------------------------------------------------
 
-    // TODO: DOC
     std::string m_str;
-    // TODO: DOC
     std::unique_ptr<deus::UnicodeView> m_view;
 };
 
-// TODO: Hash
-
 } // namespace deus
+
+// TODO: Hash
 
 #endif

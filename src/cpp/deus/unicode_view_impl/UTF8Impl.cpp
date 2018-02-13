@@ -79,7 +79,11 @@ UnicodeView::UTF8Impl::~UTF8Impl()
 
 void UnicodeView::UTF8Impl::compute_byte_length() const
 {
-    compute_byte_length_naive(m_data, m_byte_length, m_symbol_length);
+    utf8_impl::compute_byte_length_naive(
+        m_data,
+        m_byte_length,
+        m_symbol_length
+    );
 }
 
 void UnicodeView::UTF8Impl::compute_symbol_length() const
@@ -128,20 +132,23 @@ void UnicodeView::UTF8Impl::compute_symbol_length() const
 
             deus::UnicodeView character(c, 1, deus::Encoding::kASCII);
             throw deus::UTF8Error(
-                "Invalid leading byte in UTF-8 string: '" + character +
-                character.to_hex()
+                "Invalid leading byte in UTF-8 string: '" + character + ": <" +
+                character.to_hex() + ">"
             );
         }
     }
 }
 
 //------------------------------------------------------------------------------
-//                            PRIVATE STATIC FUNCTIONS
+//                                GLOBAL FUNCTIONS
 //------------------------------------------------------------------------------
+
+namespace utf8_impl
+{
 
 //---------------------COMPUTE BYTE LENGTH IMPLEMENTATIONS----------------------
 
-void UnicodeView::UTF8Impl::compute_byte_length_naive(
+void compute_byte_length_naive(
         const char* in_data,
         std::size_t& out_byte_length,
         std::size_t& out_symbol_length)
@@ -158,10 +165,49 @@ void UnicodeView::UTF8Impl::compute_byte_length_naive(
     // instead compute both byte length and symbol at the same time so this
     // iteration only has to happen once.
     const char* c = in_data;
-    // TODO: this can be heavily optimized
+    std::size_t next_check = 0;
     while(*c != 0x0)
     {
-        // TODO: UTF-8 shit
+        // determine UTF-8 symbols
+        if(next_check <= 0)
+        {
+            // single character byte
+            if((*c & 0x80) == 0)
+            {
+                next_check = 0;
+            }
+            // 2 byte character
+            else if((*c & 0xE0) == 0xC0)
+            {
+                next_check = 1;
+            }
+            // 3 byte character
+            else if((*c & 0xF0) == 0xE0)
+            {
+                out_symbol_length += 3;
+                next_check = 2;
+            }
+            // 4 byte character
+            else if((*c & 0xF8) == 0xF0)
+            {
+                out_symbol_length += 4;
+                next_check = 3;
+            }
+            else
+            {
+                deus::UnicodeView character(c, 1, deus::Encoding::kASCII);
+                throw deus::UTF8Error(
+                    "Invalid leading byte in UTF-8 string: '" + character +
+                    ": <" + character.to_hex() + ">"
+                );
+            }
+
+            out_symbol_length += next_check + 1;
+        }
+        else
+        {
+            --next_check;
+        }
 
         // as the prophecy foretold
         c++;
@@ -171,4 +217,5 @@ void UnicodeView::UTF8Impl::compute_byte_length_naive(
     ++out_byte_length;
 }
 
+} // namespace utf8_impl
 } // namespace deus

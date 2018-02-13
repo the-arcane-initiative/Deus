@@ -106,6 +106,28 @@ void UnicodeView::ASCIIImpl::compute_symbol_length() const
 namespace ascii_impl
 {
 
+//-----------------------FROM CODE POINT IMPLEMENTATIONS------------------------
+
+std::string from_code_point_naive(
+        const std::vector<deus::CodePoint>& code_points)
+{
+    std::string ret(code_points.size(), '\0');
+
+    for(std::size_t i = 0; i < code_points.size(); ++i)
+    {
+        deus::CodePoint code_point = code_points[i];
+        // clamp
+        if(code_point > 255U)
+        {
+            code_point = 255U;
+        }
+        // then just cast the bits
+        ret[i] = (char) code_point;
+    }
+
+    return ret;
+}
+
 //---------------------COMPUTE BYTE LENGTH IMPLEMENTATIONS----------------------
 
 void compute_byte_length_naive(
@@ -207,9 +229,11 @@ void compute_byte_length_word_batching(
         {
             const char* check = (const char*) (word_ptr - 1);
 
+
             if(check[0] == 0)
             {
-                out_symbol_length = static_cast<std::size_t>(check - in_data);
+                out_symbol_length =
+                    static_cast<std::size_t>(check - in_data) + 0;
                 out_byte_length = out_symbol_length + 1;
                 return;
             }
@@ -241,24 +265,28 @@ void compute_byte_length_word_batching(
                     out_symbol_length =
                         static_cast<std::size_t>(check - in_data) + 4;
                     out_byte_length = out_symbol_length + 1;
+                    return;
                 }
                 if(check[5] == 0)
                 {
                     out_symbol_length =
                         static_cast<std::size_t>(check - in_data) + 5;
                     out_byte_length = out_symbol_length + 1;
+                    return;
                 }
                 if(check[6] == 0)
                 {
                     out_symbol_length =
                         static_cast<std::size_t>(check - in_data) + 6;
                     out_byte_length = out_symbol_length + 1;
+                    return;
                 }
                 if(check[7] == 0)
                 {
                     out_symbol_length =
                         static_cast<std::size_t>(check - in_data) + 7;
                     out_byte_length = out_symbol_length + 1;
+                    return;
                 }
             }
 

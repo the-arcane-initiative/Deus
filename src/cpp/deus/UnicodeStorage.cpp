@@ -32,7 +32,9 @@
  */
 #include "deus/UnicodeStorage.hpp"
 
+#include "deus/Exceptions.hpp"
 #include "deus/UnicodeView.hpp"
+#include <deus/unicode_view_impl/ASCIIImpl.hpp>
 
 
 namespace deus
@@ -57,6 +59,33 @@ UnicodeStorage::UnicodeStorage(const deus::UnicodeView& view)
         view.encoding()
     ))
 {
+}
+
+UnicodeStorage::UnicodeStorage(
+        const std::vector<deus::CodePoint>& code_points,
+        deus::Encoding encoding)
+    : m_view(nullptr)
+{
+    switch(encoding)
+    {
+        case deus::Encoding::kASCII:
+        {
+            m_str = deus::ascii_impl::from_code_point_naive(code_points);
+            break;
+        }
+        // case deus::Encoding::kUTF8:
+        // {
+        // }
+        default:
+        {
+            throw deus::TypeError(
+                "Unrecognized Unicode encoding: " +
+                std::to_string(static_cast<unsigned>(encoding))
+            );
+        }
+    }
+
+    m_view.reset(new deus::UnicodeView(m_str, encoding));
 }
 
 UnicodeStorage::UnicodeStorage(const UnicodeStorage& other)

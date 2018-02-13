@@ -205,6 +205,14 @@ inline deus::UnicodeStorage operator+(
 // TODO: DOC
 inline deus::UnicodeStorage operator+(
         const deus::UnicodeStorage& a,
+        const char* b)
+{
+    return a.get_view().concatenate(deus::UnicodeView(b));
+}
+
+// TODO: DOC
+inline deus::UnicodeStorage operator+(
+        const deus::UnicodeStorage& a,
         const deus::UnicodeStorage& b)
 {
     return a.get_view().concatenate(b.get_view());

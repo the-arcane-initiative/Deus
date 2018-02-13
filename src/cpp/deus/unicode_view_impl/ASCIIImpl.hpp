@@ -36,6 +36,8 @@
 #ifndef DEUS_UNICODEVIEWIMPL_ASCIIIMPL_HPP_
 #define DEUS_UNICODEVIEWIMPL_ASCIIIMPL_HPP_
 
+#include <vector>
+
 #include "deus/UnicodeView.hpp"
 #include "deus/unicode_view_impl/EncodingImpl.hpp"
 
@@ -44,7 +46,8 @@ namespace deus
 {
 
 /*!
- * \brief TODO:
+ * \brief The implementation of ASCII encoding specific logic for the
+ *        deus::UnicodeView class.
  */
 class UnicodeView::ASCIIImpl
     : public UnicodeView::EncodingImpl
@@ -92,10 +95,13 @@ public:
 //                                GLOBAL FUNCTIONS
 //------------------------------------------------------------------------------
 
-// TODO: hide from docs
-
 namespace ascii_impl
 {
+
+//-----------------------FROM CODE POINT IMPLEMENTATIONS------------------------
+
+std::string from_code_point_naive(
+        const std::vector<deus::CodePoint>& code_points);
 
 //---------------------COMPUTE BYTE LENGTH IMPLEMENTATIONS----------------------
 
@@ -125,9 +131,6 @@ void compute_byte_length_simd_batching(
         std::size_t& out_symbol_length);
 
 } // namespace ascii_impl
-
-// TODO: end hide from docs
-
 } // namespace deus
 
 

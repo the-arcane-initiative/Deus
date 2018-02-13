@@ -93,7 +93,8 @@ link_directories(
 )
 
 set(DEUS_UNIT_TESTS_SRC
-    tests/unit/cpp/ComputeByteLength_UnitTest.cpp
+    tests/unit/cpp/ASCIIComputeByteLength_UnitTest.cpp
+    tests/unit/cpp/UTF8ComputeByteLength_UnitTest.cpp
     tests/unit/cpp/UnitTestsMain.cpp
 )
 
@@ -142,7 +143,7 @@ link_directories(
 )
 
 set(DEUS_PERFORMANCE_TESTS_SRC
-    tests/performance/cpp/ComputeByteLength_PerformanceTest.cpp
+    tests/performance/cpp/ASCIIComputeByteLength_PerformanceTest.cpp
     tests/performance/cpp/PerformanceTestsMain.cpp
     tests/performance/cpp/PerformanceTestsUtil.cpp
 )

@@ -38,12 +38,22 @@
 #define DEUS_CONSTANTS_HPP_
 
 #include <cstddef>
+#include <cstdint>
 
 #include "deus/CInterface.h"
 
 
 namespace deus
 {
+
+//------------------------------------------------------------------------------
+//                                TYPE DEFINITIONS
+//------------------------------------------------------------------------------
+
+/*!
+ * \brief Type that an be used to represent a Unicode code point.
+ */
+typedef uint32_t CodePoint;
 
 //------------------------------------------------------------------------------
 //                                  ENUMERATORS

@@ -44,7 +44,8 @@ namespace deus
 {
 
 /*!
- * \brief TODO:
+ * \brief The implementation of UTF-8 encoding specific logic for the
+ *        deus::UnicodeView class.
  */
 class UnicodeView::UTF8Impl
     : public UnicodeView::EncodingImpl
@@ -101,6 +102,21 @@ private:
             std::size_t& out_symbol_length);
 };
 
+//------------------------------------------------------------------------------
+//                                GLOBAL FUNCTIONS
+//------------------------------------------------------------------------------
+
+namespace utf8_impl
+{
+
+//---------------------COMPUTE BYTE LENGTH IMPLEMENTATIONS----------------------
+
+void compute_byte_length_naive(
+        const char* in_data,
+        std::size_t& out_byte_length,
+        std::size_t& out_symbol_length);
+
+} // namespace utf8_impl
 } // namespace deus
 
 #endif

@@ -43,7 +43,8 @@ namespace deus
 {
 
 /*!
- * \brief TODO:
+ * \brief Abstract base class which defines the interface for the implementation
+ *        of encoding specific logic for the deus::UnicodeView class.
  */
 class UnicodeView::EncodingImpl
 {
