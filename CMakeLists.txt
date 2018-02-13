@@ -1,35 +1,40 @@
 cmake_minimum_required(VERSION 3.2)
 project(Deus)
 
+# TODO: compiler flags should be triggered on compiler
+# TODO: sort out flags bsaed on the release mode
 IF(WIN32)
 
     # TODO: control based on architecture?
-    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/build/win_x64)
-    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/build/win_x64)
-    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/build/win_x64)
+    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/build/windows)
+    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/build/windows)
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/build/windows)
+
+ELSEIF(APPLE)
+
+    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/build/mac)
+    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/build/mac)
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/build/mac)
+
+    # TODO: apple compiler flags? should probably just use clang
+    set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -std=c++11")
 
 # TODO: linux if
 ELSE()
 
     # TODO: control based on architecture?
-    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/build/linux_x86)
-    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/build/linux_x86)
-    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/build/linux_x86)
+    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/build/linux)
+    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/build/linux)
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/build/linux)
 
-    # TODO: sort out flags
-    #   - might want: -Ofast (or -O3) and -msse4.1
     set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -Wall -std=c++11 -fPIC -Ofast -msse4.1")
 
 ENDIF()
 
-# TODO: SORT OUT
-# locate gtest
-IF(WIN32)
-ELSE()
+# TODO: should just write a gtest find_package for windows
+IF(NOT WIN32)
     find_package(GTest REQUIRED)
 ENDIF()
-
-
 
 #---------------------------------L I B R A R Y---------------------------------
 
@@ -50,20 +55,41 @@ set(DEUS_SRC
 # TODO: also build a shared version
 add_library(deus STATIC ${DEUS_SRC})
 
-#-----------------------------U N I T    T E S T S-----------------------------
+#-----------------------------U N I T    T E S T S------------------------------
 
-# TODO: SORT OUT
+# TODO: sort out
+if(WIN32)
+    set(DEUS_UNIT_INCLUDES
+        "C:/Program Files/googletest-distribution/include"
+    )
+    set(DEUS_UNIT_LIBPATHS
+        "C:/Program Files/googletest-distribution/lib"
+    )
+    set(DEUS_UNIT_LIBS
+        gtest
+    )
+ELSE()
+    set(DEUS_UNIT_INCLUDES
+        ${GTEST_INCLUDE_DIRS}
+    )
+    set(DEUS_UNIT_LIBPATHS
+        ""
+    )
+    set(DEUS_UNIT_LIBS
+        ${GTEST_LIBRARIES}
+        pthread
+    )
+ENDIF()
+
 include_directories(
     ${INCLUDE_DIRECTORIES}
-    #${GTEST_INCLUDE_DIRS}
-    "C:/Program Files/googletest-distribution/include"
+    ${DEUS_UNIT_INCLUDES}
     tests/unit/cpp
 )
 
-# TODO: SORT OUT
 link_directories(
     ${LINK_DIRECTORIES}
-    "C:/Program Files/googletest-distribution/lib"
+    ${DEUS_UNIT_LIBPATHS}
 )
 
 set(DEUS_UNIT_TESTS_SRC
@@ -73,23 +99,46 @@ set(DEUS_UNIT_TESTS_SRC
 
 add_executable(unit_tests ${DEUS_UNIT_TESTS_SRC})
 
-# TODO: SORT OUT
 target_link_libraries(unit_tests
     deus
-    gtest
-    gtest_main
-    gmock
-    #${GTEST_LIBRARIES}
-    #pthread
+    ${DEUS_UNIT_LIBS}
 )
 
 #-----------------------P E R F O R M A N C E    T E S T S----------------------
 
-# TODO: SORT OUT
+# TODO: sort out
+if(WIN32)
+    set(DEUS_PERFORMANCE_INCLUDES
+        "C:/Program Files/benchmark/include"
+    )
+    set(DEUS_PERFORMANCE_LIBPATHS
+        "C:/Program Files/benchmark/lib"
+    )
+    set(DEUS_PERFORMANCE_LIBS
+        shlwapi
+    )
+ELSE()
+    set(DEUS_PERFORMANCE_INCLUDES
+        ""
+    )
+    set(DEUS_PERFORMANCE_LIBPATHS
+        ""
+    )
+    set(DEUS_PERFORMANCE_LIBS
+        ${GTEST_LIBRARIES}
+        pthread
+    )
+ENDIF()
+
 include_directories(
     ${INCLUDE_DIRECTORIES}
-    "C:/Program Files/benchmark/include"
-    tests/performance/cpp
+    ${DEUS_PERFORMANCE_INCLUDES}
+    tests/unit/cpp
+)
+
+link_directories(
+    ${LINK_DIRECTORIES}
+    ${DEUS_PERFORMANCE_LIBPATHS}
 )
 
 set(DEUS_PERFORMANCE_TESTS_SRC
@@ -98,18 +147,11 @@ set(DEUS_PERFORMANCE_TESTS_SRC
     tests/performance/cpp/PerformanceTestsUtil.cpp
 )
 
-# TODO: SORT OUT
-link_directories(
-    ${LINK_DIRECTORIES}
-    "C:/Program Files/benchmark/lib"
-)
-
 add_executable(performance_tests ${DEUS_PERFORMANCE_TESTS_SRC})
 
 # TODO: SORT OUT
 target_link_libraries(performance_tests
     deus
     benchmark
-    shlwapi
-    #pthread
+    ${DEUS_PERFORMANCE_LIBS}
 )
