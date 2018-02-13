@@ -1,131 +1,132 @@
-#include "Catch.hpp"
+#include <gtest/gtest.h>
 
-// obtain access to the private components of Deus
-#define protected public
-#define private public
+#include <vector>
 
 #include <deus/unicode_view_impl/ASCIIImpl.hpp>
 #include <deus/unicode_view_impl/UTF8Impl.hpp>
 
-// TODO: REMOVE ME
-#include <iostream>
 
-TEST_CASE(
-    "ascii_compute_byte_length_naive",
-    "[UnicodeView][ASCII][compute_byte_length][naive]")
+//------------------------------------------------------------------------------
+//                                    FIXTURE
+//------------------------------------------------------------------------------
+
+class ASCIIComputeByteLengthTest
+    : public ::testing::Test
 {
-    std::size_t byte_length = 0;
-    std::size_t symbol_length = 0;
+protected:
 
-    SECTION("empty string")
+    std::vector<std::string> test_strs;
+
+    virtual void SetUp()
     {
-        const std::string test_str;
-
-        deus::UnicodeView::ASCIIImpl::compute_byte_length_naive(
-            test_str.c_str(),
-            byte_length,
-            symbol_length
-        );
-        REQUIRE(byte_length == test_str.length() + 1);
-        REQUIRE(symbol_length == test_str.length());
+        test_strs =
+        {
+            "",
+            "a",
+            "Hello",
+            "Hello world!"
+            // TODO:
+        };
     }
-    SECTION("a")
-    {
-        const std::string test_str("a");
+};
 
-        deus::UnicodeView::ASCIIImpl::compute_byte_length_naive(
+
+//------------------------------------------------------------------------------
+//                                     TESTS
+//------------------------------------------------------------------------------
+
+TEST_F(ASCIIComputeByteLengthTest, naive)
+{
+    for(const std::string& test_str : test_strs)
+    {
+        std::size_t byte_length = 0;
+        std::size_t symbol_length = 0;
+
+        deus::ascii_impl::compute_byte_length_naive(
             test_str.c_str(),
             byte_length,
             symbol_length
         );
-        REQUIRE(byte_length == test_str.length() + 1);
-        REQUIRE(symbol_length == test_str.length());
-    }
-    SECTION("a")
-    {
-        const std::string test_str("a");
-
-        deus::UnicodeView::ASCIIImpl::compute_byte_length_naive(
-            test_str.c_str(),
-            byte_length,
-            symbol_length
-        );
-        REQUIRE(byte_length == test_str.length() + 1);
-        REQUIRE(symbol_length == test_str.length());
+        EXPECT_EQ(byte_length, test_str.length() + 1)
+            << "Incorrect byte length for \"" << test_str << "\"";
+        EXPECT_EQ(symbol_length, test_str.length())
+            << "Incorrect symbol length for \"" << test_str << "\"";
     }
 }
 
 
-// TEST_CASE("compute_byte_length", "[UnicodeView]")
-// {
-//     SECTION("ASCII")
-//     {
-//         std::vector<std::string> test_strs =
-//         {
-//             "",
-//             "a",
-//             "Hello",
-//             "Hello world!"
-//         };
+TEST_F(ASCIIComputeByteLengthTest, strlen)
+{
+    for(const std::string& test_str : test_strs)
+    {
+        std::size_t byte_length = 0;
+        std::size_t symbol_length = 0;
 
-//         for(const std::string& test_str : test_strs)
-//         {
-//             std::cout << "TEST STR: " << test_str << std::endl;
+        deus::ascii_impl::compute_byte_length_strlen(
+            test_str.c_str(),
+            byte_length,
+            symbol_length
+        );
+        EXPECT_EQ(byte_length, test_str.length() + 1)
+            << "Incorrect byte length for \"" << test_str << "\"";
+        EXPECT_EQ(symbol_length, test_str.length())
+            << "Incorrect symbol length for \"" << test_str << "\"";
+    }
+}
 
-//             std::size_t byte_length = 0;
-//             std::size_t symbol_length = 0;
+TEST_F(ASCIIComputeByteLengthTest, std_string)
+{
+    for(const std::string& test_str : test_strs)
+    {
+        std::size_t byte_length = 0;
+        std::size_t symbol_length = 0;
 
-//             SECTION("naive")
-//             {
-//                 deus::UnicodeView::ASCIIImpl::compute_byte_length_naive(
-//                     test_str.c_str(),
-//                     byte_length,
-//                     symbol_length
-//                 );
-//                 REQUIRE(byte_length == test_str.length() + 1);
-//                 REQUIRE(symbol_length == test_str.length());
-//             }
-//             SECTION("strlen")
-//             {
-//                 deus::UnicodeView::ASCIIImpl::compute_byte_length_strlen(
-//                     test_str.c_str(),
-//                     byte_length,
-//                     symbol_length
-//                 );
-//                 REQUIRE(byte_length == test_str.length() + 1);
-//                 REQUIRE(symbol_length == test_str.length());
-//             }
-//             SECTION("std_string")
-//             {
-//                 deus::UnicodeView::ASCIIImpl::compute_byte_length_std_string(
-//                     test_str.c_str(),
-//                     byte_length,
-//                     symbol_length
-//                 );
-//                 REQUIRE(byte_length == test_str.length() + 1);
-//                 REQUIRE(symbol_length == test_str.length());
-//             }
-//             SECTION("word_batching")
-//             {
-//                 deus::UnicodeView::ASCIIImpl::compute_byte_length_word_batching(
-//                     test_str.c_str(),
-//                     byte_length,
-//                     symbol_length
-//                 );
-//                 REQUIRE(byte_length == test_str.length() + 1);
-//                 REQUIRE(symbol_length == test_str.length());
-//             }
-//             SECTION("word_batching")
-//             {
-//                 deus::UnicodeView::ASCIIImpl::compute_byte_length_word_batching(
-//                     test_str.c_str(),
-//                     byte_length,
-//                     symbol_length
-//                 );
-//                 REQUIRE(byte_length == test_str.length() + 1);
-//                 REQUIRE(symbol_length == test_str.length());
-//             }
-//         }
-//     }
+        deus::ascii_impl::compute_byte_length_std_string(
+            test_str.c_str(),
+            byte_length,
+            symbol_length
+        );
+        EXPECT_EQ(byte_length, test_str.length() + 1)
+            << "Incorrect byte length for \"" << test_str << "\"";
+        EXPECT_EQ(symbol_length, test_str.length())
+            << "Incorrect symbol length for \"" << test_str << "\"";
+    }
+}
 
-// }
+TEST_F(ASCIIComputeByteLengthTest, word_batching)
+{
+    for(const std::string& test_str : test_strs)
+    {
+        std::size_t byte_length = 0;
+        std::size_t symbol_length = 0;
+
+        deus::ascii_impl::compute_byte_length_word_batching(
+            test_str.c_str(),
+            byte_length,
+            symbol_length
+        );
+        EXPECT_EQ(byte_length, test_str.length() + 1)
+            << "Incorrect byte length for \"" << test_str << "\"";
+        EXPECT_EQ(symbol_length, test_str.length())
+            << "Incorrect symbol length for \"" << test_str << "\"";
+    }
+}
+
+TEST_F(ASCIIComputeByteLengthTest, simd_batching)
+{
+    for(const std::string& test_str : test_strs)
+    {
+        std::size_t byte_length = 0;
+        std::size_t symbol_length = 0;
+
+        deus::ascii_impl::compute_byte_length_simd_batching(
+            test_str.c_str(),
+            byte_length,
+            symbol_length
+        );
+        EXPECT_EQ(byte_length, test_str.length() + 1)
+            << "Incorrect byte length for \"" << test_str << "\"";
+        EXPECT_EQ(symbol_length, test_str.length())
+            << "Incorrect symbol length for \"" << test_str << "\"";
+    }
+}

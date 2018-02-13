@@ -86,43 +86,49 @@ public:
     virtual void compute_byte_length() const override;
 
     virtual void compute_symbol_length() const override;
-
-private:
-
-    //--------------------------------------------------------------------------
-    //                          PRIVATE MEMBER FUNCTIONS
-    //--------------------------------------------------------------------------
-
-    //-------------------COMPUTE BYTE LENGTH IMPLEMENTATIONS--------------------
-
-    static void compute_byte_length_naive(
-            const char* in_data,
-            std::size_t& out_byte_length,
-            std::size_t& out_symbol_length);
-
-    static void compute_byte_length_strlen(
-            const char* in_data,
-            std::size_t& out_byte_length,
-            std::size_t& out_symbol_length);
-
-    static void compute_byte_length_std_string(
-            const char* in_data,
-            std::size_t& out_byte_length,
-            std::size_t& out_symbol_length);
-
-    static void compute_byte_length_word_batching(
-            const char* in_data,
-            std::size_t& out_byte_length,
-            std::size_t& out_symbol_length);
-
-    static void compute_byte_length_simd_batching(
-            const char* in_data,
-            std::size_t& out_byte_length,
-            std::size_t& out_symbol_length);
-
-    // TODO: simd batching
 };
 
+//------------------------------------------------------------------------------
+//                                GLOBAL FUNCTIONS
+//------------------------------------------------------------------------------
+
+// TODO: hide from docs
+
+namespace ascii_impl
+{
+
+//---------------------COMPUTE BYTE LENGTH IMPLEMENTATIONS----------------------
+
+void compute_byte_length_naive(
+        const char* in_data,
+        std::size_t& out_byte_length,
+        std::size_t& out_symbol_length);
+
+void compute_byte_length_strlen(
+        const char* in_data,
+        std::size_t& out_byte_length,
+        std::size_t& out_symbol_length);
+
+void compute_byte_length_std_string(
+        const char* in_data,
+        std::size_t& out_byte_length,
+        std::size_t& out_symbol_length);
+
+void compute_byte_length_word_batching(
+        const char* in_data,
+        std::size_t& out_byte_length,
+        std::size_t& out_symbol_length);
+
+void compute_byte_length_simd_batching(
+        const char* in_data,
+        std::size_t& out_byte_length,
+        std::size_t& out_symbol_length);
+
+} // namespace ascii_impl
+
+// TODO: end hide from docs
+
 } // namespace deus
+
 
 #endif

@@ -79,7 +79,11 @@ UnicodeView::ASCIIImpl::~ASCIIImpl()
 
 void UnicodeView::ASCIIImpl::compute_byte_length() const
 {
-    compute_byte_length_strlen(m_data, m_byte_length, m_symbol_length);
+    ascii_impl::compute_byte_length_strlen(
+        m_data,
+        m_byte_length,
+        m_symbol_length
+    );
 }
 
 void UnicodeView::ASCIIImpl::compute_symbol_length() const
@@ -96,12 +100,15 @@ void UnicodeView::ASCIIImpl::compute_symbol_length() const
 }
 
 //------------------------------------------------------------------------------
-//                            PRIVATE STATIC FUNCTIONS
+//                               GLOBALS FUNCTIONS
 //------------------------------------------------------------------------------
+
+namespace ascii_impl
+{
 
 //---------------------COMPUTE BYTE LENGTH IMPLEMENTATIONS----------------------
 
-void UnicodeView::ASCIIImpl::compute_byte_length_naive(
+void compute_byte_length_naive(
         const char* in_data,
         std::size_t& out_byte_length,
         std::size_t& out_symbol_length)
@@ -116,7 +123,7 @@ void UnicodeView::ASCIIImpl::compute_byte_length_naive(
     out_byte_length = out_symbol_length + 1;
 }
 
-void UnicodeView::ASCIIImpl::compute_byte_length_strlen(
+void compute_byte_length_strlen(
         const char* in_data,
         std::size_t& out_byte_length,
         std::size_t& out_symbol_length)
@@ -131,7 +138,7 @@ void UnicodeView::ASCIIImpl::compute_byte_length_strlen(
     out_byte_length = out_symbol_length + 1;
 }
 
-void UnicodeView::ASCIIImpl::compute_byte_length_std_string(
+void compute_byte_length_std_string(
         const char* in_data,
         std::size_t& out_byte_length,
         std::size_t& out_symbol_length)
@@ -147,7 +154,7 @@ void UnicodeView::ASCIIImpl::compute_byte_length_std_string(
     out_byte_length = out_symbol_length + 1;
 }
 
-void UnicodeView::ASCIIImpl::compute_byte_length_word_batching(
+void compute_byte_length_word_batching(
         const char* in_data,
         std::size_t& out_byte_length,
         std::size_t& out_symbol_length)
@@ -260,7 +267,7 @@ void UnicodeView::ASCIIImpl::compute_byte_length_word_batching(
     }
 }
 
-void UnicodeView::ASCIIImpl::compute_byte_length_simd_batching(
+void compute_byte_length_simd_batching(
         const char* in_data,
         std::size_t& out_byte_length,
         std::size_t& out_symbol_length)
@@ -426,5 +433,7 @@ void UnicodeView::ASCIIImpl::compute_byte_length_simd_batching(
         }
     }
 }
+
+} // namespace ascii_impl
 
 } // namespace deus

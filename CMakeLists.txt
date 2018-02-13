@@ -4,9 +4,9 @@ project(Deus)
 IF(WIN32)
 
     # TODO: control based on architecture?
-    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/build/win_x86)
-    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/build/win_x86)
-    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/build/win_x86)
+    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/build/win_x64)
+    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/build/win_x64)
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/build/win_x64)
 
 # TODO: linux if
 ELSE()
@@ -21,6 +21,15 @@ ELSE()
     set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -Wall -std=c++11 -fPIC -Ofast -msse4.1")
 
 ENDIF()
+
+# TODO: SORT OUT
+# locate gtest
+IF(WIN32)
+ELSE()
+    find_package(GTest REQUIRED)
+ENDIF()
+
+
 
 #---------------------------------L I B R A R Y---------------------------------
 
@@ -43,10 +52,18 @@ add_library(deus STATIC ${DEUS_SRC})
 
 #-----------------------------U N I T    T E S T S-----------------------------
 
+# TODO: SORT OUT
 include_directories(
     ${INCLUDE_DIRECTORIES}
-    ext/catch
+    #${GTEST_INCLUDE_DIRS}
+    "C:/Program Files/googletest-distribution/include"
     tests/unit/cpp
+)
+
+# TODO: SORT OUT
+link_directories(
+    ${LINK_DIRECTORIES}
+    "C:/Program Files/googletest-distribution/lib"
 )
 
 set(DEUS_UNIT_TESTS_SRC
@@ -56,14 +73,22 @@ set(DEUS_UNIT_TESTS_SRC
 
 add_executable(unit_tests ${DEUS_UNIT_TESTS_SRC})
 
+# TODO: SORT OUT
 target_link_libraries(unit_tests
     deus
+    gtest
+    gtest_main
+    gmock
+    #${GTEST_LIBRARIES}
+    #pthread
 )
 
 #-----------------------P E R F O R M A N C E    T E S T S----------------------
 
+# TODO: SORT OUT
 include_directories(
     ${INCLUDE_DIRECTORIES}
+    "C:/Program Files/benchmark/include"
     tests/performance/cpp
 )
 
@@ -73,10 +98,18 @@ set(DEUS_PERFORMANCE_TESTS_SRC
     tests/performance/cpp/PerformanceTestsUtil.cpp
 )
 
+# TODO: SORT OUT
+link_directories(
+    ${LINK_DIRECTORIES}
+    "C:/Program Files/benchmark/lib"
+)
+
 add_executable(performance_tests ${DEUS_PERFORMANCE_TESTS_SRC})
 
+# TODO: SORT OUT
 target_link_libraries(performance_tests
     deus
     benchmark
-    pthread
+    shlwapi
+    #pthread
 )

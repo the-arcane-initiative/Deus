@@ -1,7 +1,7 @@
 #ifndef DEUS_PERFORMANCETESTS_UTIL_HPP_
 #define DEUS_PERFORMANCETESTS_UTIL_HPP_
 
-#include <cstdint>
+#include <cstddef>
 
 
 namespace deus_perf_util
