@@ -58,12 +58,16 @@ public:
     //                                CONSTRUCTORS
     //--------------------------------------------------------------------------
 
-    // TODO: DOC
+    /*!
+     * \brief Constructs a new ASCII encoding implementation using he given
+     *        parameters.
+     */
     ASCIIImpl(
             std::size_t byte_length,
             std::size_t symbol_length,
             const char* s);
 
+    // deleted
     ASCIIImpl(const ASCIIImpl&) = delete;
     ASCIIImpl(ASCIIImpl&&) = delete;
 
@@ -77,6 +81,7 @@ public:
     //                                 OPERATORS
     //--------------------------------------------------------------------------
 
+    // deleted
     ASCIIImpl& operator=(const ASCIIImpl&) = delete;
     ASCIIImpl& operator=(ASCIIImpl&&) = delete;
     bool operator==(const ASCIIImpl&) const = delete;

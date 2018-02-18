@@ -96,6 +96,34 @@ deus::UnicodeView::EncodingImpl* UnicodeView::EncodingImpl::new_encoding(
                 s
             );
         }
+        case deus::Encoding::kUTF16_LE:
+        {
+            throw deus::NotImplementedError(
+                "deus::UnicodeView is not yet supported for little endian "
+                "UTF-16 encoding."
+            );
+        }
+        case deus::Encoding::kUTF16_BE:
+        {
+            throw deus::NotImplementedError(
+                "deus::UnicodeView is not yet supported for big endian UTF-16 "
+                "encoding."
+            );
+        }
+        case deus::Encoding::kUTF32_LE:
+        {
+            throw deus::NotImplementedError(
+                "deus::UnicodeView is not yet supported for little endian "
+                "UTF-32 encoding."
+            );
+        }
+        case deus::Encoding::kUTF32_BE:
+        {
+            throw deus::NotImplementedError(
+                "deus::UnicodeView is not yet supported for big endian UTF-32 "
+                "encoding."
+            );
+        }
         default:
         {
             throw deus::TypeError(
@@ -112,12 +140,19 @@ std::size_t UnicodeView::EncodingImpl::null_terminator_size(
     switch(encoding)
     {
         case deus::Encoding::kASCII:
-        {
-            return 1;
-        }
         case deus::Encoding::kUTF8:
         {
             return 1;
+        }
+        case deus::Encoding::kUTF16_LE:
+        case deus::Encoding::kUTF16_BE:
+        {
+            return 2;
+        }
+        case deus::Encoding::kUTF32_LE:
+        case deus::Encoding::kUTF32_BE:
+        {
+            return 4;
         }
         default:
         {

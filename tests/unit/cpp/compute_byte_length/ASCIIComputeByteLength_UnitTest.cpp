@@ -14,7 +14,11 @@ class ASCIIComputeByteLengthTest
 {
 protected:
 
+    //--------------------------------ATTRIBUTES--------------------------------
+
     std::vector<const char*> test_strs;
+
+    //--------------------------------FUNCTIONS---------------------------------
 
     virtual void SetUp()
     {

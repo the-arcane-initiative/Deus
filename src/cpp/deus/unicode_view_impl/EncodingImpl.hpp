@@ -54,28 +54,45 @@ public:
     //                             PUBLIC ATTRIBUTES
     //--------------------------------------------------------------------------
 
-    // TODO: DOC
+    /*!
+     * \brief Reference counter for this object, implementation objects should
+     *        only be deleted when all deus::UnicodeView's that are using it
+     *        have been destroyed.
+     */
     mutable std::size_t m_ref_count;
-    // TODO: DOC
+    /*!
+     * \brief The Unicode encoding this implementation is specific to.
+     */
     deus::Encoding m_encoding;
-    // TODO: DOC
+    /*!
+     * \brief The number of bytes in the string (this number includes the
+     *        byte(s) of the null terminator).
+     */
     mutable std::size_t m_byte_length;
-    // TODO: DOC
+    /*!
+     * \brief The number of Unicode symbols in the string.
+     */
     mutable std::size_t m_symbol_length;
-    // TODO: DOC
+    /*!
+     * \brief Weak non-owning pointer to the string data this is handling.
+     */
     const char* m_data;
 
     //--------------------------------------------------------------------------
     //                                CONSTRUCTORS
     //--------------------------------------------------------------------------
 
-    // TODO:
+    /*!
+     * \brief Super constructor - just initializes the object's attributes with
+     *        the given parameters.
+     */
     EncodingImpl(
             deus::Encoding encoding,
             std::size_t byte_length,
             std::size_t symbol_length,
             const char* s);
 
+    // deleted
     EncodingImpl(const EncodingImpl&) = delete;
     EncodingImpl(EncodingImpl&&) = delete;
 
@@ -120,6 +137,7 @@ public:
     //                                 OPERATORS
     //--------------------------------------------------------------------------
 
+    // deleted
     EncodingImpl& operator=(const EncodingImpl&) = delete;
     EncodingImpl& operator=(EncodingImpl&&) = delete;
     bool operator==(const EncodingImpl&) const = delete;
@@ -129,10 +147,24 @@ public:
     //                          PUBLIC MEMBER FUNCTIONS
     //--------------------------------------------------------------------------
 
-    // TODO: DOC
+    /*!
+     * \brief Is called during deus::UnicodeView construction when the length
+     *        of the string data is unknown.
+     *
+     * \note Even though this function is called compute_byte_length for
+     *       efficiency reasons this function should compute both the byte
+     *       length and the symbol length of the data.
+     */
     virtual void compute_byte_length() const = 0;
 
-    // TODO: DOC
+    /*!
+     * \brief Computes the symbol length of the data when the byte length is
+     *        known but the symbol length is not.
+     *
+     * \note This function will be lazily called the first time the symbol
+     *       length (if it is unknown) is requested via a deus::UnicodeView
+     *       object.
+     */
     virtual void compute_symbol_length() const = 0;
 };
 

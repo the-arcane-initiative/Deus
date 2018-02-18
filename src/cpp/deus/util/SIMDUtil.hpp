@@ -44,6 +44,7 @@
 #include <smmintrin.h>
 #include <xmmintrin.h>
 
+// TODO: name this file intrinsics
 
 namespace deus
 {
@@ -57,6 +58,30 @@ union SimdInt64
     uint64_t integral[2];
     __m128i simd;
 };
+
+//------------------------------------------------------------------------------
+//                                   FUNCTIONS
+//------------------------------------------------------------------------------
+
+static const __m128i popcount_mask1 = _mm_set1_epi8(0x77);
+static const __m128i popcount_mask2 = _mm_set1_epi8(0x0F);
+static inline __m128i popcnt8(__m128i x)
+{
+    __m128i n;
+    // Count bits in each 4-bit field.
+    n = _mm_srli_epi64(x, 1);
+    n = _mm_and_si128(popcount_mask1, n);
+    x = _mm_sub_epi8(x, n);
+    n = _mm_srli_epi64(n, 1);
+    n = _mm_and_si128(popcount_mask1, n);
+    x = _mm_sub_epi8(x, n);
+    n = _mm_srli_epi64(n, 1);
+    n = _mm_and_si128(popcount_mask1, n);
+    x = _mm_sub_epi8(x, n);
+    x = _mm_add_epi8(x, _mm_srli_epi16(x, 4));
+    x = _mm_and_si128(popcount_mask2, x);
+    return x;
+}
 
 } // namespace deus
 

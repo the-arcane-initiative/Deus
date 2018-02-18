@@ -71,6 +71,29 @@ public:
 };
 
 //------------------------------------------------------------------------------
+//                             NOT IMPLEMENTED ERROR
+//------------------------------------------------------------------------------
+
+
+/*!
+ * \brief Warns that required functionality has not yet been implemented.
+ */
+class NotImplementedError
+    : public deus::DeusError
+{
+public:
+
+    NotImplementedError(const std::string& what_arg)
+        : deus::DeusError(what_arg)
+    {
+    }
+
+    virtual ~NotImplementedError() throw()
+    {
+    }
+};
+
+//------------------------------------------------------------------------------
 //                                   TYPE ERROR
 //------------------------------------------------------------------------------
 

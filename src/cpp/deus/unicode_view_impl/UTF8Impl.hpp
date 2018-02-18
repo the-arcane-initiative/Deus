@@ -56,12 +56,16 @@ public:
     //                                CONSTRUCTORS
     //--------------------------------------------------------------------------
 
-    // TODO: DOC
+    /*!
+     * \brief Constructs a new UTF-8 encoding implementation using he given
+     *        parameters.
+     */
     UTF8Impl(
             std::size_t byte_length,
             std::size_t symbol_length,
             const char* s);
 
+    // deleted
     UTF8Impl(const UTF8Impl&) = delete;
     UTF8Impl(UTF8Impl&&) = delete;
 
@@ -75,6 +79,7 @@ public:
     //                                 OPERATORS
     //--------------------------------------------------------------------------
 
+    // deleted
     UTF8Impl& operator=(const UTF8Impl&) = delete;
     UTF8Impl& operator=(UTF8Impl&&) = delete;
     bool operator==(const UTF8Impl&) const = delete;
@@ -109,9 +114,35 @@ private:
 namespace utf8_impl
 {
 
+//-----------------------FROM CODE POINT IMPLEMENTATIONS------------------------
+
+std::string from_code_point_naive(
+        const std::vector<deus::CodePoint>& code_points);
+
 //---------------------COMPUTE BYTE LENGTH IMPLEMENTATIONS----------------------
 
 void compute_byte_length_naive(
+        const char* in_data,
+        std::size_t& out_byte_length,
+        std::size_t& out_symbol_length);
+
+void compute_byte_length_wstring_convert(
+        const char* in_data,
+        std::size_t& out_byte_length,
+        std::size_t& out_symbol_length);
+
+// TODO:
+void compute_byte_length_byte_jump(
+        const char* in_data,
+        std::size_t& out_byte_length,
+        std::size_t& out_symbol_length);
+
+void compute_byte_length_word_batching(
+        const char* in_data,
+        std::size_t& out_byte_length,
+        std::size_t& out_symbol_length);
+
+void compute_byte_length_simd_batching(
         const char* in_data,
         std::size_t& out_byte_length,
         std::size_t& out_symbol_length);

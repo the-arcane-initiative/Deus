@@ -17,7 +17,7 @@ ELSEIF(APPLE)
     set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/build/mac)
 
     # TODO: apple compiler flags? should probably just use clang
-    set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -std=c++11")
+    set(CMAKE_CXX_FLAGS "-std=c++11")
 
 # TODO: linux if
 ELSE()
@@ -27,13 +27,14 @@ ELSE()
     set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/build/linux)
     set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/build/linux)
 
-    set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -Wall -std=c++11 -fPIC -Ofast -msse4.1")
+    set(CMAKE_CXX_FLAGS "-Wall -std=c++11 -fPIC -Ofast -msse3 -mssse3 -msse4.1 -msse4.2")
 
 ENDIF()
 
 # TODO: should just write a gtest find_package for windows
 IF(NOT WIN32)
     find_package(GTest REQUIRED)
+    find_package(benchmark REQUIRED)
 ENDIF()
 
 #---------------------------------L I B R A R Y---------------------------------
@@ -93,8 +94,10 @@ link_directories(
 )
 
 set(DEUS_UNIT_TESTS_SRC
-    tests/unit/cpp/ASCIIComputeByteLength_UnitTest.cpp
-    tests/unit/cpp/UTF8ComputeByteLength_UnitTest.cpp
+    tests/unit/cpp/compute_byte_length/ASCIIComputeByteLength_UnitTest.cpp
+    tests/unit/cpp/compute_byte_length/UTF8ComputeByteLength_UnitTest.cpp
+    tests/unit/cpp/from_code_point/ASCIIFromCodePoint_UnitTest.cpp
+    tests/unit/cpp/from_code_point/UTF8FromCodePoint_UnitTest.cpp
     tests/unit/cpp/UnitTestsMain.cpp
 )
 
@@ -120,7 +123,7 @@ if(WIN32)
     )
 ELSE()
     set(DEUS_PERFORMANCE_INCLUDES
-        ""
+        ${BENCHMARK_INCLUDE_DIRS}
     )
     set(DEUS_PERFORMANCE_LIBPATHS
         ""
@@ -134,7 +137,7 @@ ENDIF()
 include_directories(
     ${INCLUDE_DIRECTORIES}
     ${DEUS_PERFORMANCE_INCLUDES}
-    tests/unit/cpp
+    tests/performance/cpp
 )
 
 link_directories(
@@ -143,7 +146,8 @@ link_directories(
 )
 
 set(DEUS_PERFORMANCE_TESTS_SRC
-    tests/performance/cpp/ASCIIComputeByteLength_PerformanceTest.cpp
+    tests/performance/cpp/compute_byte_length/ASCIIComputeByteLength_PerformanceTest.cpp
+    tests/performance/cpp/compute_byte_length/UTF8ComputeByteLength_PerformanceTest.cpp
     tests/performance/cpp/PerformanceTestsMain.cpp
     tests/performance/cpp/PerformanceTestsUtil.cpp
 )

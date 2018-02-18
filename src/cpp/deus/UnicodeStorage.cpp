@@ -35,6 +35,7 @@
 #include "deus/Exceptions.hpp"
 #include "deus/UnicodeView.hpp"
 #include <deus/unicode_view_impl/ASCIIImpl.hpp>
+#include <deus/unicode_view_impl/UTF8Impl.hpp>
 
 
 namespace deus
@@ -73,9 +74,40 @@ UnicodeStorage::UnicodeStorage(
             m_str = deus::ascii_impl::from_code_point_naive(code_points);
             break;
         }
-        // case deus::Encoding::kUTF8:
-        // {
-        // }
+        case deus::Encoding::kUTF8:
+        {
+            m_str = deus::utf8_impl::from_code_point_naive(code_points);
+            break;
+        }
+        case deus::Encoding::kUTF16_LE:
+        {
+            throw deus::NotImplementedError(
+                "Constructing UnicodeStorage from code points for little "
+                "endian UTF-16 data has not yet been implemented."
+            );
+        }
+        case deus::Encoding::kUTF16_BE:
+        {
+            throw deus::NotImplementedError(
+                "Constructing UnicodeStorage from code points for big "
+                "endian UTF-16 data has not yet been implemented."
+            );
+        }
+        case deus::Encoding::kUTF32_LE:
+        {
+            throw deus::NotImplementedError(
+                "Constructing UnicodeStorage from code points for little "
+                "endian UTF-32 data has not yet been implemented."
+            );
+        }
+        case deus::Encoding::kUTF32_BE:
+        {
+            throw deus::NotImplementedError(
+                "Constructing UnicodeStorage from code points for big "
+                "endian UTF-32 data has not yet been implemented."
+            );
+        }
+        // TODO: not implemented error
         default:
         {
             throw deus::TypeError(

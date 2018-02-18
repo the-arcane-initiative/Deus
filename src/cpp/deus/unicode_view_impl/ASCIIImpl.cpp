@@ -229,7 +229,6 @@ void compute_byte_length_word_batching(
         {
             const char* check = (const char*) (word_ptr - 1);
 
-
             if(check[0] == 0)
             {
                 out_symbol_length =
