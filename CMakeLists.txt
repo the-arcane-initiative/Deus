@@ -27,7 +27,8 @@ ELSE()
     set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/build/linux)
     set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/build/linux)
 
-    set(CMAKE_CXX_FLAGS "-Wall -std=c++11 -fPIC -Ofast -msse3 -mssse3 -msse4.1 -msse4.2")
+    # TODO: clean up compiler flags
+    set(CMAKE_CXX_FLAGS "-Wall -std=c++11 -fPIC -Ofast -msse4.2")
 
 ENDIF()
 
@@ -96,6 +97,7 @@ link_directories(
 set(DEUS_UNIT_TESTS_SRC
     tests/unit/cpp/compute_byte_length/ASCIIComputeByteLength_UnitTest.cpp
     tests/unit/cpp/compute_byte_length/UTF8ComputeByteLength_UnitTest.cpp
+    tests/unit/cpp/compute_symbol_length/UTF8ComputeSymbolLength_UnitTest.cpp
     tests/unit/cpp/from_code_point/ASCIIFromCodePoint_UnitTest.cpp
     tests/unit/cpp/from_code_point/UTF8FromCodePoint_UnitTest.cpp
     tests/unit/cpp/UnitTestsMain.cpp
@@ -148,6 +150,7 @@ link_directories(
 set(DEUS_PERFORMANCE_TESTS_SRC
     tests/performance/cpp/compute_byte_length/ASCIIComputeByteLength_PerformanceTest.cpp
     tests/performance/cpp/compute_byte_length/UTF8ComputeByteLength_PerformanceTest.cpp
+    tests/performance/cpp/compute_symbol_length/UTF8ComputeSymbolLength_PerformanceTest.cpp
     tests/performance/cpp/PerformanceTestsMain.cpp
     tests/performance/cpp/PerformanceTestsUtil.cpp
 )

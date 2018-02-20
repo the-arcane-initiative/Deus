@@ -34,23 +34,23 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-#ifndef DEUS_UTIL_SIMDUTIL_HPP_
-#define DEUS_UTIL_SIMDUTIL_HPP_
+#ifndef DEUS_UTIL_INTRINSICS_HPP_
+#define DEUS_UTIL_INTRINSICS_HPP_
+
+// TODO: USE_SIMD defines
 
 #include <cstdint>
 
-// TODO: USE_SIMD defines
-// TODO: we only SSE3 for now for compatibility reasons
 #include <smmintrin.h>
 #include <xmmintrin.h>
 
-// TODO: name this file intrinsics
 
 namespace deus
 {
 
+// TODOL should probably be called SimdInt128
 /*!
- * \brief A union that provides access to 128-bit simd integer via two 64-bit
+ * \brief A union that provides access to 128-bit SIMD integer via two 64-bit
  *        integers.
  */
 union SimdInt64
@@ -58,30 +58,6 @@ union SimdInt64
     uint64_t integral[2];
     __m128i simd;
 };
-
-//------------------------------------------------------------------------------
-//                                   FUNCTIONS
-//------------------------------------------------------------------------------
-
-static const __m128i popcount_mask1 = _mm_set1_epi8(0x77);
-static const __m128i popcount_mask2 = _mm_set1_epi8(0x0F);
-static inline __m128i popcnt8(__m128i x)
-{
-    __m128i n;
-    // Count bits in each 4-bit field.
-    n = _mm_srli_epi64(x, 1);
-    n = _mm_and_si128(popcount_mask1, n);
-    x = _mm_sub_epi8(x, n);
-    n = _mm_srli_epi64(n, 1);
-    n = _mm_and_si128(popcount_mask1, n);
-    x = _mm_sub_epi8(x, n);
-    n = _mm_srli_epi64(n, 1);
-    n = _mm_and_si128(popcount_mask1, n);
-    x = _mm_sub_epi8(x, n);
-    x = _mm_add_epi8(x, _mm_srli_epi16(x, 4));
-    x = _mm_and_si128(popcount_mask2, x);
-    return x;
-}
 
 } // namespace deus
 

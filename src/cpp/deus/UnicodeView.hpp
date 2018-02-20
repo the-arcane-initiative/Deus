@@ -128,6 +128,8 @@ public:
      */
     deus::Encoding encoding() const;
 
+    // TODO: is null function
+
     /*!
      * \brief Returns the number of symbols in the string.
      *

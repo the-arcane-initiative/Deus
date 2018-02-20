@@ -208,26 +208,35 @@ void gen_rand_dyn_strs(
                 // generate random code-points
                 std::vector<deus::CodePoint> code_points;
                 code_points.reserve(length);
-                for(std::size_t i = 0; i < length; ++i)
+                std::size_t byte_count = 0;
+                for(std::size_t i = 0; byte_count < length; ++i)
                 {
-                    // evenly distribute bytes sizes
+                    // evenly distribute bytes sizes (but ensue we don't run off
+                    // the end)
+                    std::size_t remaining_bytes = length - byte_count;
                     int width = rand() % 4;
+                    if(width >= remaining_bytes)
+                    {
+                        width = remaining_bytes - 1;
+                    }
+
                     if(width == 0)
                     {
                         code_points.push_back(1 + (rand() % 0x7E));
-                        continue;
                     }
-                    if(width == 1)
+                    else if(width == 1)
                     {
                         code_points.push_back(0x7F + (rand() % 0x780));
-                        continue;
                     }
-                    if(width == 1)
+                    else if(width == 2)
                     {
                         code_points.push_back(0x7FF + (rand() % 0xF800));
-                        continue;
                     }
-                    code_points.push_back(0xFFFF + (rand() % 0x100000));
+                    else
+                    {
+                        code_points.push_back(0xFFFF + (rand() % 0x100000));
+                    }
+                    byte_count += width + 1;
                 }
 
                 // construct from code points using UnicodeStorage

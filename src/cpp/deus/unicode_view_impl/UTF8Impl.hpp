@@ -131,7 +131,6 @@ void compute_byte_length_wstring_convert(
         std::size_t& out_byte_length,
         std::size_t& out_symbol_length);
 
-// TODO:
 void compute_byte_length_byte_jump(
         const char* in_data,
         std::size_t& out_byte_length,
@@ -145,6 +144,28 @@ void compute_byte_length_word_batching(
 void compute_byte_length_simd_batching(
         const char* in_data,
         std::size_t& out_byte_length,
+        std::size_t& out_symbol_length);
+
+//--------------------COMPUTE SYMBOL LENGTH IMPLEMENTATIONS---------------------
+
+void compute_symbol_length_naive(
+        const char* in_data,
+        std::size_t in_byte_length,
+        std::size_t& out_symbol_length);
+
+void compute_symbol_length_wstring_convert(
+        const char* in_data,
+        std::size_t in_byte_length,
+        std::size_t& out_symbol_length);
+
+void compute_symbol_length_byte_jump(
+        const char* in_data,
+        std::size_t in_byte_length,
+        std::size_t& out_symbol_length);
+
+void compute_symbol_length_word_batching(
+        const char* in_data,
+        std::size_t in_byte_length,
         std::size_t& out_symbol_length);
 
 } // namespace utf8_impl

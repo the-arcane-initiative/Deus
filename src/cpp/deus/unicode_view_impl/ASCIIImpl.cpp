@@ -35,7 +35,7 @@
 #include <cstring>
 
 #include "deus/Constants.hpp"
-#include "deus/util/SIMDUtil.hpp"
+#include "deus/util/Intrinsics.hpp"
 
 
 namespace deus

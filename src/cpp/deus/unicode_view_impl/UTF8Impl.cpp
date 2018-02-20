@@ -40,7 +40,7 @@
 
 #include "deus/Constants.hpp"
 #include "deus/Exceptions.hpp"
-#include "deus/util/SIMDUtil.hpp"
+#include "deus/util/Intrinsics.hpp"
 
 
 namespace deus
@@ -84,7 +84,7 @@ UnicodeView::UTF8Impl::~UTF8Impl()
 
 void UnicodeView::UTF8Impl::compute_byte_length() const
 {
-    utf8_impl::compute_byte_length_naive(
+    utf8_impl::compute_byte_length_word_batching(
         m_data,
         m_byte_length,
         m_symbol_length
@@ -366,7 +366,7 @@ void compute_byte_length_word_batching(
     for(;((std::size_t) byte_ptr & (word_size - 1)) != 0; ++byte_ptr)
     {
         ++out_byte_length;
-        // TODO: could optmisie this to use a jump?
+        // TODO: could optimise's this to use a jump?
         if(next_check <= 0)
         {
             // null terminator?
@@ -417,37 +417,141 @@ void compute_byte_length_word_batching(
     }
 
     // read word-aligned - even though we may have "read" the first few bytes it
-    // it won't affect the following algorithim since the read byte have the
+    // it won't affect the following algorithm since the read bytes have the
     // format 10xxxxxx
     const std::size_t* word_ptr = (std::size_t*) byte_ptr;
 
-    // set zero checking magic numbers based on word size
-    constexpr std::size_t high_magic =
+    // null check magic numbers
+    constexpr std::size_t magic_1 =
         (word_size > 4)
         ?
         0x8080808080808080L
         :
         0x80808080UL;
-    constexpr std::size_t low_magic =
+    constexpr std::size_t magic_2 =
         (word_size > 4)
         ?
         0x0101010101010101L
         :
         0x01010101UL;
+    constexpr std::size_t magic_3 =
+        (word_size > 4)
+        ?
+        0x4040404040404040L
+        :
+        0x40404040UL;
+    // TODO: the following magic numbers are won't work on a big endian system
+    // end mask 0
+    constexpr std::size_t end_or_mask_0 =
+        (word_size > 4)
+        ?
+        0x8080808080808080UL
+        :
+        0x80808080UL;
+    constexpr std::size_t end_and_mask_0 =
+        (word_size > 4)
+        ?
+        0x8080808080808080UL
+        :
+        0x80808080UL;
+    // end mask 1
+    constexpr std::size_t end_or_mask_1 =
+        (word_size > 4)
+        ?
+        0x8080808080808000UL
+        :
+        0x80808000UL;
+    constexpr std::size_t end_and_mask_1 =
+        (word_size > 4)
+        ?
+        0x80808080808080FFUL
+        :
+        0x808080FFUL;
+    // end mask 2
+    constexpr std::size_t end_or_mask_2 =
+        (word_size > 4)
+        ?
+        0x8080808080800000UL
+        :
+        0x80800000UL;
+    constexpr std::size_t end_and_mask_2 =
+        (word_size > 4)
+        ?
+        0x808080808080FFFFUL
+        :
+        0x8080FFFFUL;
+    // end mask 3
+    constexpr std::size_t end_or_mask_3 =
+        (word_size > 4)
+        ?
+        0x8080808080000000UL
+        :
+        0x80000000UL;
+    constexpr std::size_t end_and_mask_3 =
+        (word_size > 4)
+        ?
+        0x8080808080FFFFFFUL
+        :
+        0x80FFFFFFUL;
+    // end mask 4 -- from here word_size < 4 don't actually matter...
+    constexpr std::size_t end_or_mask_4 =
+        (word_size > 4)
+        ?
+        0x8080808000000000UL
+        :
+        0x00000000UL;
+    constexpr std::size_t end_and_mask_4 =
+        (word_size > 4)
+        ?
+        0x80808080FFFFFFFFUL
+        :
+        0xFFFFFFFFUL;
+    // end mask 5
+    constexpr std::size_t end_or_mask_5 =
+        (word_size > 4)
+        ?
+        0x8080800000000000UL
+        :
+        0x00000000UL;
+    constexpr std::size_t end_and_mask_5 =
+        (word_size > 4)
+        ?
+        0x808080FFFFFFFFFFUL
+        :
+        0xFFFFFFFFUL;
+    // end mask 6
+    constexpr std::size_t end_or_mask_6 =
+        (word_size > 4)
+        ?
+        0x8080000000000000UL
+        :
+        0x00000000UL;
+    constexpr std::size_t end_and_mask_6 =
+        (word_size > 4)
+        ?
+        0x8080FFFFFFFFFFFFUL
+        :
+        0xFFFFFFFFUL;
+    // end mask 7
+    constexpr std::size_t end_or_mask_7 =
+        (word_size > 4)
+        ?
+        0x8000000000000000UL
+        :
+        0x00000000UL;
+    constexpr std::size_t end_and_mask_7 =
+        (word_size > 4)
+        ?
+        0x80FFFFFFFFFFFFFFUL
+        :
+        0xFFFFFFFFUL;
 
     for(;;)
     {
         std::size_t word = *word_ptr++;
 
-        // TODO: all of these needs support based on word size
-        // TODO: should make template speciailisation versions of these
-        // functions for word size?
-
-        // TODO: this is part of the algorithim (where we "zero" out invalid)
-        //       bytes is affected by endianness
-
         bool exit_loop = false;
-        if(((word - low_magic) & high_magic) != 0)
+        if(((word - magic_2) & magic_1) != 0)
         {
             const char* check = (const char*) (word_ptr - 1);
 
@@ -456,32 +560,32 @@ void compute_byte_length_word_batching(
                 out_byte_length =
                     static_cast<std::size_t>(check - in_data) + 1;
                 exit_loop = true;
-                word |= 0x8080808080808080;
-                word &= 0x8080808080808080;
+                word |= end_or_mask_0;
+                word &= end_and_mask_0;
             }
             else if(check[1] == 0)
             {
                 out_byte_length =
                     static_cast<std::size_t>(check - in_data) + 2;
                 exit_loop = true;
-                word |= 0x8080808080808000;
-                word &= 0x80808080808080FF;
+                word |= end_or_mask_1;
+                word &= end_and_mask_1;
             }
             else if(check[2] == 0)
             {
                 out_byte_length =
                     static_cast<std::size_t>(check - in_data) + 3;
                 exit_loop = true;
-                word |= 0x8080808080800000;
-                word &= 0x808080808080FFFF;
+                word |= end_or_mask_2;
+                word &= end_and_mask_2;
             }
             else if(check[3] == 0)
             {
                 out_byte_length =
                     static_cast<std::size_t>(check - in_data) + 4;
                 exit_loop = true;
-                word |= 0x8080808080000000;
-                word &= 0x8080808080FFFFFF;
+                word |= end_or_mask_3;
+                word &= end_and_mask_3;
             }
             else if(word_size > 4)
             {
@@ -490,32 +594,32 @@ void compute_byte_length_word_batching(
                     out_byte_length =
                         static_cast<std::size_t>(check - in_data) + 5;
                     exit_loop = true;
-                    word |= 0x8080808000000000;
-                    word &= 0x80808080FFFFFFFF;
+                    word |= end_or_mask_4;
+                    word &= end_and_mask_4;
                 }
                 else if(check[5] == 0)
                 {
                     out_byte_length =
                         static_cast<std::size_t>(check - in_data) + 6;
                     exit_loop = true;
-                    word |= 0x8080800000000000;
-                    word &= 0x808080FFFFFFFFFF;
+                    word |= end_or_mask_5;
+                    word &= end_and_mask_5;
                 }
                 else if(check[6] == 0)
                 {
                     out_byte_length =
                         static_cast<std::size_t>(check - in_data) + 7;
                     exit_loop = true;
-                    word |= 0x8080000000000000;
-                    word &= 0x8080FFFFFFFFFFFF;
+                    word |= end_or_mask_6;
+                    word &= end_and_mask_6;
                 }
                 else if(check[7] == 0)
                 {
                     out_byte_length =
                         static_cast<std::size_t>(check - in_data) + 8;
                     exit_loop = true;
-                    word |= 0x8000000000000000;
-                    word &= 0x80FFFFFFFFFFFFFF;
+                    word |= end_or_mask_7;
+                    word &= end_and_mask_7;
                 }
             }
 
@@ -523,10 +627,10 @@ void compute_byte_length_word_batching(
         }
 
         // bias for ascii strings
-        std::size_t symbol_counter = word & 0x8080808080808080;
+        std::size_t symbol_counter = word & magic_1;
         if(!exit_loop && symbol_counter == 0)
         {
-            out_symbol_length += 8;
+            out_symbol_length += word_size;
             continue;
         }
 
@@ -534,14 +638,18 @@ void compute_byte_length_word_batching(
         //       to byte-wise operations
         // count all the symbols that don't have the format 10xxxxxx, since
         // these are supplementary bytes
-        symbol_counter = symbol_counter & (((~word) & 0x4040404040404040) << 1);
+        symbol_counter = symbol_counter & (((~word) & magic_3) << 1);
         symbol_counter = ~symbol_counter;
-        symbol_counter = (symbol_counter >> 7) & 0x0101010101010101;
+        symbol_counter = (symbol_counter >> 7) & magic_2;
 
         const char* h_add = (const char*) (&symbol_counter);
         out_symbol_length +=
-            h_add[0] + h_add[1] + h_add[2] + h_add[3] +
-            h_add[4] + h_add[5] + h_add[6] + h_add[7];
+            h_add[0] + h_add[1] + h_add[2] + h_add[3];
+        if(word_size > 4)
+        {
+            out_symbol_length +=
+                h_add[4] + h_add[5] + h_add[6] + h_add[7];
+        }
 
         // iterations done?
         if(exit_loop)
@@ -950,7 +1058,7 @@ void compute_byte_length_simd_batching(
         // these are supplementary bytes
         deus::SimdInt64 bit_2;
         bit_2.simd = _mm_and_si128(
-            _mm_xor_ps(simd_word.simd, simd_max.simd),
+            _mm_xor_si128(simd_word.simd, simd_max.simd),
             magic_3.simd
         );
 
@@ -959,7 +1067,7 @@ void compute_byte_length_simd_batching(
         bit_2.simd = _mm_add_epi64(bit_2.simd, magic_3.simd);
 
         symbol_counter.simd = _mm_and_si128(symbol_counter.simd, bit_2.simd);
-        symbol_counter.simd = _mm_xor_ps(symbol_counter.simd, simd_max.simd);
+        symbol_counter.simd = _mm_xor_si128(symbol_counter.simd, simd_max.simd);
         symbol_counter.simd = _mm_and_si128(symbol_counter.simd, magic_1.simd);
 
         // no intrinsic bitwise shift (only byte-wise shift)
@@ -973,174 +1081,261 @@ void compute_byte_length_simd_batching(
             h_add[8]  + h_add[9]  + h_add[10] + h_add[11] +
             h_add[12] + h_add[13] + h_add[14] + h_add[15];
 
-
-        // deus::SimdInt64 result;
-
-        // TODO: can reduce this shit to byte-wise
-        // there's not horizontal add for 8 bytes
-
-        // result.simd = _mm_and_si128(symbol_counter.simd, simd_one.simd);
-        // out_symbol_length += result.integral[0] + result.integral[1];
-
-        // result.simd = _mm_and_si128(
-        //     _mm_srli_si128(symbol_counter.simd, 1),
-        //     simd_one.simd
-        // );
-        // out_symbol_length += result.integral[0] + result.integral[1];
-
-        // result.simd = _mm_and_si128(
-        //     _mm_srli_si128(symbol_counter.simd, 2),
-        //     simd_one.simd
-        // );
-        // out_symbol_length += result.integral[0] + result.integral[1];
-
-        // result.simd = _mm_and_si128(
-        //     _mm_srli_si128(symbol_counter.simd, 3),
-        //     simd_one.simd
-        // );
-        // out_symbol_length += result.integral[0] + result.integral[1];
-
-        // result.simd = _mm_and_si128(
-        //     _mm_srli_si128(symbol_counter.simd, 4),
-        //     simd_one.simd
-        // );
-        // out_symbol_length += result.integral[0] + result.integral[1];
-
-        // result.simd = _mm_and_si128(
-        //     _mm_srli_si128(symbol_counter.simd, 5),
-        //     simd_one.simd
-        // );
-        // out_symbol_length += result.integral[0] + result.integral[1];
-
-        // result.simd = _mm_and_si128(
-        //     _mm_srli_si128(symbol_counter.simd, 6),
-        //     simd_one.simd
-        // );
-        // out_symbol_length += result.integral[0] + result.integral[1];
-
-        // result.simd = _mm_and_si128(
-        //     _mm_srli_si128(symbol_counter.simd, 7),
-        //     simd_one.simd
-        // );
-        // out_symbol_length += result.integral[0] + result.integral[1];
-
-
-
-
-
-        // symbol_counter = symbol_counter & (((~word) & 0x4040404040404040) << 1);
-        // symbol_counter = ~symbol_counter;
-        // out_symbol_length +=
-        //     ((symbol_counter >> 7 ) & 0x01) +
-        //     ((symbol_counter >> 15) & 0x01) +
-        //     ((symbol_counter >> 23) & 0x01) +
-        //     ((symbol_counter >> 31) & 0x01) +
-        //     ((symbol_counter >> 39) & 0x01) +
-        //     ((symbol_counter >> 47) & 0x01) +
-        //     ((symbol_counter >> 55) & 0x01) +
-        //     ((symbol_counter >> 63) & 0x01);
-
-        // deus::SimdInt64 mask;
-        // mask.integral[0] = 0x00000000000000C0;
-        // mask.integral[1] = 0x00000000000000C0;
-        // deus::SimdInt64 compare;
-        // compare.integral[0] = 0x0000000000000080;
-        // compare.integral[1] = 0x0000000000000080;
-
-        // deus::SimdInt64 result;
-        // result.integral[0] = 0;
-        // result.integral[1] = 0;
-
-        // // --
-        // result.simd = _mm_cmpneq_ps(
-        //     _mm_and_si128(simd_word.simd, mask.simd),
-        //     compare.simd
-        // );
-        // // TODO: simd this?
-        // out_symbol_length += result.integral[0] + result.integral[1];
-
-        // // --
-        // mask.integral[0] = 0x000000000000C000;
-        // mask.integral[1] = 0x000000000000C000;
-        // compare.integral[0] = 0x0000000000008000;
-        // compare.integral[1] = 0x0000000000008000;
-        // result.simd = _mm_cmpneq_ps(
-        //     _mm_and_si128(simd_word.simd, mask.simd),
-        //     compare.simd
-        // );
-        // out_symbol_length += result.integral[0] + result.integral[1];
-
-        // // --
-        // mask.integral[0] = 0x0000000000C00000;
-        // mask.integral[1] = 0x0000000000C00000;
-        // compare.integral[0] = 0x0000000000800000;
-        // compare.integral[1] = 0x0000000000800000;
-        // result.simd = _mm_cmpneq_ps(
-        //     _mm_and_si128(simd_word.simd, mask.simd),
-        //     compare.simd
-        // );
-        // out_symbol_length += result.integral[0] + result.integral[1];
-
-        // // --
-        // mask.integral[0] = 0x00000000C0000000;
-        // mask.integral[1] = 0x00000000C0000000;
-        // compare.integral[0] = 0x0000000080000000;
-        // compare.integral[1] = 0x0000000080000000;
-        // result.simd = _mm_cmpneq_ps(
-        //     _mm_and_si128(simd_word.simd, mask.simd),
-        //     compare.simd
-        // );
-        // out_symbol_length += result.integral[0] + result.integral[1];
-
-        // // --
-        // mask.integral[0] = 0x000000C000000000;
-        // mask.integral[1] = 0x000000C000000000;
-        // compare.integral[0] = 0x0000008000000000;
-        // compare.integral[1] = 0x0000008000000000;
-        // result.simd = _mm_cmpneq_ps(
-        //     _mm_and_si128(simd_word.simd, mask.simd),
-        //     compare.simd
-        // );
-        // out_symbol_length += result.integral[0] + result.integral[1];
-
-        // // --
-        // mask.integral[0] = 0x0000C00000000000;
-        // mask.integral[1] = 0x0000C00000000000;
-        // compare.integral[0] = 0x0000800000000000;
-        // compare.integral[1] = 0x0000800000000000;
-        // result.simd = _mm_cmpneq_ps(
-        //     _mm_and_si128(simd_word.simd, mask.simd),
-        //     compare.simd
-        // );
-        // out_symbol_length += result.integral[0] + result.integral[1];
-
-        // // --
-        // mask.integral[0] = 0x00C0000000000000;
-        // mask.integral[1] = 0x00C0000000000000;
-        // compare.integral[0] = 0x0080000000000000;
-        // compare.integral[1] = 0x0080000000000000;
-        // result.simd = _mm_cmpneq_ps(
-        //     _mm_and_si128(simd_word.simd, mask.simd),
-        //     compare.simd
-        // );
-        // out_symbol_length += result.integral[0] + result.integral[1];
-
-        // // --
-        // mask.integral[0] = 0xC000000000000000;
-        // mask.integral[1] = 0xC000000000000000;
-        // compare.integral[0] = 0x8000000000000000;
-        // compare.integral[1] = 0x8000000000000000;
-        // result.simd = _mm_cmpneq_ps(
-        //     _mm_and_si128(simd_word.simd, mask.simd),
-        //     compare.simd
-        // );
-        // out_symbol_length += result.integral[0] + result.integral[1];
-
-
         // iterations done?
         if(exit_loop)
         {
             return;
+        }
+    }
+}
+
+//--------------------COMPUTE SYMBOL LENGTH IMPLEMENTATIONS---------------------
+
+void compute_symbol_length_naive(
+        const char* in_data,
+        std::size_t in_byte_length,
+        std::size_t& out_symbol_length)
+{
+    out_symbol_length = 0;
+    // null data?
+    if(in_data == nullptr)
+    {
+        return;
+    }
+
+    std::size_t next_check = 0;
+    for(std::size_t i = 0; i < in_byte_length - 1; ++i)
+    {
+        const char* c = in_data + i;
+
+        // determine UTF-8 symbols
+        if(next_check <= 0)
+        {
+            // single character byte
+            if((*c & 0x80) == 0)
+            {
+                next_check = 0;
+            }
+            // 2 byte character
+            else if((*c & 0xE0) == 0xC0)
+            {
+                next_check = 1;
+            }
+            // 3 byte character
+            else if((*c & 0xF0) == 0xE0)
+            {
+                next_check = 2;
+            }
+            // 4 byte character
+            else if((*c & 0xF8) == 0xF0)
+            {
+                next_check = 3;
+            }
+            else
+            {
+                deus::UnicodeView character(c, 1, deus::Encoding::kASCII);
+                throw deus::UTF8Error(
+                    "Invalid leading byte in UTF-8 string: '" + character +
+                    ": <" + character.to_hex() + ">"
+                );
+            }
+
+            ++out_symbol_length;
+        }
+        else
+        {
+            --next_check;
+        }
+    }
+}
+
+void compute_symbol_length_wstring_convert(
+        const char* in_data,
+        std::size_t in_byte_length,
+        std::size_t& out_symbol_length)
+{
+    out_symbol_length = 0;
+    // null data?
+    if(in_data == nullptr)
+    {
+        return;
+    }
+
+    std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> convert;
+    std::string str(in_data, in_byte_length - 1);
+    std::wstring wstr = convert.from_bytes(str);
+
+    out_symbol_length = wstr.length();
+}
+
+namespace compute_symbol_length_byte_jump__util
+{
+
+static std::vector<unsigned char> build_jump_table()
+{
+    std::vector<unsigned char> jump_table(16, 1);
+    jump_table[12] = 2;
+    jump_table[13] = 2;
+    jump_table[14] = 3;
+    jump_table[15] = 4;
+    return jump_table;
+}
+
+static std::vector<unsigned char> g_jump_table = build_jump_table();
+
+} // namespace compute_symbol_length_byte_jump__util
+
+void compute_symbol_length_byte_jump(
+        const char* in_data,
+        std::size_t in_byte_length,
+        std::size_t& out_symbol_length)
+{
+    out_symbol_length = 0;
+    // null data?
+    if(in_data == nullptr)
+    {
+        return;
+    }
+
+    for(std::size_t i = 0; i < in_byte_length - 1;)
+    {
+        const char* byte_ptr = in_data + i;
+        // use the jump table to determine how many bytes we should jump to the
+        // next symbol
+        const char jump_index = ((*byte_ptr) >> 4) & 0x0F;
+        const std::size_t jump = static_cast<std::size_t>(
+            compute_symbol_length_byte_jump__util::g_jump_table[jump_index]
+        );
+
+        i += jump;
+        ++out_symbol_length;
+    }
+}
+
+void compute_symbol_length_word_batching(
+        const char* in_data,
+        std::size_t in_byte_length,
+        std::size_t& out_symbol_length)
+{
+    out_symbol_length = 0;
+    // null data?
+    if(in_data == nullptr)
+    {
+        return;
+    }
+
+    std::size_t start_addr = (std::size_t) in_data;
+    constexpr std::size_t word_size = sizeof(std::size_t);
+
+    // determine the point of word alignment
+    std::size_t align_at = word_size - (start_addr % word_size);
+
+    // naive check the first bits until we're word aligned
+    std::size_t iterate_to = align_at;
+    if(in_byte_length - 1 < align_at)
+    {
+        iterate_to = in_byte_length - 1;
+    }
+    std::size_t naive_remainder = 0;
+    std::size_t i = 0;
+    while(i < iterate_to)
+    {
+        const char* byte_ptr = in_data + i;
+        // use the jump table to determine how many bytes we should jump to the
+        // next symbol
+        const char jump_index = ((*byte_ptr) >> 4) & 0x0F;
+        const std::size_t jump = static_cast<std::size_t>(
+            compute_symbol_length_byte_jump__util::g_jump_table[jump_index]
+        );
+
+        i += jump;
+        ++out_symbol_length;
+        naive_remainder = jump - 1;
+    }
+    i = iterate_to;
+    // complete
+    if(i >= in_byte_length - 1)
+    {
+        return;
+    }
+
+    // magic numbers
+    constexpr std::size_t magic_1 =
+        (word_size > 4)
+        ?
+        0x8080808080808080L
+        :
+        0x80808080UL;
+    constexpr std::size_t magic_2 =
+        (word_size > 4)
+        ?
+        0x0101010101010101L
+        :
+        0x01010101UL;
+    constexpr std::size_t magic_3 =
+        (word_size > 4)
+        ?
+        0x4040404040404040L
+        :
+        0x40404040UL;
+
+    // calculate when the final iteration will occur
+    std::size_t final_iteration = (in_byte_length - i) / word_size;
+    final_iteration = i + (final_iteration * word_size) - 8;
+
+    // calculate how many bytes need masking on the final iterator -- at least
+    // one byte (the null terminator) always needs masking on the final
+    // iteration
+    std::size_t mask_size = (std::size_t) (in_data + in_byte_length);
+    mask_size = ((mask_size - 1) % word_size) * 8;
+
+    // TODO: word size?
+    const std::size_t end_or_mask =
+        0x8080808080808080UL & (0xFFFFFFFFFFFFFFFF << mask_size);
+    std::size_t and_shift = 0xFFFFFFFFFFFFFFFF >> (64 - mask_size);
+    // dumb compiler bug? 0xFFFFFFFFFFFFFFFF >> (64 - 0) does not equal
+    // 0x0000000000000000 (but 0xFFFFFFFFFFFFFFFF >> 64 does...)
+    if(mask_size == 0)
+    {
+        and_shift = 0;
+    }
+    std::size_t end_and_mask = 0x8080808080808080UL | and_shift;
+
+    // read word-aligned - even though we may have "read" the first few bytes it
+    // it won't affect the following algorithm since the read bytes have the
+    // format 10xxxxxx
+    for(; i < in_byte_length; i += word_size)
+    {
+        std::size_t word = *((std::size_t*) (in_data + i));
+
+        // apply the final iteration mask?
+        if(in_byte_length - i <= word_size)
+        {
+            word |= end_or_mask;
+            word &= end_and_mask;
+        }
+
+        // bias for ascii strings
+        std::size_t symbol_counter = word & magic_1;
+        if(symbol_counter == 0)
+        {
+            out_symbol_length += word_size;
+            continue;
+        }
+
+        // count all the symbols that don't have the format 10xxxxxx, since
+        // these are supplementary bytes
+        symbol_counter = symbol_counter & (((~word) & magic_3) << 1);
+        symbol_counter = ~symbol_counter;
+        symbol_counter = (symbol_counter >> 7) & magic_2;
+
+        const char* h_add = (const char*) (&symbol_counter);
+        out_symbol_length +=
+            h_add[0] + h_add[1] + h_add[2] + h_add[3];
+        if(word_size > 4)
+        {
+            out_symbol_length +=
+                h_add[4] + h_add[5] + h_add[6] + h_add[7];
         }
     }
 }
