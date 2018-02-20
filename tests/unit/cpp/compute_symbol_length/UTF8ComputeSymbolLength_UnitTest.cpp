@@ -70,7 +70,7 @@ protected:
             TestData(" ͡°)", 4),
             TestData(
                 "This is a long string that is composed of ASCII and a sparse "
-                "number of Unicode symbols 😺. This means that *most* but not "
+                "amount of Unicode symbols 😺. This means that *most* but not "
                 "all     💣 symbols have a byte length of one. ( ͡° ͜ʖ ͡°)",
                 177
             ),

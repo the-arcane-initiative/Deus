@@ -49,26 +49,20 @@ TEST_F(ASCIIComputeByteLengthTest, naive)
     for(const char* test_str : test_strs)
     {
         std::size_t expect_byte_length = 0;
-        std::size_t expect_symbol_length = 0;
         if(test_str != nullptr)
         {
-            expect_symbol_length = strlen(test_str);
-            expect_byte_length = expect_symbol_length + 1;
+            expect_byte_length = strlen(test_str) + 1;
         }
 
         std::size_t byte_length = 0;
-        std::size_t symbol_length = 0;
 
         deus::ascii_impl::compute_byte_length_naive(
             test_str,
-            byte_length,
-            symbol_length
+            byte_length
         );
 
         EXPECT_EQ(byte_length, expect_byte_length)
             << "Incorrect byte length for \"" << test_str << "\"";
-        EXPECT_EQ(symbol_length, expect_symbol_length)
-            << "Incorrect symbol length for \"" << test_str << "\"";
     }
 }
 
@@ -78,26 +72,20 @@ TEST_F(ASCIIComputeByteLengthTest, strlen)
     for(const char* test_str : test_strs)
     {
         std::size_t expect_byte_length = 0;
-        std::size_t expect_symbol_length = 0;
         if(test_str != nullptr)
         {
-            expect_symbol_length = strlen(test_str);
-            expect_byte_length = expect_symbol_length + 1;
+            expect_byte_length = strlen(test_str) + 1;
         }
 
         std::size_t byte_length = 0;
-        std::size_t symbol_length = 0;
 
         deus::ascii_impl::compute_byte_length_strlen(
             test_str,
-            byte_length,
-            symbol_length
+            byte_length
         );
 
         EXPECT_EQ(byte_length, expect_byte_length)
             << "Incorrect byte length for \"" << test_str << "\"";
-        EXPECT_EQ(symbol_length, expect_symbol_length)
-            << "Incorrect symbol length for \"" << test_str << "\"";
     }
 }
 
@@ -107,26 +95,20 @@ TEST_F(ASCIIComputeByteLengthTest, std_string)
     for(const char* test_str : test_strs)
     {
         std::size_t expect_byte_length = 0;
-        std::size_t expect_symbol_length = 0;
         if(test_str != nullptr)
         {
-            expect_symbol_length = strlen(test_str);
-            expect_byte_length = expect_symbol_length + 1;
+            expect_byte_length = strlen(test_str) + 1;
         }
 
         std::size_t byte_length = 0;
-        std::size_t symbol_length = 0;
 
         deus::ascii_impl::compute_byte_length_std_string(
             test_str,
-            byte_length,
-            symbol_length
+            byte_length
         );
 
         EXPECT_EQ(byte_length, expect_byte_length)
             << "Incorrect byte length for \"" << test_str << "\"";
-        EXPECT_EQ(symbol_length, expect_symbol_length)
-            << "Incorrect symbol length for \"" << test_str << "\"";
     }
 }
 
@@ -136,54 +118,19 @@ TEST_F(ASCIIComputeByteLengthTest, word_batching)
     for(const char* test_str : test_strs)
     {
         std::size_t expect_byte_length = 0;
-        std::size_t expect_symbol_length = 0;
         if(test_str != nullptr)
         {
-            expect_symbol_length = strlen(test_str);
-            expect_byte_length = expect_symbol_length + 1;
+            expect_byte_length = strlen(test_str) + 1;
         }
 
         std::size_t byte_length = 0;
-        std::size_t symbol_length = 0;
 
         deus::ascii_impl::compute_byte_length_word_batching(
             test_str,
-            byte_length,
-            symbol_length
+            byte_length
         );
 
         EXPECT_EQ(byte_length, expect_byte_length)
             << "Incorrect byte length for \"" << test_str << "\"";
-        EXPECT_EQ(symbol_length, expect_symbol_length)
-            << "Incorrect symbol length for \"" << test_str << "\"";
-    }
-}
-
-
-TEST_F(ASCIIComputeByteLengthTest, simd_batching)
-{
-    for(const char* test_str : test_strs)
-    {
-        std::size_t expect_byte_length = 0;
-        std::size_t expect_symbol_length = 0;
-        if(test_str != nullptr)
-        {
-            expect_symbol_length = strlen(test_str);
-            expect_byte_length = expect_symbol_length + 1;
-        }
-
-        std::size_t byte_length = 0;
-        std::size_t symbol_length = 0;
-
-        deus::ascii_impl::compute_byte_length_simd_batching(
-            test_str,
-            byte_length,
-            symbol_length
-        );
-
-        EXPECT_EQ(byte_length, expect_byte_length)
-            << "Incorrect byte length for \"" << test_str << "\"";
-        EXPECT_EQ(symbol_length, expect_symbol_length)
-            << "Incorrect symbol length for \"" << test_str << "\"";
     }
 }

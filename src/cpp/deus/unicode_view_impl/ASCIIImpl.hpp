@@ -112,28 +112,19 @@ std::string from_code_point_naive(
 
 void compute_byte_length_naive(
         const char* in_data,
-        std::size_t& out_byte_length,
-        std::size_t& out_symbol_length);
+        std::size_t& out_byte_length);
 
 void compute_byte_length_strlen(
         const char* in_data,
-        std::size_t& out_byte_length,
-        std::size_t& out_symbol_length);
+        std::size_t& out_byte_length);
 
 void compute_byte_length_std_string(
         const char* in_data,
-        std::size_t& out_byte_length,
-        std::size_t& out_symbol_length);
+        std::size_t& out_byte_length);
 
 void compute_byte_length_word_batching(
         const char* in_data,
-        std::size_t& out_byte_length,
-        std::size_t& out_symbol_length);
-
-void compute_byte_length_simd_batching(
-        const char* in_data,
-        std::size_t& out_byte_length,
-        std::size_t& out_symbol_length);
+        std::size_t& out_byte_length);
 
 } // namespace ascii_impl
 } // namespace deus

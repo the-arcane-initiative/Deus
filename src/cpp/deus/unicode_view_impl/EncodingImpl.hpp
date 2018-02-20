@@ -151,15 +151,16 @@ public:
      * \brief Is called during deus::UnicodeView construction when the length
      *        of the string data is unknown.
      *
-     * \note Even though this function is called compute_byte_length for
-     *       efficiency reasons this function should compute both the byte
-     *       length and the symbol length of the data.
+     * Implementations of this function should set the m_byte_length attribute.
      */
     virtual void compute_byte_length() const = 0;
 
     /*!
      * \brief Computes the symbol length of the data when the byte length is
      *        known but the symbol length is not.
+     *
+     * Implementations of this function should set the m_symbol_length
+     * attribute.
      *
      * \note This function will be lazily called the first time the symbol
      *       length (if it is unknown) is requested via a deus::UnicodeView
