@@ -24,7 +24,6 @@ protected:
     {
         test_strs =
         {
-            nullptr,
             "",
             "a",
             "Hello",

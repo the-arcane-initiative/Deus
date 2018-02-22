@@ -95,10 +95,42 @@ public:
             const std::vector<deus::CodePoint>& code_points,
             deus::Encoding encoding = deus::SOURCE_ENCODING);
 
-    // TODO: DOC
+    /*!
+     * \brief Creates new storage containing the given string by moving it.
+     *
+     * \note The encoding parameter is not optional for this constructor, this
+     *       is purely to avoid creating an ambiguous definition with
+     *       UnicodeStorage(const deus::UnicodeView& view) which std::string
+     *       can be implicitly casted to.
+     *
+     * \param str The string to move and use as the contents of the storage.
+     * \param encoding The encoding of the given string.
+     */
+    UnicodeStorage(
+            std::string&& str,
+            deus::Encoding encoding);
+
+    /*!
+     * \brief Creates new storage containing the given string by moving it.
+     *
+     * \param str The string to move and use as the contents of the storage.
+     * \param symbol_length The number of symbols in the string.
+     * \param encoding The encoding of the given string.
+     */
+    UnicodeStorage(
+            std::string&& str,
+            std::size_t symbol_length,
+            deus::Encoding encoding);
+
+    /*!
+     * \brief Constructs a copy of the given UnicodeStorage.
+     */
     UnicodeStorage(const UnicodeStorage& other);
 
-    // TODO: DOC
+    /*!
+     * \brief Constructs new UnicodeStorage by moving the resource of the other
+     *        given UnicodeStorage.
+     */
     UnicodeStorage(UnicodeStorage&& other);
 
     //--------------------------------------------------------------------------

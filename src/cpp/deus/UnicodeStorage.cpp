@@ -126,6 +126,21 @@ UnicodeStorage::UnicodeStorage(const UnicodeStorage& other)
 {
 }
 
+UnicodeStorage::UnicodeStorage(std::string&& str, deus::Encoding encoding)
+    : m_str(std::move(str))
+    , m_view(new UnicodeView(m_str, encoding))
+{
+}
+
+UnicodeStorage::UnicodeStorage(
+        std::string&& str,
+        std::size_t symbol_length,
+        deus::Encoding encoding)
+    : m_str(std::move(str))
+    , m_view(new UnicodeView(m_str, symbol_length, encoding))
+{
+}
+
 UnicodeStorage::UnicodeStorage(UnicodeStorage&& other)
     : m_str (std::move(other.m_str))
     , m_view(other.m_view.get())

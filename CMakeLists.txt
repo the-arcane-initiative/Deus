@@ -95,6 +95,7 @@ link_directories(
 )
 
 set(DEUS_UNIT_TESTS_SRC
+    tests/unit/cpp/UnicodeView_UnitTest.cpp
     tests/unit/cpp/compute_byte_length/ASCIIComputeByteLength_UnitTest.cpp
     tests/unit/cpp/compute_byte_length/UTF8ComputeByteLength_UnitTest.cpp
     tests/unit/cpp/compute_symbol_length/UTF8ComputeSymbolLength_UnitTest.cpp

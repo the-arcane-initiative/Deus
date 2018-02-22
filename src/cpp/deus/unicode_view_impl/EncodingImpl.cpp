@@ -48,11 +48,13 @@ namespace deus
 //------------------------------------------------------------------------------
 
 UnicodeView::EncodingImpl::EncodingImpl(
+        const deus::UnicodeView& view,
         deus::Encoding encoding,
         std::size_t byte_length,
         std::size_t symbol_length,
         const char* s)
     : m_ref_count    (1)
+    , m_view         (view)
     , m_encoding     (encoding)
     , m_byte_length  (byte_length)
     , m_symbol_length(symbol_length)
@@ -73,6 +75,7 @@ UnicodeView::EncodingImpl::~EncodingImpl()
 //------------------------------------------------------------------------------
 
 deus::UnicodeView::EncodingImpl* UnicodeView::EncodingImpl::new_encoding(
+        const deus::UnicodeView& view,
         deus::Encoding encoding,
         std::size_t byte_length,
         std::size_t symbol_length,
@@ -83,6 +86,7 @@ deus::UnicodeView::EncodingImpl* UnicodeView::EncodingImpl::new_encoding(
         case deus::Encoding::kASCII:
         {
             return new deus::UnicodeView::ASCIIImpl(
+                view,
                 byte_length,
                 symbol_length,
                 s
@@ -91,6 +95,7 @@ deus::UnicodeView::EncodingImpl* UnicodeView::EncodingImpl::new_encoding(
         case deus::Encoding::kUTF8:
         {
             return new deus::UnicodeView::UTF8Impl(
+                view,
                 byte_length,
                 symbol_length,
                 s

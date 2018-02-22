@@ -87,6 +87,13 @@ public:
             const std::string& s,
             deus::Encoding encoding = deus::SOURCE_ENCODING);
 
+    // TODO:
+    // TODO: throw TypeError
+    explicit UnicodeView(
+            const std::string& s,
+            std::size_t symbol_length,
+            deus::Encoding encoding = deus::SOURCE_ENCODING);
+
     explicit UnicodeView(const deus::UnicodeStorage& storage);
 
     // TODO:
@@ -153,10 +160,22 @@ public:
     // TODO: DOC
     const char* c_str() const;
 
+    /*!
+     * \brief Returns a new std::string created from a copy of the data held
+     *        within this string.
+     */
+    std::string std_string() const;
+
     // TODO: validate encoding
 
     // TODO: DOC
     deus::UnicodeStorage concatenate(const UnicodeView& s) const;
+
+    /*!
+     * \brief Returns a new string that is a result of converting this string
+     *        from its current encoding to the given encoding.
+     */
+    deus::UnicodeStorage convert(deus::Encoding encoding) const;
 
     // TODO: DOC
     deus::UnicodeStorage to_hex() const;
@@ -218,6 +237,37 @@ inline deus::UnicodeStorage operator+(
         const deus::UnicodeStorage& b)
 {
     return a.get_view().concatenate(b.get_view());
+}
+
+//-------------------------------STREAM OPERATORS-------------------------------
+
+// // TODO: DOC
+// class StreamHandle
+// {
+// public:
+
+//     StreamHandle(const UnicodeView& view)
+//         :
+//     {
+//     }
+
+// private:
+
+//     UnicodeStorage m_str;
+// };
+
+
+/*!
+ * \brief Appends the string contents of the given UnicodeView to the stream.
+ */
+inline std::ostream& operator<<(
+        std::ostream& stream,
+        const deus::UnicodeStorage& str)
+{
+    // TODO: is there anyway to find the internal type of the string so we can
+    //       avoid conversion?
+    stream << str.get_view().convert(deus::Encoding::kUTF8).get_string();
+    return stream;
 }
 
 #endif

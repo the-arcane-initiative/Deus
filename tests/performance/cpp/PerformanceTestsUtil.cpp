@@ -217,7 +217,7 @@ void gen_rand_dyn_strs(
                     int width = rand() % 4;
                     if(width >= remaining_bytes)
                     {
-                        width = remaining_bytes - 1;
+                        width = static_cast<int>(remaining_bytes - 1);
                     }
 
                     if(width == 0)

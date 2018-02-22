@@ -63,6 +63,7 @@ public:
      *        parameters.
      */
     ASCIIImpl(
+            const deus::UnicodeView& view,
             std::size_t byte_length,
             std::size_t symbol_length,
             const char* s);
@@ -94,6 +95,9 @@ public:
     virtual void compute_byte_length() const override;
 
     virtual void compute_symbol_length() const override;
+
+    virtual deus::UnicodeStorage convert(
+            deus::Encoding encoding) const override;
 };
 
 //------------------------------------------------------------------------------

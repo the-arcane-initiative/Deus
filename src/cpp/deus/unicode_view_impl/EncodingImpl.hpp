@@ -61,6 +61,10 @@ public:
      */
     mutable std::size_t m_ref_count;
     /*!
+     * \brief Reference to the view that owns this encoding.
+     */
+    const deus::UnicodeView& m_view;
+    /*!
      * \brief The Unicode encoding this implementation is specific to.
      */
     deus::Encoding m_encoding;
@@ -87,6 +91,7 @@ public:
      *        the given parameters.
      */
     EncodingImpl(
+            const deus::UnicodeView& view,
             deus::Encoding encoding,
             std::size_t byte_length,
             std::size_t symbol_length,
@@ -110,6 +115,7 @@ public:
      * \brief Constructs a new encoding implementation from the provided
      *        encoding type.
      *
+     * \param view The view that will own this implementation.
      * \param encoding The encoding type to construct a new implementation for.
      * \param s The string data that the new encoding will use.
      * \param byte_length The number of bytes in the string data (including the
@@ -123,6 +129,7 @@ public:
      *                        encoding.
      */
     static deus::UnicodeView::EncodingImpl* new_encoding(
+            const deus::UnicodeView& view,
             deus::Encoding encoding,
             std::size_t byte_length,
             std::size_t symbol_length,
@@ -167,6 +174,16 @@ public:
      *       object.
      */
     virtual void compute_symbol_length() const = 0;
+
+    /*!
+     * \brief Converts the string data from the current encoding to a new string
+     *        represented in the given encoding.
+     *
+     * When converting from Unicode to ASCII any Unicode characters that do not
+     * have ascii representations will be replace by the substitute character:
+     * ␚ (0x1A).
+     */
+    virtual deus::UnicodeStorage convert(deus::Encoding encoding) const = 0;
 };
 
 } // namespace deus

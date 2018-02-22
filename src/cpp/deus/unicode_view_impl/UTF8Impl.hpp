@@ -61,6 +61,7 @@ public:
      *        parameters.
      */
     UTF8Impl(
+            const deus::UnicodeView& view,
             std::size_t byte_length,
             std::size_t symbol_length,
             const char* s);
@@ -93,18 +94,8 @@ public:
 
     virtual void compute_symbol_length() const override;
 
-private:
-
-    //--------------------------------------------------------------------------
-    //                          PRIVATE STATIC FUNCTIONS
-    //--------------------------------------------------------------------------
-
-    //-------------------COMPUTE BYTE LENGTH IMPLEMENTATIONS--------------------
-
-    static void compute_byte_length_naive(
-            const char* in_data,
-            std::size_t& out_byte_length,
-            std::size_t& out_symbol_length);
+    virtual deus::UnicodeStorage convert(
+            deus::Encoding encoding) const override;
 };
 
 //------------------------------------------------------------------------------
@@ -150,6 +141,13 @@ void compute_symbol_length_word_batching(
         const char* in_data,
         std::size_t in_byte_length,
         std::size_t& out_symbol_length);
+
+//-----------------------CONVERT TO ASCII IMPLEMENTATIONS-----------------------
+
+deus::UnicodeStorage convert_to_ascii_naive(
+        const char* in_data,
+        std::size_t in_byte_length,
+        std::size_t in_symbol_length);
 
 } // namespace utf8_impl
 } // namespace deus

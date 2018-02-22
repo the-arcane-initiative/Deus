@@ -51,10 +51,12 @@ namespace deus
 //------------------------------------------------------------------------------
 
 UnicodeView::UTF8Impl::UTF8Impl(
+        const deus::UnicodeView& view,
         std::size_t byte_length,
         std::size_t symbol_length,
         const char* s)
     : UnicodeView::EncodingImpl(
+        view,
         deus::Encoding::kUTF8,
         byte_length,
         symbol_length,
@@ -94,6 +96,56 @@ void UnicodeView::UTF8Impl::compute_symbol_length() const
         m_byte_length,
         m_symbol_length
     );
+}
+
+deus::UnicodeStorage UnicodeView::UTF8Impl::convert(
+        deus::Encoding encoding) const
+{
+    switch(encoding)
+    {
+        case deus::Encoding::kASCII:
+        // TODO:
+        case deus::Encoding::kUTF8:
+        {
+            // string can be left as is
+            return deus::UnicodeStorage(m_view);
+        }
+        case deus::Encoding::kUTF16_LE:
+        {
+            throw deus::NotImplementedError(
+                "deus::UnicodeView::convert is not yet supported for ASCII "
+                "to little endian UTF-16 conversions."
+            );
+        }
+        case deus::Encoding::kUTF16_BE:
+        {
+            throw deus::NotImplementedError(
+                "deus::UnicodeView::convert is not yet supported for ASCII "
+                "to big endian UTF-16 conversions."
+            );
+        }
+        case deus::Encoding::kUTF32_LE:
+        {
+            throw deus::NotImplementedError(
+                "deus::UnicodeView::convert is not yet supported for ASCII "
+                "to little endian UTF-32 conversions."
+            );
+        }
+        case deus::Encoding::kUTF32_BE:
+        {
+            throw deus::NotImplementedError(
+                "deus::UnicodeView::convert is not yet supported for ASCII "
+                "to big endian UTF-32 conversions."
+            );
+        }
+        default:
+        {
+            throw deus::TypeError(
+                "Unrecognized Unicode encoding: " +
+                std::to_string(static_cast<unsigned>(encoding))
+            );
+        }
+    }
 }
 
 //------------------------------------------------------------------------------
@@ -167,11 +219,6 @@ void compute_byte_length_naive(
         std::size_t& out_byte_length)
 {
     out_byte_length = 0;
-    if(in_data == nullptr)
-    {
-        return;
-    }
-
     for(const char* c = in_data; (*c) != '\0'; ++c, ++out_byte_length);
     // final increment for null pointer
     ++out_byte_length;
@@ -182,11 +229,6 @@ void compute_byte_length_strlen(
         std::size_t& out_byte_length)
 {
     out_byte_length = 0;
-    if(in_data == nullptr)
-    {
-        return;
-    }
-
     out_byte_length = strlen(in_data) + 1;
 }
 
@@ -198,12 +240,6 @@ void compute_symbol_length_naive(
         std::size_t& out_symbol_length)
 {
     out_symbol_length = 0;
-    // null data?
-    if(in_data == nullptr)
-    {
-        return;
-    }
-
     std::size_t next_check = 0;
     for(std::size_t i = 0; i < in_byte_length - 1; ++i)
     {
@@ -292,12 +328,6 @@ void compute_symbol_length_byte_jump(
         std::size_t& out_symbol_length)
 {
     out_symbol_length = 0;
-    // null data?
-    if(in_data == nullptr)
-    {
-        return;
-    }
-
     for(std::size_t i = 0; i < in_byte_length - 1;)
     {
         const char* byte_ptr = in_data + i;
@@ -319,12 +349,6 @@ void compute_symbol_length_word_batching(
         std::size_t& out_symbol_length)
 {
     out_symbol_length = 0;
-    // null data?
-    if(in_data == nullptr)
-    {
-        return;
-    }
-
     std::size_t start_addr = (std::size_t) in_data;
     constexpr std::size_t word_size = sizeof(std::size_t);
 
@@ -337,7 +361,6 @@ void compute_symbol_length_word_batching(
     {
         iterate_to = in_byte_length - 1;
     }
-    std::size_t naive_remainder = 0;
     std::size_t i = 0;
     while(i < iterate_to)
     {
@@ -351,7 +374,6 @@ void compute_symbol_length_word_batching(
 
         i += jump;
         ++out_symbol_length;
-        naive_remainder = jump - 1;
     }
     i = iterate_to;
     // complete
@@ -439,6 +461,45 @@ void compute_symbol_length_word_batching(
                 h_add[4] + h_add[5] + h_add[6] + h_add[7];
         }
     }
+}
+
+deus::UnicodeStorage convert_to_ascii_naive(
+        const char* in_data,
+        std::size_t in_byte_length,
+        std::size_t in_symbol_length)
+{
+    std::string converted;
+    converted.reserve(in_symbol_length);
+
+    for(std::size_t i = 0; i < in_byte_length - 1;)
+    {
+        const char* c = in_data + i;
+        if((*c) <= 0x7F)
+        {
+            // just use as is
+            converted.push_back(*c);
+            ++i;
+        }
+        else
+        {
+            // use substitution
+            converted.push_back('\x1A');
+            // use the jump table to determine how many bytes we should jump
+            // to the next symbol
+            const char jump_index = ((*c) >> 4) & 0x0F;
+            const std::size_t jump = static_cast<std::size_t>(
+                compute_symbol_length_byte_jump__util::g_jump_table[jump_index]
+            );
+            i += jump;
+        }
+    }
+
+    // TODO: move with symbol length
+    return UnicodeStorage(
+        std::move(converted),
+        in_symbol_length,
+        deus::Encoding::kASCII
+    );
 }
 
 } // namespace utf8_impl

@@ -48,7 +48,6 @@ protected:
     {
         test_data =
         {
-            TestData(nullptr, 0),
             TestData(""),
             TestData("a"),
             TestData("Hello"),

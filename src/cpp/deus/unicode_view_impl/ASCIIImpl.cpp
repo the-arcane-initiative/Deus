@@ -35,6 +35,7 @@
 #include <cstring>
 
 #include "deus/Constants.hpp"
+#include "deus/Exceptions.hpp"
 
 
 namespace deus
@@ -45,10 +46,12 @@ namespace deus
 //------------------------------------------------------------------------------
 
 UnicodeView::ASCIIImpl::ASCIIImpl(
+        const deus::UnicodeView& view,
         std::size_t byte_length,
         std::size_t symbol_length,
         const char* s)
     : UnicodeView::EncodingImpl(
+        view,
         deus::Encoding::kASCII,
         byte_length,
         symbol_length,
@@ -94,6 +97,55 @@ void UnicodeView::ASCIIImpl::compute_symbol_length() const
     }
 }
 
+deus::UnicodeStorage UnicodeView::ASCIIImpl::convert(
+        deus::Encoding encoding) const
+{
+    switch(encoding)
+    {
+        case deus::Encoding::kASCII:
+        case deus::Encoding::kUTF8:
+        {
+            // string can be left as is
+            return deus::UnicodeStorage(m_view);
+        }
+        case deus::Encoding::kUTF16_LE:
+        {
+            throw deus::NotImplementedError(
+                "deus::UnicodeView::convert is not yet supported for ASCII "
+                "to little endian UTF-16 conversions."
+            );
+        }
+        case deus::Encoding::kUTF16_BE:
+        {
+            throw deus::NotImplementedError(
+                "deus::UnicodeView::convert is not yet supported for ASCII "
+                "to big endian UTF-16 conversions."
+            );
+        }
+        case deus::Encoding::kUTF32_LE:
+        {
+            throw deus::NotImplementedError(
+                "deus::UnicodeView::convert is not yet supported for ASCII "
+                "to little endian UTF-32 conversions."
+            );
+        }
+        case deus::Encoding::kUTF32_BE:
+        {
+            throw deus::NotImplementedError(
+                "deus::UnicodeView::convert is not yet supported for ASCII "
+                "to big endian UTF-32 conversions."
+            );
+        }
+        default:
+        {
+            throw deus::TypeError(
+                "Unrecognized Unicode encoding: " +
+                std::to_string(static_cast<unsigned>(encoding))
+            );
+        }
+    }
+}
+
 //------------------------------------------------------------------------------
 //                               GLOBALS FUNCTIONS
 //------------------------------------------------------------------------------
@@ -130,11 +182,6 @@ void compute_byte_length_naive(
         std::size_t& out_byte_length)
 {
     out_byte_length = 0;
-    if(in_data == nullptr)
-    {
-        return;
-    }
-
     for(const char* c = in_data; (*c) != '\0'; ++c, ++out_byte_length);
     // final increment for null pointer
     ++out_byte_length;
@@ -144,12 +191,6 @@ void compute_byte_length_strlen(
         const char* in_data,
         std::size_t& out_byte_length)
 {
-    out_byte_length = 0;
-    if(in_data == nullptr)
-    {
-        return;
-    }
-
     out_byte_length = strlen(in_data) + 1;
 }
 
@@ -157,12 +198,6 @@ void compute_byte_length_std_string(
         const char* in_data,
         std::size_t& out_byte_length)
 {
-    out_byte_length = 0;
-    if(in_data == nullptr)
-    {
-        return;
-    }
-
     std::string s(in_data);
     out_byte_length = s.length() + 1;
 }
@@ -172,11 +207,6 @@ void compute_byte_length_word_batching(
         std::size_t& out_byte_length)
 {
     out_byte_length = 0;
-    if(in_data == nullptr)
-    {
-        return;
-    }
-
     const char* byte_ptr = in_data;
 
     constexpr std::size_t word_size = sizeof(std::size_t);

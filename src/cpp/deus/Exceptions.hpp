@@ -94,11 +94,35 @@ public:
 };
 
 //------------------------------------------------------------------------------
+//                                  VALUE ERROR
+//------------------------------------------------------------------------------
+
+/*!
+ * \brief An error specifying that an invalid value has been used for an
+ *        operation.
+ */
+class ValueError
+    : public deus::DeusError
+{
+public:
+
+    ValueError(const std::string& what_arg)
+        : deus::DeusError(what_arg)
+    {
+    }
+
+    virtual ~ValueError() throw()
+    {
+    }
+};
+
+//------------------------------------------------------------------------------
 //                                   TYPE ERROR
 //------------------------------------------------------------------------------
 
 /*!
- * \brief An error specifying that invalid type has been used for an operation.
+ * \brief An error specifying that an invalid type has been used for an
+ *        operation.
  */
 class TypeError
     : public deus::DeusError

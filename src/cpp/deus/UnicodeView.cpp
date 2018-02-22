@@ -36,6 +36,7 @@
 #include <iomanip>
 #include <sstream>
 
+#include "deus/Exceptions.hpp"
 #include "deus/unicode_view_impl/EncodingImpl.hpp"
 
 
@@ -49,13 +50,28 @@ namespace deus
 UnicodeView::UnicodeView()
     : m_impl(nullptr)
 {
-    m_impl = EncodingImpl::new_encoding(deus::Encoding::kUTF8, 0, 0, nullptr);
+    m_impl = EncodingImpl::new_encoding(
+        *this,
+        deus::Encoding::kUTF8,
+        0,
+        0,
+        nullptr
+    );
 }
 
 UnicodeView::UnicodeView(const char* s, deus::Encoding encoding)
     : m_impl(nullptr)
 {
+    // don't allow null strings
+    if(s == nullptr)
+    {
+        throw deus::ValueError(
+            "UnicodeView cannot be constructed using a null pointer"
+        );
+    }
+
     m_impl = EncodingImpl::new_encoding(
+        *this,
         encoding,
         deus::NULL_POS,
         deus::NULL_POS,
@@ -69,7 +85,16 @@ UnicodeView::UnicodeView(
         deus::Encoding encoding)
     : m_impl(nullptr)
 {
+    // don't allow null strings
+    if(s == nullptr)
+    {
+        throw deus::ValueError(
+            "UnicodeView cannot be constructed using a null pointer"
+        );
+    }
+
     m_impl = EncodingImpl::new_encoding(
+        *this,
         encoding,
         c_str_length + EncodingImpl::null_terminator_size(encoding),
         deus::NULL_POS,
@@ -84,7 +109,16 @@ UnicodeView::UnicodeView(
         deus::Encoding encoding)
     : m_impl(nullptr)
 {
+    // don't allow null strings
+    if(s == nullptr)
+    {
+        throw deus::ValueError(
+            "UnicodeView cannot be constructed using a null pointer"
+        );
+    }
+
     m_impl = EncodingImpl::new_encoding(
+        *this,
         encoding,
         c_str_length + EncodingImpl::null_terminator_size(encoding),
         symbol_length,
@@ -96,9 +130,25 @@ UnicodeView::UnicodeView(const std::string& s, deus::Encoding encoding)
     : m_impl(nullptr)
 {
     m_impl = EncodingImpl::new_encoding(
+        *this,
         encoding,
         s.length() + EncodingImpl::null_terminator_size(encoding),
         deus::NULL_POS,
+        s.c_str()
+    );
+}
+
+UnicodeView::UnicodeView(
+        const std::string& s,
+        std::size_t symbol_length,
+        deus::Encoding encoding)
+    : m_impl(nullptr)
+{
+    m_impl = EncodingImpl::new_encoding(
+        *this,
+        encoding,
+        s.length() + EncodingImpl::null_terminator_size(encoding),
+        symbol_length,
         s.c_str()
     );
 }
@@ -209,10 +259,20 @@ const char* UnicodeView::c_str() const
     return m_impl->m_data;
 }
 
+std::string UnicodeView::std_string() const
+{
+    return std::string(m_impl->m_data, m_impl->m_byte_length - 1);
+}
+
 deus::UnicodeStorage UnicodeView::concatenate(const UnicodeView& s) const
 {
     // TODO:
     return deus::UnicodeStorage("TODO: implement concatenate");
+}
+
+deus::UnicodeStorage UnicodeView::convert(deus::Encoding encoding) const
+{
+    return m_impl->convert(encoding);
 }
 
 deus::UnicodeStorage UnicodeView::to_hex() const
