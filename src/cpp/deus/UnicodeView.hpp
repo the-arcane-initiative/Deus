@@ -38,6 +38,7 @@
 
 #include <cstdint>
 #include <string>
+#include <vector>
 
 #include "deus/CInterface.h"
 
@@ -191,8 +192,21 @@ public:
      */
     deus::UnicodeStorage concatenate(const UnicodeView& s) const;
 
-    // TODO: DOC
-    deus::UnicodeStorage to_hex() const;
+    /*!
+     * \brief Returns a vector of the bytes (not symbols) of this string
+     *        converted to their hex representation in string format.
+     *
+     * The returned vector will contain the same number of elements as bytes in
+     * this string minus the byte(s) of the null terminator.
+     *
+     * \param prefix The string each hex element will be prefiex with, e.g.
+     *               "0x7F" where "0x" is the prefix.
+     * \param uppercase Whether the letters in the hex values (A, B, C, D, E, F)
+     *                  will be uppercase.
+     */
+    std::vector<deus::UnicodeStorage> bytes_as_hex(
+            const deus::UnicodeView& prefix = "0x",
+            bool uppercase = true) const;
 
 private:
 

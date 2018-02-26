@@ -281,7 +281,7 @@ void compute_symbol_length_naive(
                 deus::UnicodeView character(c, 1, deus::Encoding::kASCII);
                 throw deus::UTF8Error(
                     "Invalid leading byte in UTF-8 string: '" + character +
-                    ": <" + character.to_hex() + ">"
+                    ": <" + character.bytes_as_hex().front() + ">"
                 );
             }
 

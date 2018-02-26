@@ -39,6 +39,9 @@
 #include "deus/Exceptions.hpp"
 #include "deus/unicode_view_impl/EncodingImpl.hpp"
 
+// TODO: REMOVE ME
+#include <iostream>
+
 
 namespace deus
 {
@@ -292,15 +295,42 @@ deus::UnicodeStorage UnicodeView::concatenate(const UnicodeView& s) const
     return deus::UnicodeStorage(std::move(a), encoding());
 }
 
-deus::UnicodeStorage UnicodeView::to_hex() const
+std::vector<deus::UnicodeStorage> UnicodeView::bytes_as_hex(
+        const deus::UnicodeView& prefix,
+        bool uppercase) const
 {
+    // TODO: I'm sure I can write a much faster version of this
     // this function doesn't require a encoding specific implementation
-    // TODO: can potentially write code that's faster than std::hex?
+    std::vector<deus::UnicodeStorage> ret;
+    ret.reserve(c_str_length());
+    // set up the stream
+    // TODO: probably need to set padding
     std::stringstream ss;
-    ss
-        << std::hex << std::uppercase
-        << std::string(m_impl->m_data, m_impl->m_byte_length);
-    return UnicodeView(ss.str(), deus::Encoding::kASCII);
+    ss << std::hex;
+    if(uppercase)
+    {
+        ss << std::uppercase;
+    }
+    // convert each characeter
+    for(const char* c = m_impl->m_data;
+        c != m_impl->m_data + c_str_length();
+        ++c)
+    {
+        // clear
+        ss.str("");
+        // convert
+        const uint32_t as_unsigned = *((const unsigned char*) c);
+        ss << prefix << as_unsigned;
+        // insert (implicitly convert UnicodeStorage from UnicodeView)
+        std::string hex = ss.str();
+        ret.emplace_back(
+            std::move(hex),
+            prefix.length() + hex.length(),
+            deus::Encoding::kASCII
+        );
+    }
+
+    return ret;
 }
 
 } // namespace DEUS_VERSION_NS
