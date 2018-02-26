@@ -52,10 +52,10 @@ UnicodeView::UnicodeView()
 {
     m_impl = EncodingImpl::new_encoding(
         *this,
-        deus::Encoding::kUTF8,
+        "",
+        1,
         0,
-        0,
-        nullptr
+        deus::Encoding::kUTF8
     );
 }
 
@@ -72,10 +72,10 @@ UnicodeView::UnicodeView(const char* s, deus::Encoding encoding)
 
     m_impl = EncodingImpl::new_encoding(
         *this,
-        encoding,
+        s,
         deus::NULL_POS,
         deus::NULL_POS,
-        s
+        encoding
     );
 }
 
@@ -95,10 +95,10 @@ UnicodeView::UnicodeView(
 
     m_impl = EncodingImpl::new_encoding(
         *this,
-        encoding,
+        s,
         c_str_length + EncodingImpl::null_terminator_size(encoding),
         deus::NULL_POS,
-        s
+        encoding
     );
 }
 
@@ -119,10 +119,10 @@ UnicodeView::UnicodeView(
 
     m_impl = EncodingImpl::new_encoding(
         *this,
-        encoding,
+        s,
         c_str_length + EncodingImpl::null_terminator_size(encoding),
         symbol_length,
-        s
+        encoding
     );
 }
 
@@ -131,10 +131,10 @@ UnicodeView::UnicodeView(const std::string& s, deus::Encoding encoding)
 {
     m_impl = EncodingImpl::new_encoding(
         *this,
-        encoding,
+        s.c_str(),
         s.length() + EncodingImpl::null_terminator_size(encoding),
         deus::NULL_POS,
-        s.c_str()
+        encoding
     );
 }
 
@@ -146,10 +146,10 @@ UnicodeView::UnicodeView(
 {
     m_impl = EncodingImpl::new_encoding(
         *this,
-        encoding,
+        s.c_str(),
         s.length() + EncodingImpl::null_terminator_size(encoding),
         symbol_length,
-        s.c_str()
+        encoding
     );
 }
 
@@ -188,6 +188,7 @@ UnicodeView::~UnicodeView()
         if(m_impl->m_ref_count <= 1)
         {
             delete m_impl;
+            m_impl = nullptr;
         }
         else
         {
@@ -264,15 +265,29 @@ std::string UnicodeView::std_string() const
     return std::string(m_impl->m_data, m_impl->m_byte_length - 1);
 }
 
-deus::UnicodeStorage UnicodeView::concatenate(const UnicodeView& s) const
-{
-    // TODO:
-    return deus::UnicodeStorage("TODO: implement concatenate");
-}
-
 deus::UnicodeStorage UnicodeView::convert(deus::Encoding encoding) const
 {
     return m_impl->convert(encoding);
+}
+
+deus::UnicodeStorage UnicodeView::concatenate(const UnicodeView& s) const
+{
+    deus::UnicodeStorage converted;
+    deus::UnicodeView other_view = s;
+
+    // different encodings?
+    if(s.encoding() != encoding())
+    {
+        converted = s.convert(encoding());
+        other_view = converted.get_view();
+    }
+
+    // actually concatenate the strings
+    std::string a = std_string();
+    a += other_view.std_string();
+
+    // return new storage
+    return deus::UnicodeStorage(std::move(a), encoding());
 }
 
 deus::UnicodeStorage UnicodeView::to_hex() const

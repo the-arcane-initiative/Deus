@@ -130,10 +130,10 @@ public:
      */
     static deus::UnicodeView::EncodingImpl* new_encoding(
             const deus::UnicodeView& view,
-            deus::Encoding encoding,
+            const char* s,
             std::size_t byte_length,
             std::size_t symbol_length,
-            const char* s);
+            deus::Encoding encoding);
 
     /*!
      * \brief Returns the size in bytes of the given encoding's null terminator.
@@ -180,8 +180,8 @@ public:
      *        represented in the given encoding.
      *
      * When converting from Unicode to ASCII any Unicode characters that do not
-     * have ascii representations will be replace by the substitute character:
-     * ␚ (0x1A).
+     * have ascii representations should be replaced by the substitute
+     * character: ␚ (0x1A).
      */
     virtual deus::UnicodeStorage convert(deus::Encoding encoding) const = 0;
 };

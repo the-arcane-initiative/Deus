@@ -168,14 +168,24 @@ public:
 
     // TODO: validate encoding
 
-    // TODO: DOC
-    deus::UnicodeStorage concatenate(const UnicodeView& s) const;
-
     /*!
      * \brief Returns a new string that is a result of converting this string
      *        from its current encoding to the given encoding.
+     *
+     * When converting from Unicode to ASCII any Unicode characters that do not
+     * have ascii representations will be replaced by the substitute character:
+     * ␚ (0x1A).
      */
     deus::UnicodeStorage convert(deus::Encoding encoding) const;
+
+    /*!
+     * \brief Returns a new UnicodeStorage which is the result of concatenating
+     *        the given string to end of this string.
+     *
+     * If the strings have different encodings the resulting string will be in
+     * the encoding of this string.
+     */
+    deus::UnicodeStorage concatenate(const UnicodeView& s) const;
 
     // TODO: DOC
     deus::UnicodeStorage to_hex() const;

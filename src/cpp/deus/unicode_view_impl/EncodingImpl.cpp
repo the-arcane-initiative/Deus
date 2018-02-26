@@ -76,10 +76,10 @@ UnicodeView::EncodingImpl::~EncodingImpl()
 
 deus::UnicodeView::EncodingImpl* UnicodeView::EncodingImpl::new_encoding(
         const deus::UnicodeView& view,
-        deus::Encoding encoding,
+        const char* s,
         std::size_t byte_length,
         std::size_t symbol_length,
-        const char* s)
+        deus::Encoding encoding)
 {
     switch(encoding)
     {

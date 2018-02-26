@@ -104,7 +104,13 @@ deus::UnicodeStorage UnicodeView::UTF8Impl::convert(
     switch(encoding)
     {
         case deus::Encoding::kASCII:
-        // TODO:
+        {
+            return utf8_impl::convert_to_ascii_naive(
+                m_data,
+                m_byte_length,
+                m_view.length()
+            );
+        }
         case deus::Encoding::kUTF8:
         {
             // string can be left as is
@@ -473,7 +479,7 @@ deus::UnicodeStorage convert_to_ascii_naive(
 
     for(std::size_t i = 0; i < in_byte_length - 1;)
     {
-        const char* c = in_data + i;
+        const unsigned char* c = (const unsigned char*) (in_data + i);
         if((*c) <= 0x7F)
         {
             // just use as is
@@ -494,8 +500,7 @@ deus::UnicodeStorage convert_to_ascii_naive(
         }
     }
 
-    // TODO: move with symbol length
-    return UnicodeStorage(
+    return deus::UnicodeStorage(
         std::move(converted),
         in_symbol_length,
         deus::Encoding::kASCII

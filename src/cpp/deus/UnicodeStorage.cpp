@@ -55,7 +55,7 @@ UnicodeStorage::UnicodeStorage(const deus::UnicodeView& view)
     : m_str (view.c_str(), view.c_str_length())
     , m_view(new deus::UnicodeView(
         m_str.c_str(),
-        view.byte_length(),
+        view.c_str_length(),
         view.length(),
         view.encoding()
     ))
@@ -122,7 +122,12 @@ UnicodeStorage::UnicodeStorage(
 
 UnicodeStorage::UnicodeStorage(const UnicodeStorage& other)
     : m_str (other.m_str)
-    , m_view(new deus::UnicodeView(*other.m_view))
+    , m_view(new deus::UnicodeView(
+        m_str.c_str(),
+        other.m_view->c_str_length(),
+        other.m_view->length(),
+        other.m_view->encoding()
+    ))
 {
 }
 
@@ -143,7 +148,11 @@ UnicodeStorage::UnicodeStorage(
 
 UnicodeStorage::UnicodeStorage(UnicodeStorage&& other)
     : m_str (std::move(other.m_str))
-    , m_view(other.m_view.get())
+    , m_view(new deus::UnicodeView(
+        m_str,
+        other.m_view->length(),
+        other.m_view->encoding()
+    ))
 {
     other.m_view = nullptr;
 }
@@ -169,24 +178,29 @@ UnicodeStorage& UnicodeStorage::operator=(const UnicodeView& view)
         view.length(),
         view.encoding()
     ));
-
     return *this;
 }
 
 UnicodeStorage& UnicodeStorage::operator=(const UnicodeStorage& other)
 {
     m_str  = other.m_str;
-    m_view.reset(new deus::UnicodeView(*other.m_view));
-
+    m_view.reset(new deus::UnicodeView(
+        m_str.c_str(),
+        other.m_view->c_str_length(),
+        other.m_view->length(),
+        other.m_view->encoding()
+    ));
     return *this;
 }
 
 UnicodeStorage& UnicodeStorage::operator=(UnicodeStorage&& other)
 {
     m_str  = std::move(other.m_str);
-    m_view.reset(other.m_view.get());
-
-    other.m_view = nullptr;
+    m_view.reset(new deus::UnicodeView(
+        m_str,
+        other.m_view->length(),
+        other.m_view->encoding()
+    ));
 
     return *this;
 }
