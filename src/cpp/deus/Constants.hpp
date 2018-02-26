@@ -46,6 +46,9 @@
 namespace deus
 {
 
+inline namespace DEUS_VERSION_NS
+{
+
 //------------------------------------------------------------------------------
 //                                TYPE DEFINITIONS
 //------------------------------------------------------------------------------
@@ -140,6 +143,7 @@ extern const std::size_t NULL_POS;
  */
 static constexpr deus::Encoding SOURCE_ENCODING = determine_source_encoding();
 
+} // namespace DEUS_VERSION_NS
 } // namespace deus
 
 #endif

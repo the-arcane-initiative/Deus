@@ -44,6 +44,11 @@ extern "C"
 #endif
 
 // TODO: DOC
+#define DEUS_API_VERSION 0
+// TODO: DOC
+#define DEUS_VERSION_NS v##DEUS_API_VERSION
+
+// TODO: DOC
 #define kDeusEncodingASCII    0U
 // TODO: DOC
 #define kDeusEncodingUTF8     1U

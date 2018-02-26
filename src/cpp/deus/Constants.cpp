@@ -37,7 +37,10 @@
 
 namespace deus
 {
+inline namespace DEUS_VERSION_NS
+{
 
 const std::size_t NULL_POS = std::numeric_limits<std::size_t>::max();
 
+} // namespace DEUS_VERSION_NS
 } // namespace deus

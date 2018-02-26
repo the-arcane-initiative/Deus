@@ -42,6 +42,8 @@
 
 namespace deus
 {
+inline namespace DEUS_VERSION_NS
+{
 
 //------------------------------------------------------------------------------
 //                                  CONSTRUCTORS
@@ -301,4 +303,5 @@ deus::UnicodeStorage UnicodeView::to_hex() const
     return UnicodeView(ss.str(), deus::Encoding::kASCII);
 }
 
+} // namespace DEUS_VERSION_NS
 } // namespace deus

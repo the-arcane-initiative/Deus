@@ -40,6 +40,8 @@
 
 namespace deus
 {
+inline namespace DEUS_VERSION_NS
+{
 
 //------------------------------------------------------------------------------
 //                                  CONSTRUCTORS
@@ -301,4 +303,5 @@ void compute_byte_length_word_batching(
 }
 
 } // namespace ascii_impl
+} // namespace DEUS_VERSION_NS
 } // namespace deus

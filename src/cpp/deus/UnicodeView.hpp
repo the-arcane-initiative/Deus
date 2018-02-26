@@ -39,11 +39,15 @@
 #include <cstdint>
 #include <string>
 
+#include "deus/CInterface.h"
+
 #include "deus/Constants.hpp"
 #include "deus/UnicodeStorage.hpp"
 
 
 namespace deus
+{
+inline namespace DEUS_VERSION_NS
 {
 
 /*!
@@ -209,6 +213,7 @@ private:
     EncodingImpl* m_impl;
 };
 
+} // namespace DEUS_VERSION_NS
 } // namespace deus
 
 // TODO: could move this to an inline file?

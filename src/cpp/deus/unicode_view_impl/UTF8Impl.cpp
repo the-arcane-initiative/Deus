@@ -45,6 +45,8 @@
 
 namespace deus
 {
+inline namespace DEUS_VERSION_NS
+{
 
 //------------------------------------------------------------------------------
 //                                  CONSTRUCTORS
@@ -508,4 +510,5 @@ deus::UnicodeStorage convert_to_ascii_naive(
 }
 
 } // namespace utf8_impl
+} // namespace DEUS_VERSION_NS
 } // namespace deus

@@ -42,6 +42,8 @@
 
 namespace deus
 {
+inline namespace DEUS_VERSION_NS
+{
 
 //------------------------------------------------------------------------------
 //                                  CONSTRUCTORS
@@ -169,4 +171,5 @@ std::size_t UnicodeView::EncodingImpl::null_terminator_size(
     }
 }
 
+} // namespace DEUS_VERSION_NS
 } // namespace deus

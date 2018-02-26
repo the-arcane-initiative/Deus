@@ -44,6 +44,8 @@
 
 namespace deus
 {
+inline namespace DEUS_VERSION_NS
+{
 
 /*!
  * \brief The implementation of ASCII encoding specific logic for the
@@ -131,6 +133,7 @@ void compute_byte_length_word_batching(
         std::size_t& out_byte_length);
 
 } // namespace ascii_impl
+} // namespace DEUS_VERSION_NS
 } // namespace deus
 
 

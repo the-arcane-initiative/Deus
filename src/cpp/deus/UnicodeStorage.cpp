@@ -40,6 +40,8 @@
 
 namespace deus
 {
+inline namespace DEUS_VERSION_NS
+{
 
 //------------------------------------------------------------------------------
 //                                  CONSTRUCTORS
@@ -235,4 +237,5 @@ const UnicodeView& UnicodeStorage::get_view() const
     return *m_view;
 }
 
+} // namespace DEUS_VERSION_NS
 } // namespace deus

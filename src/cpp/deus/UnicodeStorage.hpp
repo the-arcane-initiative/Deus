@@ -41,10 +41,13 @@
 #include <string>
 #include <vector>
 
+#include "deus/CInterface.h"
 #include "deus/Constants.hpp"
 
 
 namespace deus
+{
+inline namespace DEUS_VERSION_NS
 {
 
 //------------------------------------------------------------------------------
@@ -200,6 +203,7 @@ private:
     std::unique_ptr<deus::UnicodeView> m_view;
 };
 
+} // namespace DEUS_VERSION_NS
 } // namespace deus
 
 // TODO: Hash
