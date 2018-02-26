@@ -39,9 +39,6 @@
 #include "deus/Exceptions.hpp"
 #include "deus/unicode_view_impl/EncodingImpl.hpp"
 
-// TODO: REMOVE ME
-#include <iostream>
-
 
 namespace deus
 {
@@ -304,7 +301,6 @@ std::vector<deus::UnicodeStorage> UnicodeView::bytes_as_hex(
     std::vector<deus::UnicodeStorage> ret;
     ret.reserve(c_str_length());
     // set up the stream
-    // TODO: probably need to set padding
     std::stringstream ss;
     ss << std::hex;
     if(uppercase)
@@ -321,7 +317,7 @@ std::vector<deus::UnicodeStorage> UnicodeView::bytes_as_hex(
         // convert
         const uint32_t as_unsigned = *((const unsigned char*) c);
         ss << prefix << as_unsigned;
-        // insert (implicitly convert UnicodeStorage from UnicodeView)
+        // insert
         std::string hex = ss.str();
         ret.emplace_back(
             std::move(hex),
