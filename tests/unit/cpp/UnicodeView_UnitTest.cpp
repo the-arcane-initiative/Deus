@@ -41,6 +41,155 @@ TEST(UnicodeView, null_constructor)
     );
 }
 
+TEST(UnicodeView, equality)
+{
+    {
+        const std::string a_str("");
+        const deus::UnicodeView a_view(a_str, deus::Encoding::kASCII);
+        const std::string b_str("");
+        const deus::UnicodeView b_view(b_str, deus::Encoding::kASCII);
+
+        EXPECT_TRUE(a_view == b_view);
+        EXPECT_FALSE(a_view != b_view);
+        EXPECT_TRUE(a_view.explicit_equals(b_view));
+    }
+
+    {
+        const std::string a_str("");
+        const deus::UnicodeView a_view(a_str, deus::Encoding::kASCII);
+        const std::string b_str("");
+        const deus::UnicodeView b_view(b_str, deus::Encoding::kUTF8);
+
+        EXPECT_TRUE(a_view == b_view);
+        EXPECT_FALSE(a_view != b_view);
+        EXPECT_FALSE(a_view.explicit_equals(b_view));
+    }
+
+    {
+        const std::string a_str("");
+        const deus::UnicodeView a_view(a_str, deus::Encoding::kUTF8);
+        const std::string b_str("");
+        const deus::UnicodeView b_view(b_str, deus::Encoding::kASCII);
+
+        EXPECT_TRUE(a_view == b_view);
+        EXPECT_FALSE(a_view != b_view);
+        EXPECT_FALSE(a_view.explicit_equals(b_view));
+    }
+
+    {
+        const std::string a_str("a");
+        const deus::UnicodeView a_view(a_str, deus::Encoding::kUTF8);
+        const std::string b_str("");
+        const deus::UnicodeView b_view(b_str, deus::Encoding::kUTF8);
+
+        EXPECT_FALSE(a_view == b_view);
+        EXPECT_TRUE(a_view != b_view);
+        EXPECT_FALSE(a_view.explicit_equals(b_view));
+    }
+
+    {
+        const std::string a_str("a");
+        const deus::UnicodeView a_view(a_str, deus::Encoding::kUTF8);
+        const std::string b_str("a");
+        const deus::UnicodeView b_view(b_str, deus::Encoding::kUTF8);
+
+        EXPECT_TRUE(a_view == b_view);
+        EXPECT_FALSE(a_view != b_view);
+        EXPECT_TRUE(a_view.explicit_equals(b_view));
+    }
+
+    {
+        const std::string a_str("Hello world!");
+        const deus::UnicodeView a_view(a_str, deus::Encoding::kUTF8);
+        const std::string b_str("Hello world!");
+        const deus::UnicodeView b_view(b_str, deus::Encoding::kUTF8);
+
+        EXPECT_TRUE(a_view == b_view);
+        EXPECT_FALSE(a_view != b_view);
+        EXPECT_TRUE(a_view.explicit_equals(b_view));
+    }
+
+    {
+        const std::string a_str("Hello world!");
+        const deus::UnicodeView a_view(a_str, deus::Encoding::kUTF8);
+        const std::string b_str("Hello world!");
+        const deus::UnicodeView b_view(b_str, deus::Encoding::kASCII);
+
+        EXPECT_TRUE(a_view == b_view);
+        EXPECT_FALSE(a_view != b_view);
+        EXPECT_FALSE(a_view.explicit_equals(b_view));
+    }
+
+    {
+        const std::string a_str("Hello world!");
+        const deus::UnicodeView a_view(a_str, deus::Encoding::kUTF8);
+        const std::string b_str("Hello world");
+        const deus::UnicodeView b_view(b_str, deus::Encoding::kUTF8);
+
+        EXPECT_FALSE(a_view == b_view);
+        EXPECT_TRUE(a_view != b_view);
+        EXPECT_FALSE(a_view.explicit_equals(b_view));
+    }
+
+    {
+        const std::string a_str("Hello world!");
+        const deus::UnicodeView a_view(a_str, deus::Encoding::kASCII);
+        const std::string b_str("Hello world");
+        const deus::UnicodeView b_view(b_str, deus::Encoding::kUTF8);
+
+        EXPECT_FALSE(a_view == b_view);
+        EXPECT_TRUE(a_view != b_view);
+        EXPECT_FALSE(a_view.explicit_equals(b_view));
+    }
+
+    {
+        const std::string a_str("🌿𝄞ꬍꝊޝΟz@");
+        const deus::UnicodeView a_view(a_str, deus::Encoding::kUTF8);
+        const std::string b_str("🌿𝄞ꬍꝊޝΟz@");
+        const deus::UnicodeView b_view(b_str, deus::Encoding::kUTF8);
+
+        EXPECT_TRUE(a_view == b_view);
+        EXPECT_FALSE(a_view != b_view);
+        EXPECT_TRUE(a_view.explicit_equals(b_view));
+    }
+
+    {
+        const std::string a_str("🌿𝄞ꬍꝊޝΟz@");
+        const deus::UnicodeView a_view(a_str, deus::Encoding::kUTF8);
+        const std::string b_str("🌿𝄞ꬍꝊޝΟz@");
+        const deus::UnicodeView b_view(b_str, deus::Encoding::kUTF8);
+
+        EXPECT_TRUE(a_view == b_view);
+        EXPECT_FALSE(a_view != b_view);
+        EXPECT_TRUE(a_view.explicit_equals(b_view));
+    }
+
+
+    {
+        const std::string a_str("🌿𝄞ꬍꝊޝΟz@");
+        const deus::UnicodeView a_view(a_str, deus::Encoding::kUTF8);
+        const std::string b_str("🌿𝄞ꬍꝊ😺Οz@");
+        const deus::UnicodeView b_view(b_str, deus::Encoding::kUTF8);
+
+        EXPECT_FALSE(a_view == b_view);
+        EXPECT_TRUE(a_view != b_view);
+        EXPECT_FALSE(a_view.explicit_equals(b_view));
+    }
+
+    {
+        const std::string a_str("\x1A\x1A\x1A\x1A \x1A\x1A");
+        const deus::UnicodeView a_view(a_str, deus::Encoding::kASCII);
+        const std::string b_str("γειά σο");
+        const deus::UnicodeView b_view(b_str, deus::Encoding::kUTF8);
+
+        EXPECT_TRUE(a_view == b_view);
+        EXPECT_FALSE(a_view != b_view);
+        EXPECT_FALSE(a_view.explicit_equals(b_view));
+    }
+
+    // TODO: more tests for different encodings
+}
+
 TEST(UnicodeView, bytes_as_hex)
 {
     {
@@ -97,7 +246,8 @@ TEST(UnicodeView, bytes_as_hex)
             "\\x6F", "\\x72", "\\x6C", "\\x64", "\\x21"
         };
 
-        const std::vector<deus::UnicodeStorage> result = input.bytes_as_hex("\\x");
+        const std::vector<deus::UnicodeStorage> result =
+            input.bytes_as_hex("\\x");
 
         ASSERT_EQ(result.size(), expected.size());
         for(std::size_t i = 0; i < result.size(); ++i)
@@ -210,4 +360,6 @@ TEST(UnicodeView, bytes_as_hex)
             EXPECT_EQ(result[i].get_string(), expected[i]);
         }
     }
+
+    // TODO: more tests for different encodings
 }

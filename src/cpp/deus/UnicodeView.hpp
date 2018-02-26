@@ -127,9 +127,23 @@ public:
      */
     UnicodeView& operator=(UnicodeView&& other);
 
-    // TODO: equals should check symbols only...?
+    /*!
+     * \brief Returns whether this string and the other given string consist of
+     *        the same code points.
+     *
+     * \note This is not explicit memory equality, if the other string has a
+     *       different encoding, it will be converted to this encoding and then
+     *       the symbols will be compared. So this function compares whether the
+     *       strings represent the same information. For explicit memory
+     *       equality see explicit_equals().
+     */
+    bool operator==(const UnicodeView& other) const;
 
-    // TODO: +=
+    /*!
+     * \brief Returns whether this string and the other given string do not
+     *        consist of the same code points.
+     */
+    bool operator!=(const UnicodeView& other) const;
 
     //--------------------------------------------------------------------------
     //                          PUBLIC MEMBER FUNCTIONS
@@ -170,6 +184,18 @@ public:
      *        within this string.
      */
     std::string std_string() const;
+
+    /*!
+     * \brief Checks whether this string and the other given string have the
+     *        same memory representation.
+     *
+     * This means that this function will always return ```false``` for strings
+     * with different encodings.
+     *
+     * \note This function will also take the memory of the null terminator into
+     *       account when comparing strings.
+     */
+    bool explicit_equals(const deus::UnicodeView& other) const;
 
     // TODO: validate encoding
 

@@ -222,6 +222,26 @@ UnicodeView& UnicodeView::operator=(UnicodeView&& other)
     return *this;
 }
 
+bool UnicodeView::operator==(const UnicodeView& other) const
+{
+    deus::UnicodeStorage converted;
+    deus::UnicodeView other_view = other;
+
+    // different encodings?
+    if(other.encoding() != encoding())
+    {
+        converted = other.convert(encoding());
+        other_view = converted.get_view();
+    }
+
+    return std::memcmp(c_str(), other_view.c_str(), c_str_length()) == 0;
+}
+
+bool UnicodeView::operator!=(const UnicodeView& other) const
+{
+    return !((*this) == other);
+}
+
 //------------------------------------------------------------------------------
 //                            PUBLIC MEMBER FUNCTIONS
 //------------------------------------------------------------------------------
@@ -265,6 +285,25 @@ const char* UnicodeView::c_str() const
 std::string UnicodeView::std_string() const
 {
     return std::string(m_impl->m_data, m_impl->m_byte_length - 1);
+}
+
+bool UnicodeView::explicit_equals(const deus::UnicodeView& other) const
+{
+    // encodings different?
+    if(encoding() != other.encoding())
+    {
+        return false;
+    }
+
+    // sizes different
+    if(byte_length() != other.byte_length())
+    {
+        return false;
+    }
+
+    // compare
+    return
+        std::memcmp(m_impl->m_data, other.m_impl->m_data, byte_length()) == 0;
 }
 
 deus::UnicodeStorage UnicodeView::convert(deus::Encoding encoding) const
