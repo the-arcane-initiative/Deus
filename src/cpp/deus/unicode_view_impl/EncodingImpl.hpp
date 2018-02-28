@@ -36,6 +36,7 @@
 #ifndef DEUS_UNICODEVIEWIMPL_ENCODINGIMPL_HPP_
 #define DEUS_UNICODEVIEWIMPL_ENCODINGIMPL_HPP_
 
+#include "deus/API.h"
 #include "deus/UnicodeView.hpp"
 
 

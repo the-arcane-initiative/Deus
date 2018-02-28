@@ -38,6 +38,7 @@
 
 #include <vector>
 
+#include "deus/API.h"
 #include "deus/UnicodeView.hpp"
 #include "deus/unicode_view_impl/EncodingImpl.hpp"
 

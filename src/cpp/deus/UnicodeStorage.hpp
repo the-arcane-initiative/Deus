@@ -41,7 +41,7 @@
 #include <string>
 #include <vector>
 
-#include "deus/CInterface.h"
+#include "deus/API.h"
 #include "deus/Constants.hpp"
 
 

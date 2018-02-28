@@ -40,7 +40,7 @@
 #include <string>
 #include <vector>
 
-#include "deus/CInterface.h"
+#include "deus/API.h"
 
 #include "deus/Constants.hpp"
 #include "deus/UnicodeStorage.hpp"
@@ -208,6 +208,42 @@ public:
      * ␚ (0x1A).
      */
     deus::UnicodeStorage convert(deus::Encoding encoding) const;
+
+    /*!
+     * \brief Returns a UnicodeView which is the result of converting this
+     *        string to the given encoding *but only if this string is not
+     *        already in the given encoding*.
+     *
+     * This function is useful for requiring a string to be in a encoding, but
+     * avoiding extra overhead if it is already in that encoding.
+     *
+     * \param expected_encoding The encoding the returned string will be in.
+     * \param storage Reference to empty storage that will be used to store the
+     *                converted string, but only if a conversion is required.
+     */
+    const deus::UnicodeView& convert_if(
+            deus::Encoding expected_encoding,
+            deus::UnicodeStorage& storage) const;
+
+    /*!
+     * \brief Returns a UnicodeView which is guaranteed to have an encoding that
+     *        matches an encoding in the allowed_encodings bit mask.
+     *
+     * If this encoding is not in the allowed_encodings, a UnicodeView will be
+     * returned to a version of the string converted to the convert_encoding,
+     * otherwise this UnicodeVIew is simply returned.
+     *
+     * \param allowed_encodings Bitmask of the encodings which do not need
+     *                          converting by this operation.
+     * \param convert_encoding The encoding to convert this string to if it is
+     *                         not in the allowed_encodings.
+     * \param storage Reference to empty storage that will be used to store the
+     *                converted string, but only if a conversion is required.
+     */
+    const deus::UnicodeView& convert_if(
+            uint64_t allowed_encodings,
+            deus::Encoding convert_encoding,
+            deus::UnicodeStorage& storage) const;
 
     /*!
      * \brief Returns a new UnicodeStorage which is the result of concatenating

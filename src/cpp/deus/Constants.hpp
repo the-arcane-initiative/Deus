@@ -40,7 +40,7 @@
 #include <cstddef>
 #include <cstdint>
 
-#include "deus/CInterface.h"
+#include "deus/API.h"
 
 
 namespace deus
@@ -65,7 +65,7 @@ typedef uint32_t CodePoint;
 /*!
  * \brief TODO: DOC
  */
-enum class Encoding
+enum class Encoding : uint64_t
 {
     kASCII    = kDeusEncodingASCII,
     /// TODO: DOC
@@ -142,6 +142,11 @@ extern const std::size_t NULL_POS;
  * \brief The encoding type used by the compiler for the current source code.
  */
 static constexpr deus::Encoding SOURCE_ENCODING = determine_source_encoding();
+
+/*!
+ * \brief Bitwise OR of the encodings that are ASCII compatible.
+ */
+extern const uint64_t ASCII_COMPATIBLE_ENCODINGS;
 
 } // namespace DEUS_VERSION_NS
 } // namespace deus

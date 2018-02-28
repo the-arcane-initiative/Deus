@@ -40,7 +40,7 @@
 #include <stdexcept>
 #include <string>
 
-#include "deus/CInterface.h"
+#include "deus/API.h"
 
 
 namespace deus

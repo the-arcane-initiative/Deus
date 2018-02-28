@@ -49,19 +49,17 @@ extern "C"
 #define DEUS_VERSION_NS v##DEUS_API_VERSION
 
 // TODO: DOC
-#define kDeusEncodingASCII    0U
+#define kDeusEncodingASCII    1U
 // TODO: DOC
-#define kDeusEncodingUTF8     1U
+#define kDeusEncodingUTF8     2U
 // TODO: DOC
-#define kDeusEncodingUTF16_LE 2U
+#define kDeusEncodingUTF16_LE 4U
 // TODO: DOC
-#define kDeusEncodingUTF16_BE 3U
+#define kDeusEncodingUTF16_BE 8U
 // TODO: DOC
-#define kDeusEncodingUTF32_LE 4U
+#define kDeusEncodingUTF32_LE 16U
 // TODO: DOC
-#define kDeusEncodingUTF32_BE 5U
-// TODO: DOC
-#define kDeusEncodingCount    6U
+#define kDeusEncodingUTF32_BE 32U
 
 
 #ifdef __cplusplus
