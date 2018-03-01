@@ -311,7 +311,7 @@ deus::UnicodeStorage UnicodeView::convert(deus::Encoding encoding) const
     return m_impl->convert(encoding);
 }
 
-const deus::UnicodeView& UnicodeView::convert_if(
+const deus::UnicodeView& UnicodeView::convert_if_not(
         deus::Encoding expected_encoding,
         deus::UnicodeStorage& storage) const
 {
@@ -323,7 +323,7 @@ const deus::UnicodeView& UnicodeView::convert_if(
     return *this;
 }
 
-const deus::UnicodeView& UnicodeView::convert_if(
+const deus::UnicodeView& UnicodeView::convert_if_not(
         uint64_t allowed_encodings,
         deus::Encoding convert_encoding,
         deus::UnicodeStorage& storage) const
@@ -340,7 +340,7 @@ deus::UnicodeStorage UnicodeView::concatenate(const UnicodeView& s) const
 {
     // different encodings?
     deus::UnicodeStorage converted;
-    deus::UnicodeView other_view = s.convert_if(encoding(), converted);
+    deus::UnicodeView other_view = s.convert_if_not(encoding(), converted);
 
     // actually concatenate the strings
     std::string a = std_string();

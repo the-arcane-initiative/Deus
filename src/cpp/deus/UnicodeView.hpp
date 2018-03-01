@@ -221,7 +221,7 @@ public:
      * \param storage Reference to empty storage that will be used to store the
      *                converted string, but only if a conversion is required.
      */
-    const deus::UnicodeView& convert_if(
+    const deus::UnicodeView& convert_if_not(
             deus::Encoding expected_encoding,
             deus::UnicodeStorage& storage) const;
 
@@ -240,7 +240,7 @@ public:
      * \param storage Reference to empty storage that will be used to store the
      *                converted string, but only if a conversion is required.
      */
-    const deus::UnicodeView& convert_if(
+    const deus::UnicodeView& convert_if_not(
             uint64_t allowed_encodings,
             deus::Encoding convert_encoding,
             deus::UnicodeStorage& storage) const;

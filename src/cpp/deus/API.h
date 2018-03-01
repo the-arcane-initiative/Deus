@@ -45,8 +45,12 @@ extern "C"
 
 // TODO: DOC
 #define DEUS_API_VERSION 0
+
+#define DEUS_BUILD_VER_NS2(ver) v##ver
+#define DEUS_BUILD_VER_NS(ver) DEUS_BUILD_VER_NS2(ver)
+
 // TODO: DOC
-#define DEUS_VERSION_NS v##DEUS_API_VERSION
+#define DEUS_VERSION_NS DEUS_BUILD_VER_NS(DEUS_API_VERSION)
 
 // TODO: DOC
 #define kDeusEncodingASCII    1U
