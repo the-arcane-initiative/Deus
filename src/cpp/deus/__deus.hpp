@@ -44,16 +44,6 @@
  */
 namespace deus
 {
-
-// note: currently this has to be updated every time the API changes
-/*!
- * \brief Version 0 of the Deus API. This namespace is implicit and doesn't have
- *        to be used by source code using Deus.
- */
-namespace DEUS_VERSION_NS
-{
-} // namespace DEUS_VERSION_NS
-
 } // namespace deus
 
 #endif

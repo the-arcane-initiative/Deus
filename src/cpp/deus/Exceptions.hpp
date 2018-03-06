@@ -45,8 +45,7 @@
 
 namespace deus
 {
-inline namespace DEUS_VERSION_NS
-{
+DEUS_VERSION_NS_BEGIN
 
 //------------------------------------------------------------------------------
 //                                   DEUS ERROR
@@ -207,7 +206,7 @@ public:
     }
 };
 
-} // namespace DEUS_VERSION_NS
+DEUS_VERSION_NS_END
 } // namespace deus
 
 #endif

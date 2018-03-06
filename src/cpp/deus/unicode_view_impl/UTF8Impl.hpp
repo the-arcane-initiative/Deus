@@ -43,8 +43,7 @@
 
 namespace deus
 {
-inline namespace DEUS_VERSION_NS
-{
+DEUS_VERSION_NS_BEGIN
 
 /*!
  * \brief The implementation of UTF-8 encoding specific logic for the
@@ -153,7 +152,7 @@ deus::UnicodeStorage convert_to_ascii_naive(
         std::size_t in_symbol_length);
 
 } // namespace utf8_impl
-} // namespace DEUS_VERSION_NS
+DEUS_VERSION_NS_END
 } // namespace deus
 
 #endif

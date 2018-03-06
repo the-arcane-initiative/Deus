@@ -42,8 +42,7 @@
 
 namespace deus
 {
-inline namespace DEUS_VERSION_NS
-{
+DEUS_VERSION_NS_BEGIN
 
 /*!
  * \brief Abstract base class which defines the interface for the implementation
@@ -189,7 +188,7 @@ public:
     virtual deus::UnicodeStorage convert(deus::Encoding encoding) const = 0;
 };
 
-} // namespace DEUS_VERSION_NS
+DEUS_VERSION_NS_END
 } // namespace deus
 
 #endif

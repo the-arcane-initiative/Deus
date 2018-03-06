@@ -53,6 +53,20 @@ extern "C"
 #define DEUS_VERSION_NS DEUS_BUILD_VER_NS(DEUS_API_VERSION)
 
 // TODO: DOC
+#define DEUS_VERSION_NS_BEGIN
+#ifndef IN_DOXYGEN
+    #undef DEUS_VERSION_NS_BEGIN
+    #define DEUS_VERSION_NS_BEGIN inline namespace DEUS_VERSION_NS {
+#endif
+
+// TODO: DOC
+#define DEUS_VERSION_NS_END
+#ifndef IN_DOXYGEN
+    #undef DEUS_VERSION_NS_END
+    #define DEUS_VERSION_NS_END }
+#endif
+
+// TODO: DOC
 #define kDeusEncodingASCII    1U
 // TODO: DOC
 #define kDeusEncodingUTF8     2U

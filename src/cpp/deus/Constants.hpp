@@ -46,8 +46,7 @@
 namespace deus
 {
 
-inline namespace DEUS_VERSION_NS
-{
+DEUS_VERSION_NS_BEGIN
 
 //------------------------------------------------------------------------------
 //                                TYPE DEFINITIONS
@@ -148,7 +147,7 @@ static constexpr deus::Encoding SOURCE_ENCODING = determine_source_encoding();
  */
 extern const uint64_t ASCII_COMPATIBLE_ENCODINGS;
 
-} // namespace DEUS_VERSION_NS
+DEUS_VERSION_NS_END
 } // namespace deus
 
 #endif

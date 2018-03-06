@@ -48,8 +48,7 @@
 
 namespace deus
 {
-inline namespace DEUS_VERSION_NS
-{
+DEUS_VERSION_NS_BEGIN
 
 /*!
  * \brief TODO:
@@ -238,6 +237,8 @@ public:
      */
     bool explicit_equals(const deus::UnicodeView& other) const;
 
+    #ifndef IN_DOXYGEN
+
     /*!
      * \brief Returns whether this string starts with the other given string.
      *
@@ -245,6 +246,8 @@ public:
      * internally converted to the encoding type of this string.
      */
     bool starts_with(const deus::UnicodeView& other) const;
+
+    #endif
 
     /*!
      * \brief Returns whether this string ends with the other given string.
@@ -356,7 +359,7 @@ private:
     EncodingImpl* m_impl;
 };
 
-} // namespace DEUS_VERSION_NS
+DEUS_VERSION_NS_END
 } // namespace deus
 
 // TODO: could move this to an inline file?

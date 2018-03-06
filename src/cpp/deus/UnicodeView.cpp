@@ -42,8 +42,7 @@
 
 namespace deus
 {
-inline namespace DEUS_VERSION_NS
-{
+DEUS_VERSION_NS_BEGIN
 
 //------------------------------------------------------------------------------
 //                                  CONSTRUCTORS
@@ -477,5 +476,5 @@ std::vector<deus::UnicodeStorage> UnicodeView::bytes_as_hex(
     return ret;
 }
 
-} // namespace DEUS_VERSION_NS
+DEUS_VERSION_NS_END
 } // namespace deus

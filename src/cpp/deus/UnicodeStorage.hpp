@@ -47,8 +47,7 @@
 
 namespace deus
 {
-inline namespace DEUS_VERSION_NS
-{
+DEUS_VERSION_NS_BEGIN
 
 //------------------------------------------------------------------------------
 //                              FORWARD DECLARATIONS
@@ -233,7 +232,7 @@ private:
     std::unique_ptr<deus::UnicodeView> m_view;
 };
 
-} // namespace DEUS_VERSION_NS
+DEUS_VERSION_NS_END
 } // namespace deus
 
 // TODO: Hash

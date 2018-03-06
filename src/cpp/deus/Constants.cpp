@@ -37,8 +37,7 @@
 
 namespace deus
 {
-inline namespace DEUS_VERSION_NS
-{
+DEUS_VERSION_NS_BEGIN
 
 const std::size_t NULL_POS = std::numeric_limits<std::size_t>::max();
 
@@ -46,5 +45,5 @@ const uint64_t ASCII_COMPATIBLE_ENCODINGS =
     static_cast<uint64_t>(Encoding::kASCII) |
     static_cast<uint64_t>(Encoding::kUTF8);
 
-} // namespace DEUS_VERSION_NS
+DEUS_VERSION_NS_END
 } // namespace deus
