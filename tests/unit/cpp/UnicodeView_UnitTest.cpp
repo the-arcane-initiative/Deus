@@ -251,6 +251,246 @@ TEST(UnicodeView, empty)
     // TODO: more tests for different encodings
 }
 
+TEST(UnicodeView, starts_with)
+{
+    {
+        const std::string a_str("");
+        const deus::UnicodeView a_view(a_str, deus::Encoding::kASCII);
+        const std::string b_str("");
+        const deus::UnicodeView b_view(b_str, deus::Encoding::kASCII);
+
+        EXPECT_TRUE(a_view.starts_with(b_view));
+    }
+
+    {
+        const std::string a_str("");
+        const deus::UnicodeView a_view(a_str, deus::Encoding::kUTF8);
+        const std::string b_str("");
+        const deus::UnicodeView b_view(b_str, deus::Encoding::kUTF8);
+
+        EXPECT_TRUE(a_view.starts_with(b_view));
+    }
+
+    {
+        const std::string a_str("");
+        const deus::UnicodeView a_view(a_str, deus::Encoding::kASCII);
+        const std::string b_str("");
+        const deus::UnicodeView b_view(b_str, deus::Encoding::kUTF8);
+
+        EXPECT_TRUE(a_view.starts_with(b_view));
+    }
+
+    {
+        const std::string a_str("");
+        const deus::UnicodeView a_view(a_str, deus::Encoding::kUTF8);
+        const std::string b_str("");
+        const deus::UnicodeView b_view(b_str, deus::Encoding::kASCII);
+
+        EXPECT_TRUE(a_view.starts_with(b_view));
+    }
+
+    {
+        const std::string a_str("");
+        const deus::UnicodeView a_view(a_str, deus::Encoding::kUTF8);
+        const std::string b_str("a");
+        const deus::UnicodeView b_view(b_str, deus::Encoding::kUTF8);
+
+        EXPECT_FALSE(a_view.starts_with(b_view));
+    }
+
+    {
+        const std::string a_str("Hello world");
+        const deus::UnicodeView a_view(a_str, deus::Encoding::kUTF8);
+        const std::string b_str("Hello world!");
+        const deus::UnicodeView b_view(b_str, deus::Encoding::kASCII);
+
+        EXPECT_FALSE(a_view.starts_with(b_view));
+    }
+
+    {
+        const std::string a_str("Hello world");
+        const deus::UnicodeView a_view(a_str, deus::Encoding::kASCII);
+        const std::string b_str("Hello world💣");
+        const deus::UnicodeView b_view(b_str, deus::Encoding::kUTF8);
+
+        EXPECT_FALSE(a_view.starts_with(b_view));
+    }
+
+    {
+        const std::string a_str("Hello world");
+        const deus::UnicodeView a_view(a_str, deus::Encoding::kASCII);
+        const std::string b_str("Hello");
+        const deus::UnicodeView b_view(b_str, deus::Encoding::kASCII);
+
+        EXPECT_TRUE(a_view.starts_with(b_view));
+    }
+
+    {
+        const std::string a_str("Hello world");
+        const deus::UnicodeView a_view(a_str, deus::Encoding::kUTF8);
+        const std::string b_str("hello");
+        const deus::UnicodeView b_view(b_str, deus::Encoding::kASCII);
+
+        EXPECT_FALSE(a_view.starts_with(b_view));
+    }
+
+    {
+        const std::string a_str("🌿𝄞ꬍꝊޝΟz@");
+        const deus::UnicodeView a_view(a_str, deus::Encoding::kUTF8);
+        const std::string b_str("Hello");
+        const deus::UnicodeView b_view(b_str, deus::Encoding::kASCII);
+
+        EXPECT_FALSE(a_view.starts_with(b_view));
+    }
+
+    {
+        const std::string a_str("🌿𝄞ꬍꝊޝΟz@");
+        const deus::UnicodeView a_view(a_str, deus::Encoding::kUTF8);
+        const std::string b_str("🌿𝄞ꬍꝊޝ");
+        const deus::UnicodeView b_view(b_str, deus::Encoding::kUTF8);
+
+        EXPECT_TRUE(a_view.starts_with(b_view));
+    }
+
+    {
+        const std::string a_str("this is a مزيج of text");
+        const deus::UnicodeView a_view(a_str, deus::Encoding::kUTF8);
+        const std::string b_str("this is a مزيج of text");
+        const deus::UnicodeView b_view(b_str, deus::Encoding::kUTF8);
+
+        EXPECT_TRUE(a_view.starts_with(b_view));
+    }
+
+    {
+        const std::string a_str("this is a مزيج of text");
+        const deus::UnicodeView a_view(a_str, deus::Encoding::kUTF8);
+        const std::string b_str("this is a مزج of text");
+        const deus::UnicodeView b_view(b_str, deus::Encoding::kUTF8);
+
+        EXPECT_FALSE(a_view.starts_with(b_view));
+    }
+}
+
+TEST(UnicodeView, ends_with)
+{
+    {
+        const std::string a_str("");
+        const deus::UnicodeView a_view(a_str, deus::Encoding::kASCII);
+        const std::string b_str("");
+        const deus::UnicodeView b_view(b_str, deus::Encoding::kASCII);
+
+        EXPECT_TRUE(a_view.ends_with(b_view));
+    }
+
+    {
+        const std::string a_str("");
+        const deus::UnicodeView a_view(a_str, deus::Encoding::kUTF8);
+        const std::string b_str("");
+        const deus::UnicodeView b_view(b_str, deus::Encoding::kUTF8);
+
+        EXPECT_TRUE(a_view.ends_with(b_view));
+    }
+
+    {
+        const std::string a_str("");
+        const deus::UnicodeView a_view(a_str, deus::Encoding::kASCII);
+        const std::string b_str("");
+        const deus::UnicodeView b_view(b_str, deus::Encoding::kUTF8);
+
+        EXPECT_TRUE(a_view.ends_with(b_view));
+    }
+
+    {
+        const std::string a_str("");
+        const deus::UnicodeView a_view(a_str, deus::Encoding::kUTF8);
+        const std::string b_str("");
+        const deus::UnicodeView b_view(b_str, deus::Encoding::kASCII);
+
+        EXPECT_TRUE(a_view.ends_with(b_view));
+    }
+
+    {
+        const std::string a_str("");
+        const deus::UnicodeView a_view(a_str, deus::Encoding::kUTF8);
+        const std::string b_str("a");
+        const deus::UnicodeView b_view(b_str, deus::Encoding::kUTF8);
+
+        EXPECT_FALSE(a_view.ends_with(b_view));
+    }
+
+    {
+        const std::string a_str("Hello world");
+        const deus::UnicodeView a_view(a_str, deus::Encoding::kUTF8);
+        const std::string b_str("Hello world!");
+        const deus::UnicodeView b_view(b_str, deus::Encoding::kASCII);
+
+        EXPECT_FALSE(a_view.ends_with(b_view));
+    }
+
+    {
+        const std::string a_str("Hello world");
+        const deus::UnicodeView a_view(a_str, deus::Encoding::kASCII);
+        const std::string b_str("Hello world💣");
+        const deus::UnicodeView b_view(b_str, deus::Encoding::kUTF8);
+
+        EXPECT_FALSE(a_view.ends_with(b_view));
+    }
+
+    {
+        const std::string a_str("Hello world");
+        const deus::UnicodeView a_view(a_str, deus::Encoding::kASCII);
+        const std::string b_str(" world");
+        const deus::UnicodeView b_view(b_str, deus::Encoding::kASCII);
+
+        EXPECT_TRUE(a_view.ends_with(b_view));
+    }
+
+    {
+        const std::string a_str("Hello world");
+        const deus::UnicodeView a_view(a_str, deus::Encoding::kUTF8);
+        const std::string b_str("\tworld");
+        const deus::UnicodeView b_view(b_str, deus::Encoding::kASCII);
+
+        EXPECT_FALSE(a_view.ends_with(b_view));
+    }
+
+    {
+        const std::string a_str("🌿𝄞ꬍꝊޝΟz@");
+        const deus::UnicodeView a_view(a_str, deus::Encoding::kUTF8);
+        const std::string b_str("Hello");
+        const deus::UnicodeView b_view(b_str, deus::Encoding::kASCII);
+
+        EXPECT_FALSE(a_view.ends_with(b_view));
+    }
+
+    {
+        const std::string a_str("🌿𝄞ꬍꝊޝΟz@");
+        const deus::UnicodeView a_view(a_str, deus::Encoding::kUTF8);
+        const std::string b_str("Οz@");
+        const deus::UnicodeView b_view(b_str, deus::Encoding::kUTF8);
+
+        EXPECT_TRUE(a_view.ends_with(b_view));
+    }
+
+    {
+        const std::string a_str("this is a مزيج of text");
+        const deus::UnicodeView a_view(a_str, deus::Encoding::kUTF8);
+        const std::string b_str("this is a مزيج of text");
+        const deus::UnicodeView b_view(b_str, deus::Encoding::kUTF8);
+
+        EXPECT_TRUE(a_view.ends_with(b_view));
+    }
+
+    {
+        const std::string a_str("this is a مزيج of text");
+        const deus::UnicodeView a_view(a_str, deus::Encoding::kUTF8);
+        const std::string b_str("this is a مزج of text");
+        const deus::UnicodeView b_view(b_str, deus::Encoding::kUTF8);
+
+        EXPECT_FALSE(a_view.ends_with(b_view));
+    }
+}
+
 TEST(UnicodeView, bytes_as_hex)
 {
     {

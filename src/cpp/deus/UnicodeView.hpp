@@ -238,6 +238,24 @@ public:
      */
     bool explicit_equals(const deus::UnicodeView& other) const;
 
+    /*!
+     * \brief Returns whether this string starts with the other given string.
+     *
+     * If the strings have different encodings the input string will be
+     * internally converted to the encoding type of this string.
+     */
+    bool starts_with(const deus::UnicodeView& other) const;
+
+    /*!
+     * \brief Returns whether this string ends with the other given string.
+     *
+     * If the strings have different encodings the input string will be
+     * internally converted to the encoding type of this string.
+     */
+    bool ends_with(const deus::UnicodeView& other) const;
+
+    // TODO: contains/find
+
     // TODO: validate encoding
 
     /*!

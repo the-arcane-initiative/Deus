@@ -321,6 +321,52 @@ bool UnicodeView::explicit_equals(const deus::UnicodeView& other) const
         std::memcmp(m_impl->m_data, other.m_impl->m_data, byte_length()) == 0;
 }
 
+bool UnicodeView::starts_with(const deus::UnicodeView& other) const
+{
+    // sub string greater? - fast fail
+    if(other.length() > length())
+    {
+        return false;
+    }
+
+    // different encodings?
+    deus::UnicodeStorage converted;
+    deus::UnicodeView other_view = other.convert_if_not(encoding(), converted);
+
+    // just use memcmp for the fastest result
+    return std::memcmp(
+        c_str(),
+        other_view.c_str(),
+        other_view.c_str_length()
+    ) == 0;
+}
+
+bool UnicodeView::ends_with(const deus::UnicodeView& other) const
+{
+    // sub string greater? - fast fail
+    if(other.length() > length())
+    {
+        return false;
+    }
+
+    // zero length? - fast succeed
+    if(other.length() == 0)
+    {
+        return true;
+    }
+
+    // different encodings?
+    deus::UnicodeStorage converted;
+    deus::UnicodeView other_view = other.convert_if_not(encoding(), converted);
+
+    // just use memcmp for the fastest result
+    return std::memcmp(
+        c_str() + c_str_length() - other_view.c_str_length(),
+        other_view.c_str(),
+        other_view.c_str_length()
+    ) == 0;
+}
+
 deus::UnicodeStorage UnicodeView::convert(deus::Encoding encoding) const
 {
     return m_impl->convert(encoding);
