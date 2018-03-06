@@ -411,6 +411,35 @@ deus::UnicodeStorage UnicodeView::concatenate(const UnicodeView& s) const
     return deus::UnicodeStorage(std::move(a), encoding());
 }
 
+deus::UnicodeStorage UnicodeView::repeat(int32_t n) const
+{
+    // don't support negative multiplication
+    if(n < 0)
+    {
+        throw deus::ValueError(
+            "UnicodeView::repeat cannot operate for negative values."
+        );
+    }
+
+    // allocate
+    std::string result;
+    result.reserve(c_str_length() * n);
+
+    // insert
+    std::string s = std_string();
+    for(int32_t i = 0; i < n; ++i)
+    {
+        result.insert(result.end(), s.begin(), s.end());
+    }
+
+    // return storage
+    return deus::UnicodeStorage(
+        std::move(result),
+        length() * n,
+        encoding()
+    );
+}
+
 std::vector<deus::UnicodeStorage> UnicodeView::bytes_as_hex(
         const deus::UnicodeView& prefix,
         bool uppercase) const

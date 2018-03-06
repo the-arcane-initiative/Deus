@@ -491,6 +491,64 @@ TEST(UnicodeView, ends_with)
     }
 }
 
+TEST(UnicodeView, repeat)
+{
+    {
+        const std::string str("");
+        const deus::UnicodeView view(str, deus::Encoding::kASCII);
+        const deus::UnicodeStorage result = view.repeat(0);
+
+        EXPECT_EQ(result.get_string(), "");
+    }
+
+    {
+        const std::string str("");
+        const deus::UnicodeView view(str, deus::Encoding::kUTF8);
+        const deus::UnicodeStorage result = view * 0;
+
+        EXPECT_EQ(result.get_string(), "");
+    }
+
+    {
+        const std::string str("");
+        const deus::UnicodeView view(str, deus::Encoding::kASCII);
+        const deus::UnicodeStorage result = view.repeat(14);
+
+        EXPECT_EQ(result.get_string(), "");
+    }
+
+    {
+        const std::string str("😺");
+        const deus::UnicodeView view(str, deus::Encoding::kUTF8);
+        const deus::UnicodeStorage result = view.repeat(1);
+
+        EXPECT_EQ(result.get_string(), "😺");
+    }
+
+    {
+        const deus::UnicodeStorage storage("-", deus::Encoding::kASCII);
+        const deus::UnicodeStorage result = storage * 12;
+
+        EXPECT_EQ(result.get_string(), "------------");
+    }
+
+    {
+        const std::string str("Hello ");
+        const deus::UnicodeView view(str, deus::Encoding::kASCII);
+        const deus::UnicodeStorage result = view.repeat(2);
+
+        EXPECT_EQ(result.get_string(), "Hello Hello ");
+    }
+
+    {
+        const std::string str("🌿𝄞ꬍꝊޝΟz@");
+        const deus::UnicodeView view(str, deus::Encoding::kUTF8);
+        const deus::UnicodeStorage result = view * 3;
+
+        EXPECT_EQ(result.get_string(), "🌿𝄞ꬍꝊޝΟz@🌿𝄞ꬍꝊޝΟz@🌿𝄞ꬍꝊޝΟz@");
+    }
+}
+
 TEST(UnicodeView, bytes_as_hex)
 {
     {

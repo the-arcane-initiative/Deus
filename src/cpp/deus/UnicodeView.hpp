@@ -314,6 +314,14 @@ public:
     deus::UnicodeStorage concatenate(const UnicodeView& s) const;
 
     /*!
+     * \brief Returns new UnicodeStorage which is the result of repeating this
+     *        string n number of times.
+     *
+     * \throw deus::ValueError If the n parameter is negative.
+     */
+    deus::UnicodeStorage repeat(int32_t n) const;
+
+    /*!
      * \brief Returns a vector of the bytes (not symbols) of this string
      *        converted to their hex representation in string format.
      *
@@ -357,7 +365,11 @@ private:
 //                               EXTERNAL OPERATORS
 //------------------------------------------------------------------------------
 
-// TODO: DOC
+//----------------------------CONCATENATE OPERATORS-----------------------------
+
+/*!
+ * \brief Operator for performing UnicodeView::concatenate().
+ */
 inline deus::UnicodeStorage operator+(
         const char* a,
         const deus::UnicodeView& b)
@@ -365,7 +377,9 @@ inline deus::UnicodeStorage operator+(
     return deus::UnicodeView(a).concatenate(b);
 }
 
-// TODO: DOC
+/*!
+ * \brief Operator for performing UnicodeView::concatenate().
+ */
 inline deus::UnicodeStorage operator+(
         const deus::UnicodeView& a,
         const deus::UnicodeView& b)
@@ -373,7 +387,9 @@ inline deus::UnicodeStorage operator+(
     return a.concatenate(b);
 }
 
-// TODO: DOC
+/*!
+ * \brief Operator for performing UnicodeView::concatenate().
+ */
 inline deus::UnicodeStorage operator+(
         const deus::UnicodeStorage& a,
         const char* b)
@@ -381,12 +397,32 @@ inline deus::UnicodeStorage operator+(
     return a.get_view().concatenate(deus::UnicodeView(b));
 }
 
-// TODO: DOC
+/*!
+ * \brief Operator for performing UnicodeView::concatenate().
+ */
 inline deus::UnicodeStorage operator+(
         const deus::UnicodeStorage& a,
         const deus::UnicodeStorage& b)
 {
     return a.get_view().concatenate(b.get_view());
+}
+
+//-------------------------------REPEAT OPERATORS-------------------------------
+
+/*!
+ * \brief Operator for performing UnicodeView::concatenate().
+ */
+inline deus::UnicodeStorage operator*(const deus::UnicodeView& a, int32_t n)
+{
+    return a.repeat(n);
+}
+
+/*!
+ * \brief Operator for performing UnicodeView::concatenate().
+ */
+inline deus::UnicodeStorage operator*(const deus::UnicodeStorage& a, int32_t n)
+{
+    return a.get_view().repeat(n);
 }
 
 //-------------------------------STREAM OPERATORS-------------------------------
