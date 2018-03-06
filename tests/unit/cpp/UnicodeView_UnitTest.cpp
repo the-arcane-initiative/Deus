@@ -190,6 +190,67 @@ TEST(UnicodeView, equality)
     // TODO: more tests for different encodings
 }
 
+TEST(UnicodeView, empty)
+{
+    {
+        const std::string str("");
+        const deus::UnicodeView view(str, deus::Encoding::kASCII);
+
+        EXPECT_TRUE(str.empty());
+    }
+
+    {
+        const std::string str("\0");
+        const deus::UnicodeView view(str, deus::Encoding::kASCII);
+
+        EXPECT_TRUE(str.empty());
+    }
+
+    {
+        const std::string str(" ");
+        const deus::UnicodeView view(str, deus::Encoding::kASCII);
+
+        EXPECT_FALSE(str.empty());
+    }
+
+    {
+        const std::string str("Hello world!");
+        const deus::UnicodeView view(str, deus::Encoding::kASCII);
+
+        EXPECT_FALSE(str.empty());
+    }
+
+    {
+        const std::string str("");
+        const deus::UnicodeView view(str, deus::Encoding::kUTF8);
+
+        EXPECT_TRUE(str.empty());
+    }
+
+    {
+        const std::string str("\0");
+        const deus::UnicodeView view(str, deus::Encoding::kUTF8);
+
+        EXPECT_TRUE(str.empty());
+    }
+
+    {
+        const std::string str(" ");
+        const deus::UnicodeView view(str, deus::Encoding::kUTF8);
+
+        EXPECT_FALSE(str.empty());
+    }
+
+    {
+        const std::string str("Hello world!");
+        const deus::UnicodeView view(str, deus::Encoding::kUTF8);
+
+        EXPECT_FALSE(str.empty());
+    }
+
+    // TODO: more tests for different encodings
+}
+
 TEST(UnicodeView, bytes_as_hex)
 {
     {

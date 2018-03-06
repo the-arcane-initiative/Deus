@@ -210,7 +210,7 @@ UnicodeStorage& UnicodeStorage::operator=(UnicodeStorage&& other)
 bool UnicodeStorage::operator==(const UnicodeStorage& other) const
 {
     // just use the UnicodeView
-    return m_view == other.m_view;
+    return (*m_view) == (*other.m_view);
 }
 
 bool UnicodeStorage::operator!=(const UnicodeStorage& other) const
@@ -218,9 +218,24 @@ bool UnicodeStorage::operator!=(const UnicodeStorage& other) const
     return !((*this) == other);
 }
 
+bool UnicodeStorage::operator==(const deus::UnicodeView& other) const
+{
+    return (*m_view) == other;
+}
+
+bool UnicodeStorage::operator!=(const deus::UnicodeView& other) const
+{
+    return !((*this) == other);
+}
+
 UnicodeStorage::operator std::string() const
 {
     return m_str;
+}
+
+UnicodeStorage::operator deus::UnicodeView() const
+{
+    return *m_view;
 }
 
 //------------------------------------------------------------------------------

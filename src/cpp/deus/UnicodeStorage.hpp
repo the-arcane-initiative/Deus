@@ -180,9 +180,32 @@ public:
     bool operator!=(const UnicodeStorage& other) const;
 
     /*!
+     * \brief Returns whether this string and the other given string consist of
+     *        the same code points.
+     *
+     * \note This is not explicit memory equality, if the other string has a
+     *       different encoding, it will be converted to this encoding and then
+     *       the symbols will be compared. So this function compares whether the
+     *       strings represent the same information. For explicit memory
+     *       equality see deus::UnicodeView::explicit_equals().
+     */
+    bool operator==(const deus::UnicodeView& other) const;
+
+    /*!
+     * \brief Returns whether this string and the other given string do not
+     *        consist of the same code points.
+     */
+    bool operator!=(const deus::UnicodeView& other) const;
+
+    /*!
      * \brief Implicitly converts this UnicodeStorage to a std::string.
      */
     operator std::string() const;
+
+    /*!
+     * \brief Implicitly converts this UnicodeStorage to a deus::UnicodeView.
+     */
+    operator deus::UnicodeView() const;
 
     //--------------------------------------------------------------------------
     //                          PUBLIC MEMBER FUNCTIONS

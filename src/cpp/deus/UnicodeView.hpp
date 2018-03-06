@@ -145,6 +145,24 @@ public:
      */
     bool operator!=(const UnicodeView& other) const;
 
+    /*!
+     * \brief Returns whether this string and the other given string consist of
+     *        the same code points.
+     *
+     * \note This is not explicit memory equality, if the other string has a
+     *       different encoding, it will be converted to this encoding and then
+     *       the symbols will be compared. So this function compares whether the
+     *       strings represent the same information. For explicit memory
+     *       equality see explicit_equals().
+     */
+    bool operator==(const UnicodeStorage& other) const;
+
+    /*!
+     * \brief Returns whether this string and the other given string do not
+     *        consist of the same code points.
+     */
+    bool operator!=(const UnicodeStorage& other) const;
+
     //--------------------------------------------------------------------------
     //                          PUBLIC MEMBER FUNCTIONS
     //--------------------------------------------------------------------------
@@ -170,13 +188,36 @@ public:
      */
     std::size_t length() const;
 
-    // TODO: DOC
+    /*!
+     * \brief Returns the number of bytes in the internal string data of this
+     *        UnicodeView, this also includes the null terminator bytes of the
+     *        data.
+     */
     std::size_t byte_length() const;
 
-    // TODO: DOC
+    /*!
+     * \brief Returns the number of character bytes in the internal string, this
+     *        is the same as byte_length() but does not include the bytes of the
+     *        nullptr.
+     *
+     * This length should be used for the length of C-style strings acquired via
+     * c_str().
+     */
     std::size_t c_str_length() const;
 
-    // TODO: DOC
+    /*!
+     * \brief Returns whether this is an empty string (i.e. both length() and
+     *        c_str_length() are 0).
+     */
+    bool empty() const;
+
+    /*!
+     * \brief Returns the C-style string of the internal data of this
+     *        UnicodeView.
+     *
+     * This is effectively the pointer to the first byte of this UnicodeView's
+     * internal data.
+     */
     const char* c_str() const;
 
     /*!

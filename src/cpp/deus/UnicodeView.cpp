@@ -242,6 +242,16 @@ bool UnicodeView::operator!=(const UnicodeView& other) const
     return !((*this) == other);
 }
 
+bool UnicodeView::operator==(const UnicodeStorage& other) const
+{
+    return (*this) == other.get_view();
+}
+
+bool UnicodeView::operator!=(const UnicodeStorage& other) const
+{
+    return !((*this) == other);
+}
+
 //------------------------------------------------------------------------------
 //                            PUBLIC MEMBER FUNCTIONS
 //------------------------------------------------------------------------------
@@ -275,6 +285,11 @@ std::size_t UnicodeView::c_str_length() const
     return
         m_impl->m_byte_length -
         EncodingImpl::null_terminator_size(m_impl->m_encoding);
+}
+
+bool UnicodeView::empty() const
+{
+    return c_str_length() == 0;
 }
 
 const char* UnicodeView::c_str() const
