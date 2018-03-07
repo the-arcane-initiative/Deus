@@ -393,22 +393,22 @@ inline deus::UnicodeStorage operator+(
 /*!
  * \brief Operator for performing UnicodeView::concatenate().
  */
-inline deus::UnicodeStorage operator+(
-        const deus::UnicodeStorage& a,
-        const char* b)
-{
-    return a.get_view().concatenate(deus::UnicodeView(b));
-}
+// inline deus::UnicodeStorage operator+(
+//         const deus::UnicodeStorage& a,
+//         const char* b)
+// {
+//     return a.get_view().concatenate(deus::UnicodeView(b));
+// }
 
 /*!
  * \brief Operator for performing UnicodeView::concatenate().
  */
-inline deus::UnicodeStorage operator+(
-        const deus::UnicodeStorage& a,
-        const deus::UnicodeStorage& b)
-{
-    return a.get_view().concatenate(b.get_view());
-}
+// inline deus::UnicodeStorage operator+(
+//         const deus::UnicodeStorage& a,
+//         const deus::UnicodeStorage& b)
+// {
+//     return a.get_view().concatenate(b.get_view());
+// }
 
 //-------------------------------REPEAT OPERATORS-------------------------------
 
@@ -423,10 +423,10 @@ inline deus::UnicodeStorage operator*(const deus::UnicodeView& a, int32_t n)
 /*!
  * \brief Operator for performing UnicodeView::concatenate().
  */
-inline deus::UnicodeStorage operator*(const deus::UnicodeStorage& a, int32_t n)
-{
-    return a.get_view().repeat(n);
-}
+// inline deus::UnicodeStorage operator*(const deus::UnicodeStorage& a, int32_t n)
+// {
+//     return a.get_view().repeat(n);
+// }
 
 //-------------------------------STREAM OPERATORS-------------------------------
 
