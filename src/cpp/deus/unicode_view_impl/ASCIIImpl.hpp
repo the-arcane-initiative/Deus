@@ -98,6 +98,14 @@ public:
 
     virtual void compute_symbol_length() const override;
 
+    virtual std::size_t size_of_symbol(std::size_t symbol_index) const override;
+
+    virtual std::size_t symbol_to_byte_index(
+            std::size_t symbol_index) const override;
+
+    virtual std::size_t byte_to_symbol_index(
+            std::size_t byte_index) const override;
+
     virtual deus::UnicodeStorage convert(
             deus::Encoding encoding) const override;
 };

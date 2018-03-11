@@ -170,5 +170,102 @@ std::size_t UnicodeView::EncodingImpl::null_terminator_size(
     }
 }
 
+//------------------------------------------------------------------------------
+//                            PUBLIC MEMBER FUNCTIONS
+//------------------------------------------------------------------------------
+
+std::size_t UnicodeView::EncodingImpl::find(
+        const deus::UnicodeView& s,
+        std::size_t pos) const
+{
+    // TODO:
+    return enc_impl::find_naive(m_view, s, pos);
+}
+
+std::size_t UnicodeView::EncodingImpl::rfind(
+        const deus::UnicodeView& s,
+        std::size_t pos) const
+{
+    return enc_impl::rfind_naive(m_view, s, pos);
+}
+
+std::vector<std::size_t> UnicodeView::EncodingImpl::find_all(
+        const deus::UnicodeView& s,
+        std::size_t pos) const
+{
+    return enc_impl::find_all_naive(m_view, s, pos);
+}
+
+//------------------------------------------------------------------------------
+//                                GLOBAL FUNCTIONS
+//------------------------------------------------------------------------------
+
+namespace enc_impl
+{
+
+//-----------------------------FIND IMPLEMENTATIONS-----------------------------
+
+std::size_t find_naive(
+        const deus::UnicodeView& self,
+        const deus::UnicodeView& s,
+        std::size_t pos)
+{
+    // generic checks
+    // --
+    std::size_t self_size = self.c_str_length();
+    if(pos > self_size)
+    {
+        return deus::NULL_POS;
+    }
+    self_size -= pos;
+
+    const std::size_t s_size = s.c_str_length();
+    const char* s_data = s.c_str();
+    if(s_size == 0)
+    {
+        return 0;
+    }
+
+    const char* self_data = self.c_str() + pos;
+    if(s_size > self_size)
+    {
+        return deus::NULL_POS;
+    }
+    // --
+
+    std::size_t check_to = self_size - (s_size - 1);
+    for(const char* c = self_data; c != (self_data + check_to); ++c)
+    {
+        if(std::memcmp(c, s_data, s_size) == 0)
+        {
+            return (c - self_data) + pos;
+        }
+    }
+
+    return deus::NULL_POS;
+}
+
+std::size_t rfind_naive(
+        const deus::UnicodeView& self,
+        const deus::UnicodeView& s,
+        std::size_t pos)
+{
+    // TODO:
+
+    return 0;
+}
+
+std::vector<std::size_t> find_all_naive(
+        const deus::UnicodeView& self,
+        const deus::UnicodeView& s,
+        std::size_t pos)
+{
+    // TODO:
+
+    return std::vector<std::size_t>();
+}
+
+} // namespace enc_impl
+
 DEUS_VERSION_NS_END
 } // namespace deus

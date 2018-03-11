@@ -98,6 +98,27 @@ void UnicodeView::ASCIIImpl::compute_symbol_length() const
     }
 }
 
+std::size_t UnicodeView::ASCIIImpl::size_of_symbol(
+        std::size_t symbol_index) const
+{
+    // all symbols are exactly one byte
+    return 1;
+}
+
+std::size_t UnicodeView::ASCIIImpl::symbol_to_byte_index(
+            std::size_t symbol_index) const
+{
+    // nothing clever needs doing for ASCII
+    return symbol_index;
+}
+
+std::size_t UnicodeView::ASCIIImpl::byte_to_symbol_index(
+        std::size_t byte_index) const
+{
+    // nothing clever needs doing for ASCII
+    return byte_index;
+}
+
 deus::UnicodeStorage UnicodeView::ASCIIImpl::convert(
         deus::Encoding encoding) const
 {

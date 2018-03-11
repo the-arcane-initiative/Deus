@@ -108,7 +108,6 @@ UnicodeStorage::UnicodeStorage(
                 "endian UTF-32 data has not yet been implemented."
             );
         }
-        // TODO: not implemented error
         default:
         {
             throw deus::TypeError(
@@ -249,6 +248,81 @@ const std::string& UnicodeStorage::get_string() const
 const UnicodeView& UnicodeStorage::get_view() const
 {
     return *m_view;
+}
+
+deus::Encoding UnicodeStorage::encoding() const
+{
+    return m_view->encoding();
+}
+
+std::size_t UnicodeStorage::length() const
+{
+    return m_view->length();
+}
+
+std::size_t UnicodeStorage::byte_length() const
+{
+    return m_view->byte_length();
+}
+
+std::size_t UnicodeStorage::c_str_length() const
+{
+    return m_view->c_str_length();
+}
+
+const char* UnicodeStorage::c_str() const
+{
+    return m_view->c_str();
+}
+
+bool UnicodeStorage::explicit_equals(const deus::UnicodeView& other) const
+{
+    return m_view->explicit_equals(other);
+}
+
+bool UnicodeStorage::empty() const
+{
+    return m_view->empty();
+}
+
+bool UnicodeStorage::starts_with(const deus::UnicodeView& other) const
+{
+    return m_view->starts_with(other);
+}
+
+bool UnicodeStorage::ends_with(const deus::UnicodeView& other) const
+{
+    return m_view->ends_with(other);
+}
+
+deus::UnicodeStorage UnicodeStorage::convert(deus::Encoding encoding) const
+{
+    return m_view->convert(encoding);
+}
+
+const deus::UnicodeView& UnicodeStorage::convert_if_not(
+        deus::Encoding expected_encoding,
+        deus::UnicodeStorage& storage) const
+{
+    return m_view->convert_if_not(expected_encoding, storage);
+}
+
+const deus::UnicodeView& UnicodeStorage::convert_if_not(
+        uint64_t allowed_encodings,
+        deus::Encoding convert_encoding,
+        deus::UnicodeStorage& storage) const
+{
+    return m_view->convert_if_not(allowed_encodings, convert_encoding, storage);
+}
+
+deus::UnicodeStorage UnicodeStorage::concatenate(const UnicodeView& s) const
+{
+    return m_view->concatenate(s);
+}
+
+deus::UnicodeStorage UnicodeStorage::repeat(int32_t n) const
+{
+    return m_view->repeat(n);
 }
 
 DEUS_VERSION_NS_END

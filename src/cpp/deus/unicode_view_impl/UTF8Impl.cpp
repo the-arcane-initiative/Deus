@@ -48,6 +48,36 @@ namespace deus
 DEUS_VERSION_NS_BEGIN
 
 //------------------------------------------------------------------------------
+//                               UTILITY FUNCTIONS
+//------------------------------------------------------------------------------
+
+namespace
+{
+
+// this performs the same functionality as size_of_symbol, expect it just
+// returns the number of bytes of the symbol contained at the start of the given
+// data. This means internal functions can use this version the avoid any extra
+// overhead and/or cyclic calls
+static std::size_t bytes_in_symbol(const char* symbol_data)
+{
+    if((*symbol_data & 0x80) == 0)
+    {
+        return 1;
+    }
+    if((*symbol_data & 0xE0) == 0xC0)
+    {
+        return 2;
+    }
+    if((*symbol_data & 0xF0) == 0xE0)
+    {
+        return 3;
+    }
+    return 4;
+}
+
+} // namespace anonymous
+
+//------------------------------------------------------------------------------
 //                                  CONSTRUCTORS
 //------------------------------------------------------------------------------
 
@@ -97,6 +127,31 @@ void UnicodeView::UTF8Impl::compute_symbol_length() const
         m_byte_length,
         m_symbol_length
     );
+}
+
+std::size_t UnicodeView::UTF8Impl::size_of_symbol(
+        std::size_t symbol_index) const
+{
+    if(symbol_index >= m_view.length())
+    {
+        return deus::NULL_POS;
+    }
+    // get the byte to check from
+    return bytes_in_symbol(m_data + symbol_to_byte_index(symbol_index));
+}
+
+std::size_t UnicodeView::UTF8Impl::symbol_to_byte_index(
+            std::size_t symbol_index) const
+{
+    // TODO:
+    return utf8_impl::symbol_to_byte_index_naive(m_view, symbol_index);
+}
+
+std::size_t UnicodeView::UTF8Impl::byte_to_symbol_index(
+        std::size_t byte_index) const
+{
+    // TODO:
+    return 0;
 }
 
 deus::UnicodeStorage UnicodeView::UTF8Impl::convert(
@@ -423,7 +478,7 @@ void compute_symbol_length_word_batching(
     const std::size_t end_or_mask =
         0x8080808080808080UL & (0xFFFFFFFFFFFFFFFF << mask_size);
     std::size_t and_shift = 0xFFFFFFFFFFFFFFFF >> (64 - mask_size);
-    // dumb compiler bug? 0xFFFFFFFFFFFFFFFF >> (64 - 0) does not equal
+    // compiler bug? 0xFFFFFFFFFFFFFFFF >> (64 - 0) does not equal
     // 0x0000000000000000 (but 0xFFFFFFFFFFFFFFFF >> 64 does...)
     if(mask_size == 0)
     {
@@ -469,6 +524,33 @@ void compute_symbol_length_word_batching(
         }
     }
 }
+
+//---------------------SYMBOL TO BYTE INDEX IMPLEMENTATIONS---------------------
+
+std::size_t symbol_to_byte_index_naive(
+        const deus::UnicodeView& self,
+        std::size_t symbol_index)
+{
+    // generic checks
+    // --
+    if(symbol_index >= self.length())
+    {
+        return deus::NULL_POS;
+    }
+    // --
+
+    const char* data = self.c_str();
+    std::size_t current_symbol = 0;
+    std::size_t byte_counter = 0;
+    while(current_symbol != symbol_index)
+    {
+        byte_counter += bytes_in_symbol(data + byte_counter);
+        ++current_symbol;
+    }
+    return byte_counter;
+}
+
+//-----------------------CONVERT TO ASCII IMPLEMENTATIONS-----------------------
 
 deus::UnicodeStorage convert_to_ascii_naive(
         const char* in_data,

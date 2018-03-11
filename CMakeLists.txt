@@ -103,8 +103,11 @@ set(DEUS_UNIT_TESTS_SRC
     tests/unit/cpp/concatenate/ASCIIConcatenate_UnitTest.cpp
     tests/unit/cpp/concatenate/UTF8Concatenate_UnitTest.cpp
     tests/unit/cpp/convert/UTF8ConvertToASCII_UnitTest.cpp
+    tests/unit/cpp/find/ASCIIFind_UnitTest.cpp
+    tests/unit/cpp/find/UTF8Find_UnitTest.cpp
     tests/unit/cpp/from_code_point/ASCIIFromCodePoint_UnitTest.cpp
     tests/unit/cpp/from_code_point/UTF8FromCodePoint_UnitTest.cpp
+    tests/unit/cpp/symbol_to_byte_index/UTF8SymbolToByteIndex_UnitTest.cpp
 )
 
 add_executable(unit_tests ${DEUS_UNIT_TESTS_SRC})

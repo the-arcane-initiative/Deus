@@ -87,13 +87,13 @@ public:
 
     // TODO:
     // TODO: throw TypeError
-    explicit UnicodeView(
+    UnicodeView(
             const std::string& s,
             deus::Encoding encoding = deus::SOURCE_ENCODING);
 
     // TODO:
     // TODO: throw TypeError
-    explicit UnicodeView(
+    UnicodeView(
             const std::string& s,
             std::size_t symbol_length,
             deus::Encoding encoding = deus::SOURCE_ENCODING);
@@ -205,12 +205,6 @@ public:
     std::size_t c_str_length() const;
 
     /*!
-     * \brief Returns whether this is an empty string (i.e. both length() and
-     *        c_str_length() are 0).
-     */
-    bool empty() const;
-
-    /*!
      * \brief Returns the C-style string of the internal data of this
      *        UnicodeView.
      *
@@ -237,7 +231,38 @@ public:
      */
     bool explicit_equals(const deus::UnicodeView& other) const;
 
-    #ifndef IN_DOXYGEN
+    /*!
+     * \brief Returns whether this is an empty string (i.e. both length() and
+     *        c_str_length() are 0).
+     */
+    bool empty() const;
+
+    /*!
+     * \brief Returns the size in bytes of the symbol in this string at the
+     *        given index.
+     *
+     * \param If the given symbol index is greater than or equal to the symbol
+     *        length of this string, deus::NULL_POS is returned.
+     */
+    std::size_t size_of_symbol(std::size_t symbol_index) const;
+
+    /*!
+     * \brief Returns the index of the byte in this string that the given symbol
+     *        starts at.
+     *
+     * If the given symbol index is greater than or equal to the symbol length
+     * of this string, deus::NULL_POS is returned.
+     */
+    std::size_t symbol_to_byte_index(std::size_t symbol_index) const;
+
+    /*!
+     * \brief Returns the index of the symbol in this string that the given byte
+     *        is contained within.
+     *
+     * If the given byte index is greater than or equal to the c_str length of
+     * this string, deus::NULL_POS is returned.
+     */
+    std::size_t byte_to_symbol_index(std::size_t byte_index) const;
 
     /*!
      * \brief Returns whether this string starts with the other given string.
@@ -247,8 +272,6 @@ public:
      */
     bool starts_with(const deus::UnicodeView& other) const;
 
-    #endif
-
     /*!
      * \brief Returns whether this string ends with the other given string.
      *
@@ -257,7 +280,63 @@ public:
      */
     bool ends_with(const deus::UnicodeView& other) const;
 
-    // TODO: contains/find
+    /*!
+     * \brief Finds the first occurrence of the given string within this string.
+     *
+     * If the strings have different encodings the input string will be
+     * internally converted to the encoding type of this string.
+     *
+     * \param s The subject to search for.
+     * \param pos The index of the symbol in this string to start searching
+     *            from.
+     *
+     * \return The symbol index of the start of the first occurrence of the
+     *         subject in this string. If the subject is not found,
+     *         deus::NULL_POS is returned.
+     */
+    std::size_t find(const deus::UnicodeView& s, std::size_t pos) const;
+
+    /*!
+     * \brief Find the last occurrence of the given string within this string.
+     *
+     * If the strings have different encodings the input string will be
+     * internally converted to the encoding type of this string.
+     *
+     * \param s The subject to search for.
+     * \param pos The index of the symbol in this string to start searching
+     *            from.
+     *
+     * \return The symbol index of the start of the last occurrence of the
+     *         subject in this string. If the subject is not found,
+     *         deus::NULL_POS is returned.
+     */
+    std::size_t rfind(const deus::UnicodeView& s, std::size_t pos) const;
+
+    /*!
+     * \brief Finds all non-overlapping occurrences of the given string within
+     *        this string.
+     *
+     * If the strings have different encodings the input string will be
+     * internally converted to the encoding type of this string.
+     *
+     * \note This searching for only non-overlapping occurrences of the subject.
+     *       For example, if the subject was "choochoo", and this string contain
+     *       "choochoochoo", only on 1 occurrence of the subject will be found
+     *       at index 0: ">choochoo<choo".
+     *
+     * \param s The subject to search for.
+     * \param pos The index of the symbol in this string to start searching
+     *            from.
+     *
+     * \return An array of the indices of the first symbol of each of the
+     *         occurrences of the subject in the order that they appear in this
+     *         string.
+     */
+    std::vector<std::size_t> find_all(
+        const deus::UnicodeView& s,
+        std::size_t pos) const;
+
+    // TODO: rfind_all?
 
     // TODO: validate encoding
 
@@ -324,6 +403,9 @@ public:
      */
     deus::UnicodeStorage repeat(int32_t n) const;
 
+    // TODO: DOC
+    // std::vector<deus::UnicodeStorage> split(const deus::UnicodeView delimiter);
+
     /*!
      * \brief Returns a vector of the bytes (not symbols) of this string
      *        converted to their hex representation in string format.
@@ -362,7 +444,6 @@ private:
 DEUS_VERSION_NS_END
 } // namespace deus
 
-// TODO: could move this to an inline file?
 
 //------------------------------------------------------------------------------
 //                               EXTERNAL OPERATORS
@@ -390,26 +471,6 @@ inline deus::UnicodeStorage operator+(
     return a.concatenate(b);
 }
 
-/*!
- * \brief Operator for performing UnicodeView::concatenate().
- */
-// inline deus::UnicodeStorage operator+(
-//         const deus::UnicodeStorage& a,
-//         const char* b)
-// {
-//     return a.get_view().concatenate(deus::UnicodeView(b));
-// }
-
-/*!
- * \brief Operator for performing UnicodeView::concatenate().
- */
-// inline deus::UnicodeStorage operator+(
-//         const deus::UnicodeStorage& a,
-//         const deus::UnicodeStorage& b)
-// {
-//     return a.get_view().concatenate(b.get_view());
-// }
-
 //-------------------------------REPEAT OPERATORS-------------------------------
 
 /*!
@@ -420,31 +481,7 @@ inline deus::UnicodeStorage operator*(const deus::UnicodeView& a, int32_t n)
     return a.repeat(n);
 }
 
-/*!
- * \brief Operator for performing UnicodeView::concatenate().
- */
-// inline deus::UnicodeStorage operator*(const deus::UnicodeStorage& a, int32_t n)
-// {
-//     return a.get_view().repeat(n);
-// }
-
 //-------------------------------STREAM OPERATORS-------------------------------
-
-// // TODO: DOC
-// class StreamHandle
-// {
-// public:
-
-//     StreamHandle(const UnicodeView& view)
-//         :
-//     {
-//     }
-
-// private:
-
-//     UnicodeStorage m_str;
-// };
-
 
 /*!
  * \brief Appends the string contents of the given UnicodeView to the stream.

@@ -178,6 +178,42 @@ public:
     virtual void compute_symbol_length() const = 0;
 
     /*!
+     * \copydoc deus::UnicodeView::size_of_symbol
+     */
+    virtual std::size_t size_of_symbol(std::size_t symbol_index) const = 0;
+
+    /*!
+     * \copydoc deus::UnicodeView::symbol_to_byte_index
+     */
+    virtual std::size_t symbol_to_byte_index(
+            std::size_t symbol_index) const = 0;
+
+    /*!
+     * \copydoc deus::UnicodeView::byte_to_symbol_index
+     */
+    virtual std::size_t byte_to_symbol_index(
+            std::size_t byte_index) const = 0;
+
+    /*!
+     * \copydoc deus::UnicodeView::find
+     */
+    virtual std::size_t find(const deus::UnicodeView& s, std::size_t pos) const;
+
+    /*!
+     * \copydoc deus::UnicodeView::rfind
+     */
+    virtual std::size_t rfind(
+            const deus::UnicodeView& s,
+            std::size_t pos) const;
+
+    /*!
+     * \copydoc deus::UnicodeView::find_all
+     */
+    virtual std::vector<std::size_t> find_all(
+            const deus::UnicodeView& s,
+            std::size_t pos) const;
+
+    /*!
      * \brief Converts the string data from the current encoding to a new string
      *        represented in the given encoding.
      *
@@ -187,6 +223,32 @@ public:
      */
     virtual deus::UnicodeStorage convert(deus::Encoding encoding) const = 0;
 };
+
+//------------------------------------------------------------------------------
+//                                GLOBAL FUNCTIONS
+//------------------------------------------------------------------------------
+
+namespace enc_impl
+{
+
+//-----------------------------FIND IMPLEMENTATIONS-----------------------------
+
+std::size_t find_naive(
+        const deus::UnicodeView& self,
+        const deus::UnicodeView& s,
+        std::size_t pos);
+
+std::size_t rfind_naive(
+        const deus::UnicodeView& self,
+        const deus::UnicodeView& s,
+        std::size_t pos);
+
+std::vector<std::size_t> find_all_naive(
+        const deus::UnicodeView& self,
+        const deus::UnicodeView& s,
+        std::size_t pos);
+
+} // namespace enc_impl
 
 DEUS_VERSION_NS_END
 } // namespace deus

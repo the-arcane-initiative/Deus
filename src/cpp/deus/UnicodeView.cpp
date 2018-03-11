@@ -286,11 +286,6 @@ std::size_t UnicodeView::c_str_length() const
         EncodingImpl::null_terminator_size(m_impl->m_encoding);
 }
 
-bool UnicodeView::empty() const
-{
-    return c_str_length() == 0;
-}
-
 const char* UnicodeView::c_str() const
 {
     return m_impl->m_data;
@@ -318,6 +313,26 @@ bool UnicodeView::explicit_equals(const deus::UnicodeView& other) const
     // compare
     return
         std::memcmp(m_impl->m_data, other.m_impl->m_data, byte_length()) == 0;
+}
+
+bool UnicodeView::empty() const
+{
+    return c_str_length() == 0;
+}
+
+std::size_t UnicodeView::size_of_symbol(std::size_t symbol_index) const
+{
+    return m_impl->size_of_symbol(symbol_index);
+}
+
+std::size_t UnicodeView::symbol_to_byte_index(std::size_t symbol_index) const
+{
+    return m_impl->symbol_to_byte_index(symbol_index);
+}
+
+std::size_t UnicodeView::byte_to_symbol_index(std::size_t byte_index) const
+{
+    return m_impl->byte_to_symbol_index(byte_index);
 }
 
 bool UnicodeView::starts_with(const deus::UnicodeView& other) const
@@ -364,6 +379,37 @@ bool UnicodeView::ends_with(const deus::UnicodeView& other) const
         other_view.c_str(),
         other_view.c_str_length()
     ) == 0;
+}
+
+std::size_t UnicodeView::find(const deus::UnicodeView& s, std::size_t pos) const
+{
+    // different encodings?
+    deus::UnicodeStorage converted;
+    deus::UnicodeView s_view = s.convert_if_not(encoding(), converted);
+
+    return m_impl->find(s_view, pos);
+}
+
+std::size_t UnicodeView::rfind(
+        const deus::UnicodeView& s,
+        std::size_t pos) const
+{
+    // different encodings?
+    deus::UnicodeStorage converted;
+    deus::UnicodeView s_view = s.convert_if_not(encoding(), converted);
+
+    return m_impl->rfind(s_view, pos);
+}
+
+std::vector<std::size_t> UnicodeView::find_all(
+    const deus::UnicodeView& s,
+    std::size_t pos) const
+{
+    // different encodings?
+    deus::UnicodeStorage converted;
+    deus::UnicodeView s_view = s.convert_if_not(encoding(), converted);
+
+    return m_impl->find_all(s_view, pos);
 }
 
 deus::UnicodeStorage UnicodeView::convert(deus::Encoding encoding) const
@@ -438,6 +484,12 @@ deus::UnicodeStorage UnicodeView::repeat(int32_t n) const
         encoding()
     );
 }
+
+// std::vector<deus::UnicodeStorage> UnicodeView::split(
+//         const deus::UnicodeView delimiter)
+// {
+//     // TODO: just use find all
+// }
 
 std::vector<deus::UnicodeStorage> UnicodeView::bytes_as_hex(
         const deus::UnicodeView& prefix,

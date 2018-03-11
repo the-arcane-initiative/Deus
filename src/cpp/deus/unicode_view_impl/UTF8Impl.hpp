@@ -96,6 +96,14 @@ public:
 
     virtual void compute_symbol_length() const override;
 
+    virtual std::size_t size_of_symbol(std::size_t symbol_index) const override;
+
+    virtual std::size_t symbol_to_byte_index(
+            std::size_t symbol_index) const override;
+
+    virtual std::size_t byte_to_symbol_index(
+            std::size_t byte_index) const override;
+
     virtual deus::UnicodeStorage convert(
             deus::Encoding encoding) const override;
 };
@@ -143,6 +151,12 @@ void compute_symbol_length_word_batching(
         const char* in_data,
         std::size_t in_byte_length,
         std::size_t& out_symbol_length);
+
+//---------------------SYMBOL TO BYTE INDEX IMPLEMENTATIONS---------------------
+
+std::size_t symbol_to_byte_index_naive(
+        const deus::UnicodeView& self,
+        std::size_t symbol_index);
 
 //-----------------------CONVERT TO ASCII IMPLEMENTATIONS-----------------------
 

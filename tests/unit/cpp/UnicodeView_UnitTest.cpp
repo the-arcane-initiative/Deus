@@ -251,6 +251,100 @@ TEST(UnicodeView, empty)
     // TODO: more tests for different encodings
 }
 
+TEST(UnicodeView, size_of_symbol)
+{
+    {
+        const std::string str("a");
+        const deus::UnicodeView utf8_view(str, deus::Encoding::kUTF8);
+        const deus::UnicodeView ascii_view =
+            utf8_view.convert(deus::Encoding::kASCII);
+        // TODO: other encodings
+
+        EXPECT_EQ(ascii_view.size_of_symbol(0), ascii_view.c_str_length());
+        EXPECT_EQ(utf8_view.size_of_symbol(0), utf8_view.c_str_length());
+    }
+    {
+        const std::string str("Z");
+        const deus::UnicodeView utf8_view(str, deus::Encoding::kUTF8);
+        const deus::UnicodeView ascii_view =
+            utf8_view.convert(deus::Encoding::kASCII);
+        // TODO: other encodings
+
+        EXPECT_EQ(ascii_view.size_of_symbol(0), ascii_view.c_str_length());
+        EXPECT_EQ(utf8_view.size_of_symbol(0), utf8_view.c_str_length());
+    }
+    {
+        const std::string str("!");
+        const deus::UnicodeView utf8_view(str, deus::Encoding::kUTF8);
+        const deus::UnicodeView ascii_view =
+            utf8_view.convert(deus::Encoding::kASCII);
+        // TODO: other encodings
+
+        EXPECT_EQ(ascii_view.size_of_symbol(0), ascii_view.c_str_length());
+        EXPECT_EQ(utf8_view.size_of_symbol(0), utf8_view.c_str_length());
+    }
+    {
+        const std::string str("~");
+        const deus::UnicodeView utf8_view(str, deus::Encoding::kUTF8);
+        const deus::UnicodeView ascii_view =
+            utf8_view.convert(deus::Encoding::kASCII);
+        // TODO: other encodings
+
+        EXPECT_EQ(ascii_view.size_of_symbol(0), ascii_view.c_str_length());
+        EXPECT_EQ(utf8_view.size_of_symbol(0), utf8_view.c_str_length());
+    }
+    {
+        const std::string str("😺");
+        const deus::UnicodeView utf8_view(str, deus::Encoding::kUTF8);
+        const deus::UnicodeView ascii_view =
+            utf8_view.convert(deus::Encoding::kASCII);
+        // TODO: other encodings
+
+        EXPECT_EQ(ascii_view.size_of_symbol(0), ascii_view.c_str_length());
+        EXPECT_EQ(utf8_view.size_of_symbol(0), utf8_view.c_str_length());
+    }
+    {
+        const std::string str("🌿");
+        const deus::UnicodeView utf8_view(str, deus::Encoding::kUTF8);
+        const deus::UnicodeView ascii_view =
+            utf8_view.convert(deus::Encoding::kASCII);
+        // TODO: other encodings
+
+        EXPECT_EQ(ascii_view.size_of_symbol(0), ascii_view.c_str_length());
+        EXPECT_EQ(utf8_view.size_of_symbol(0), utf8_view.c_str_length());
+    }
+    {
+        const std::string str("𐌸");
+        const deus::UnicodeView utf8_view(str, deus::Encoding::kUTF8);
+        const deus::UnicodeView ascii_view =
+            utf8_view.convert(deus::Encoding::kASCII);
+        // TODO: other encodings
+
+        EXPECT_EQ(ascii_view.size_of_symbol(0), ascii_view.c_str_length());
+        EXPECT_EQ(utf8_view.size_of_symbol(0), utf8_view.c_str_length());
+    }
+    {
+        const std::string str("ͱ");
+        const deus::UnicodeView utf8_view(str, deus::Encoding::kUTF8);
+        const deus::UnicodeView ascii_view =
+            utf8_view.convert(deus::Encoding::kASCII);
+        // TODO: other encodings
+
+        EXPECT_EQ(ascii_view.size_of_symbol(0), ascii_view.c_str_length());
+        EXPECT_EQ(utf8_view.size_of_symbol(0), utf8_view.c_str_length());
+    }
+    {
+        const std::string str("𫝃");
+        const deus::UnicodeView utf8_view(str, deus::Encoding::kUTF8);
+        const deus::UnicodeView ascii_view =
+            utf8_view.convert(deus::Encoding::kASCII);
+        // TODO: other encodings
+
+        EXPECT_EQ(ascii_view.size_of_symbol(0), ascii_view.c_str_length());
+        EXPECT_EQ(utf8_view.size_of_symbol(0), utf8_view.c_str_length());
+    }
+}
+
 TEST(UnicodeView, starts_with)
 {
     {

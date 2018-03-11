@@ -161,38 +161,22 @@ public:
     UnicodeStorage& operator=(UnicodeStorage&& other);
 
     /*!
-     * \brief Returns whether this string and the other given string consist of
-     *        the same code points.
-     *
-     * \note This is not explicit memory equality, if the other string has a
-     *       different encoding, it will be converted to this encoding and then
-     *       the symbols will be compared. So this function compares whether the
-     *       strings represent the same information. For explicit memory
-     *       equality see deus::UnicodeView::explicit_equals().
+     * \copydoc deus::UnicodeView::operator==
      */
     bool operator==(const UnicodeStorage& other) const;
 
     /*!
-     * \brief Returns whether this string and the other given string do not
-     *        consist of the same code points.
+     * \copydoc deus::UnicodeView::operator==
      */
     bool operator!=(const UnicodeStorage& other) const;
 
     /*!
-     * \brief Returns whether this string and the other given string consist of
-     *        the same code points.
-     *
-     * \note This is not explicit memory equality, if the other string has a
-     *       different encoding, it will be converted to this encoding and then
-     *       the symbols will be compared. So this function compares whether the
-     *       strings represent the same information. For explicit memory
-     *       equality see deus::UnicodeView::explicit_equals().
+     * \copydoc deus::UnicodeView::operator==
      */
     bool operator==(const deus::UnicodeView& other) const;
 
     /*!
-     * \brief Returns whether this string and the other given string do not
-     *        consist of the same code points.
+     * \copydoc deus::UnicodeView::operator==
      */
     bool operator!=(const deus::UnicodeView& other) const;
 
@@ -221,6 +205,81 @@ public:
      *        string data.
      */
     const UnicodeView& get_view() const;
+
+    /*!
+     * \copydoc deus::UnicodeView::encoding
+     */
+    deus::Encoding encoding() const;
+
+    /*!
+     * \copydoc deus::UnicodeView::length
+     */
+    std::size_t length() const;
+
+    /*!
+     * \copydoc deus::UnicodeView::byte_length
+     */
+    std::size_t byte_length() const;
+
+    /*!
+     * \copydoc deus::UnicodeView::c_str_length
+     */
+    std::size_t c_str_length() const;
+
+    /*!
+     * \copydoc deus::UnicodeView::c_str
+     */
+    const char* c_str() const;
+
+    /*!
+     * \copydoc deus::UnicodeView::explicit_equals
+     */
+    bool explicit_equals(const deus::UnicodeView& other) const;
+
+    /*!
+     * \copydoc deus::UnicodeView::empty
+     */
+    bool empty() const;
+
+    /*!
+     * \copydoc deus::UnicodeView::starts_with
+     */
+    bool starts_with(const deus::UnicodeView& other) const;
+
+    /*!
+     * \copydoc deus::UnicodeView::ends_with
+     */
+    bool ends_with(const deus::UnicodeView& other) const;
+
+    /*!
+     * \copydoc deus::UnicodeView::convert
+     */
+    deus::UnicodeStorage convert(deus::Encoding encoding) const;
+
+    /*!
+     * \copydoc deus::UnicodeView::convert_if_not
+     */
+    const deus::UnicodeView& convert_if_not(
+            deus::Encoding expected_encoding,
+            deus::UnicodeStorage& storage) const;
+
+    /*!
+     * \copydoc deus::UnicodeView::convert_if_not
+     */
+    const deus::UnicodeView& convert_if_not(
+            uint64_t allowed_encodings,
+            deus::Encoding convert_encoding,
+            deus::UnicodeStorage& storage) const;
+
+    /*!
+     * \copydoc deus::UnicodeView::concatenate
+     */
+    deus::UnicodeStorage concatenate(const UnicodeView& s) const;
+
+    /*!
+     * \copydoc deus::UnicodeView::repeat
+     */
+    deus::UnicodeStorage repeat(int32_t n) const;
 
 private:
 
