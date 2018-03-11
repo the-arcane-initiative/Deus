@@ -285,6 +285,11 @@ bool UnicodeStorage::empty() const
     return m_view->empty();
 }
 
+std::size_t UnicodeStorage::size_of_symbol(std::size_t symbol_index) const
+{
+    return m_view->size_of_symbol(symbol_index);
+}
+
 bool UnicodeStorage::starts_with(const deus::UnicodeView& other) const
 {
     return m_view->starts_with(other);

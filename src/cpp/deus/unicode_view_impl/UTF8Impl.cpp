@@ -151,7 +151,7 @@ std::size_t UnicodeView::UTF8Impl::byte_to_symbol_index(
         std::size_t byte_index) const
 {
     // TODO:
-    return 0;
+    return utf8_impl::byte_to_symbol_index_naive(m_view, byte_index);
 }
 
 deus::UnicodeStorage UnicodeView::UTF8Impl::convert(
@@ -548,6 +548,35 @@ std::size_t symbol_to_byte_index_naive(
         ++current_symbol;
     }
     return byte_counter;
+}
+
+//---------------------BYTE TO SYMBOL INDEX IMPLEMENTATIONS---------------------
+
+std::size_t byte_to_symbol_index_naive(
+        const deus::UnicodeView& self,
+        std::size_t byte_index)
+{
+    // generic checks
+    // --
+    if(byte_index >= self.c_str_length())
+    {
+        return deus::NULL_POS;
+    }
+    // --
+
+    const char* data = self.c_str();
+    std::size_t current_byte = 0;
+    std::size_t symbol_counter = 0;
+    while(current_byte < byte_index)
+    {
+        current_byte += bytes_in_symbol(data + current_byte);
+        if(current_byte > byte_index)
+        {
+            return symbol_counter;
+        }
+        ++symbol_counter;
+    }
+    return symbol_counter;
 }
 
 //-----------------------CONVERT TO ASCII IMPLEMENTATIONS-----------------------

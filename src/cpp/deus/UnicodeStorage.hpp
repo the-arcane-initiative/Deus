@@ -242,6 +242,11 @@ public:
     bool empty() const;
 
     /*!
+     * \copydoc deus::UnicodeView::size_of_symbol
+     */
+    std::size_t size_of_symbol(std::size_t symbol_index) const;
+
+    /*!
      * \copydoc deus::UnicodeView::starts_with
      */
     bool starts_with(const deus::UnicodeView& other) const;

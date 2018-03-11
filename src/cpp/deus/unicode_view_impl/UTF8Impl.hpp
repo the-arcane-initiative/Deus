@@ -158,6 +158,12 @@ std::size_t symbol_to_byte_index_naive(
         const deus::UnicodeView& self,
         std::size_t symbol_index);
 
+//---------------------BYTE TO SYMBOL INDEX IMPLEMENTATIONS---------------------
+
+std::size_t byte_to_symbol_index_naive(
+        const deus::UnicodeView& self,
+        std::size_t byte_index);
+
 //-----------------------CONVERT TO ASCII IMPLEMENTATIONS-----------------------
 
 deus::UnicodeStorage convert_to_ascii_naive(
