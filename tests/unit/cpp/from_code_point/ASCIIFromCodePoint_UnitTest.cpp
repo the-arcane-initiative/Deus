@@ -63,7 +63,7 @@ TEST_F(ASCIIFromCodePointTest, naive)
     for(const TestData& data : test_data)
     {
         std::string result =
-            deus::ascii_impl::from_code_point_naive(data.code_points);
+            deus::ascii_inl::from_code_point_naive(data.code_points);
         EXPECT_EQ(result, data.expected);
     }
 }

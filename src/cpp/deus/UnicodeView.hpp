@@ -247,20 +247,36 @@ public:
     std::size_t size_of_symbol(std::size_t symbol_index) const;
 
     /*!
+     * \brief Returns the smallest number of bytes allowed in a symbol by this
+     *        string's encoding.
+     */
+    std::size_t minimum_symbol_size() const;
+
+    // TODO: currently this maps to minimum_symbol_size -> this could just be
+    //       removed
+    /*!
+     * \brief Returns the number of bytes used for the null terminator for the
+     *        encoding of this string's type.
+     */
+    std::size_t null_terminator_size() const;
+
+    /*!
      * \brief Returns the index of the byte in this string that the given symbol
      *        starts at.
      *
-     * If the given symbol index is greater than or equal to the symbol length
-     * of this string, deus::NULL_POS is returned.
+     * \note If the given symbol index is greater than the number of symbols in
+     *       the string then the minimum byte size of its encoding is used for
+     *       symbols past the end of the string.
      */
     std::size_t symbol_to_byte_index(std::size_t symbol_index) const;
 
     /*!
      * \brief Returns the index of the symbol in this string that the given byte
-     *        is contained within.
+     *        starts within.
      *
-     * If the given byte index is greater than or equal to the c_str length of
-     * this string, deus::NULL_POS is returned.
+     * \note If the given byte index is greater than the number of bytes in the
+     *       string then the minimum byte size of its encoding is used for
+     *       symbols past the end of the string.
      */
     std::size_t byte_to_symbol_index(std::size_t byte_index) const;
 

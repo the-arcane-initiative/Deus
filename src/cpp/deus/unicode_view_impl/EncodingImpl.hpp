@@ -138,6 +138,12 @@ public:
             deus::Encoding encoding);
 
     /*!
+     * \brief Returns the smallest number of bytes allowed in a symbol of the
+     *        given encoding.
+     */
+    static std::size_t minimum_symbol_size(deus::Encoding encoding);
+
+    /*!
      * \brief Returns the size in bytes of the given encoding's null terminator.
      */
     static std::size_t null_terminator_size(deus::Encoding encoding);
@@ -224,33 +230,16 @@ public:
     virtual deus::UnicodeStorage convert(deus::Encoding encoding) const = 0;
 };
 
-//------------------------------------------------------------------------------
-//                                GLOBAL FUNCTIONS
-//------------------------------------------------------------------------------
-
-namespace enc_impl
-{
-
-//-----------------------------FIND IMPLEMENTATIONS-----------------------------
-
-std::size_t find_naive(
-        const deus::UnicodeView& self,
-        const deus::UnicodeView& s,
-        std::size_t pos);
-
-std::size_t rfind_naive(
-        const deus::UnicodeView& self,
-        const deus::UnicodeView& s,
-        std::size_t pos);
-
-std::vector<std::size_t> find_all_naive(
-        const deus::UnicodeView& self,
-        const deus::UnicodeView& s,
-        std::size_t pos);
-
-} // namespace enc_impl
-
 DEUS_VERSION_NS_END
 } // namespace deus
+
+//------------------------------------------------------------------------------
+//                             INLINE IMPLEMENTATIONS
+//------------------------------------------------------------------------------
+
+#include "deus/unicode_view_impl/GenericFind.inl"
+#include "deus/unicode_view_impl/GenericRFind.inl"
+#include "deus/unicode_view_impl/GenericFindAll.inl"
+
 
 #endif

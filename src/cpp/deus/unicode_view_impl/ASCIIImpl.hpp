@@ -110,39 +110,15 @@ public:
             deus::Encoding encoding) const override;
 };
 
-//------------------------------------------------------------------------------
-//                                GLOBAL FUNCTIONS
-//------------------------------------------------------------------------------
-
-namespace ascii_impl
-{
-
-//-----------------------FROM CODE POINT IMPLEMENTATIONS------------------------
-
-std::string from_code_point_naive(
-        const std::vector<deus::CodePoint>& code_points);
-
-//---------------------COMPUTE BYTE LENGTH IMPLEMENTATIONS----------------------
-
-void compute_byte_length_naive(
-        const char* in_data,
-        std::size_t& out_byte_length);
-
-void compute_byte_length_strlen(
-        const char* in_data,
-        std::size_t& out_byte_length);
-
-void compute_byte_length_std_string(
-        const char* in_data,
-        std::size_t& out_byte_length);
-
-void compute_byte_length_word_batching(
-        const char* in_data,
-        std::size_t& out_byte_length);
-
-} // namespace ascii_impl
 DEUS_VERSION_NS_END
 } // namespace deus
 
+
+//------------------------------------------------------------------------------
+//                             INLINE IMPLEMENTATIONS
+//------------------------------------------------------------------------------
+
+#include "deus/unicode_view_impl/ASCIIFromCodePoint.inl"
+#include "deus/unicode_view_impl/ASCIIComputeByteLength.inl"
 
 #endif

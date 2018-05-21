@@ -94,7 +94,7 @@ TEST_F(UTF8ComputeSymbolLengthTest, naive)
     {
         std::size_t symbol_length = 0;
 
-        deus::utf8_impl::compute_symbol_length_naive(
+        deus::utf8_inl::compute_symbol_length_naive(
             data.str,
             data.byte_length,
             symbol_length
@@ -111,7 +111,7 @@ TEST_F(UTF8ComputeSymbolLengthTest, wstring_convert)
     {
         std::size_t symbol_length = 0;
 
-        deus::utf8_impl::compute_symbol_length_wstring_convert(
+        deus::utf8_inl::compute_symbol_length_wstring_convert(
             data.str,
             data.byte_length,
             symbol_length
@@ -128,7 +128,7 @@ TEST_F(UTF8ComputeSymbolLengthTest, byte_jump)
     {
         std::size_t symbol_length = 0;
 
-        deus::utf8_impl::compute_symbol_length_byte_jump(
+        deus::utf8_inl::compute_symbol_length_byte_jump(
             data.str,
             data.byte_length,
             symbol_length
@@ -145,7 +145,7 @@ TEST_F(UTF8ComputeSymbolLengthTest, word_batching)
     {
         std::size_t symbol_length = 0;
 
-        deus::utf8_impl::compute_symbol_length_word_batching(
+        deus::utf8_inl::compute_symbol_length_word_batching(
             data.str,
             data.byte_length,
             symbol_length

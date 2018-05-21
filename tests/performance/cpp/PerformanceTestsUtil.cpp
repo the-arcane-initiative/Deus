@@ -109,6 +109,9 @@ static std::vector<std::size_t> g_gen_rand_dyn_str_sizes_xlong =
 };
 static std::vector<std::size_t> g_gen_rand_dyn_str_sizes_mixed;
 
+static std::vector<deus::UnicodeView> g_gen_rand_dyn_views;
+static std::size_t g_gen_rand_dyn_view_index = 0;
+
 } // namespace anonymous
 
 //------------------------------------------------------------------------------
@@ -146,12 +149,15 @@ void clear_generators()
         );
     }
 
-    g_gen_rand_dyn_str_index = 0;
     for(GenDynStr* dyn_str : g_gen_rand_dyn_strs)
     {
         delete dyn_str;
     }
     g_gen_rand_dyn_strs.clear();
+    g_gen_rand_dyn_str_index = 0;
+
+    g_gen_rand_dyn_views.clear();
+    g_gen_rand_dyn_view_index = 0;
 
     // reseed random
     srand(0xDEADBEEF);
@@ -307,6 +313,36 @@ const char* get_next_rand_dyn_str(std::size_t& byte_length)
     byte_length = g_gen_rand_dyn_strs[g_gen_rand_dyn_str_index]->byte_length;
     ++g_gen_rand_dyn_str_index;
     return ret;
+}
+
+void gen_rand_dyn_views(
+        deus::Encoding encoding,
+        deus_perf_util::StringSize string_size)
+{
+    clear_generators();
+    // generate the underlying strings first
+    gen_rand_dyn_strs(encoding, string_size);
+    // builds views (with length computed)
+    g_gen_rand_dyn_views.reserve(g_gen_rand_dyn_strs.size());
+    for(GenDynStr* str : g_gen_rand_dyn_strs)
+    {
+        g_gen_rand_dyn_views.push_back(deus::UnicodeView(
+            str->str,
+            str->byte_length,
+            encoding
+        ));
+        g_gen_rand_dyn_views.back().length();
+    }
+}
+
+const deus::UnicodeView& get_next_rand_dyn_view()
+{
+    // wrap index
+    if(g_gen_rand_dyn_view_index >= g_gen_rand_dyn_views.size())
+    {
+        g_gen_rand_dyn_view_index = 0;
+    }
+    return g_gen_rand_dyn_views[g_gen_rand_dyn_view_index++];
 }
 
 } // namespace deus_perf_util

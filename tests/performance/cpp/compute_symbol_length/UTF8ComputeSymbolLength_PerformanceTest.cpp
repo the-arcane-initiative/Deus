@@ -28,7 +28,7 @@ static void BM_utf8_compute_symbol_length_short_utf8_naive(
 
         // call
         std::size_t symbol_length = 0;
-        deus::utf8_impl::compute_symbol_length_naive(
+        deus::utf8_inl::compute_symbol_length_naive(
             s,
             byte_length,
             symbol_length
@@ -54,7 +54,7 @@ static void BM_utf8_compute_symbol_length_short_utf8_wstring_convert(
 
         // call
         std::size_t symbol_length = 0;
-        deus::utf8_impl::compute_symbol_length_wstring_convert(
+        deus::utf8_inl::compute_symbol_length_wstring_convert(
             s,
             byte_length,
             symbol_length
@@ -80,7 +80,7 @@ static void BM_utf8_compute_symbol_length_short_utf8_byte_jump(
 
         // call
         std::size_t symbol_length = 0;
-        deus::utf8_impl::compute_symbol_length_byte_jump(
+        deus::utf8_inl::compute_symbol_length_byte_jump(
             s,
             byte_length,
             symbol_length
@@ -106,7 +106,7 @@ static void BM_utf8_compute_symbol_length_short_utf8_word_batching(
 
         // call
         std::size_t symbol_length = 0;
-        deus::utf8_impl::compute_symbol_length_word_batching(
+        deus::utf8_inl::compute_symbol_length_word_batching(
             s,
             byte_length,
             symbol_length
@@ -134,7 +134,7 @@ static void BM_utf8_compute_symbol_length_short_ascii_naive(
 
         // call
         std::size_t symbol_length = 0;
-        deus::utf8_impl::compute_symbol_length_naive(
+        deus::utf8_inl::compute_symbol_length_naive(
             s,
             byte_length,
             symbol_length
@@ -160,7 +160,7 @@ static void BM_utf8_compute_symbol_length_short_ascii_wstring_convert(
 
         // call
         std::size_t symbol_length = 0;
-        deus::utf8_impl::compute_symbol_length_wstring_convert(
+        deus::utf8_inl::compute_symbol_length_wstring_convert(
             s,
             byte_length,
             symbol_length
@@ -186,7 +186,7 @@ static void BM_utf8_compute_symbol_length_short_ascii_byte_jump(
 
         // call
         std::size_t symbol_length = 0;
-        deus::utf8_impl::compute_symbol_length_byte_jump(
+        deus::utf8_inl::compute_symbol_length_byte_jump(
             s,
             byte_length,
             symbol_length
@@ -212,7 +212,7 @@ static void BM_utf8_compute_symbol_length_short_ascii_word_batching(
 
         // call
         std::size_t symbol_length = 0;
-        deus::utf8_impl::compute_symbol_length_word_batching(
+        deus::utf8_inl::compute_symbol_length_word_batching(
             s,
             byte_length,
             symbol_length
@@ -244,7 +244,7 @@ static void BM_utf8_compute_symbol_length_medium_utf8_naive(
 
         // call
         std::size_t symbol_length = 0;
-        deus::utf8_impl::compute_symbol_length_naive(
+        deus::utf8_inl::compute_symbol_length_naive(
             s,
             byte_length,
             symbol_length
@@ -270,7 +270,7 @@ static void BM_utf8_compute_symbol_length_medium_utf8_wstring_convert(
 
         // call
         std::size_t symbol_length = 0;
-        deus::utf8_impl::compute_symbol_length_wstring_convert(
+        deus::utf8_inl::compute_symbol_length_wstring_convert(
             s,
             byte_length,
             symbol_length
@@ -296,7 +296,7 @@ static void BM_utf8_compute_symbol_length_medium_utf8_byte_jump(
 
         // call
         std::size_t symbol_length = 0;
-        deus::utf8_impl::compute_symbol_length_byte_jump(
+        deus::utf8_inl::compute_symbol_length_byte_jump(
             s,
             byte_length,
             symbol_length
@@ -322,7 +322,7 @@ static void BM_utf8_compute_symbol_length_medium_utf8_word_batching(
 
         // call
         std::size_t symbol_length = 0;
-        deus::utf8_impl::compute_symbol_length_word_batching(
+        deus::utf8_inl::compute_symbol_length_word_batching(
             s,
             byte_length,
             symbol_length
@@ -350,7 +350,7 @@ static void BM_utf8_compute_symbol_length_medium_ascii_naive(
 
         // call
         std::size_t symbol_length = 0;
-        deus::utf8_impl::compute_symbol_length_naive(
+        deus::utf8_inl::compute_symbol_length_naive(
             s,
             byte_length,
             symbol_length
@@ -376,7 +376,7 @@ static void BM_utf8_compute_symbol_length_medium_ascii_wstring_convert(
 
         // call
         std::size_t symbol_length = 0;
-        deus::utf8_impl::compute_symbol_length_wstring_convert(
+        deus::utf8_inl::compute_symbol_length_wstring_convert(
             s,
             byte_length,
             symbol_length
@@ -402,7 +402,7 @@ static void BM_utf8_compute_symbol_length_medium_ascii_byte_jump(
 
         // call
         std::size_t symbol_length = 0;
-        deus::utf8_impl::compute_symbol_length_byte_jump(
+        deus::utf8_inl::compute_symbol_length_byte_jump(
             s,
             byte_length,
             symbol_length
@@ -428,7 +428,7 @@ static void BM_utf8_compute_symbol_length_medium_ascii_word_batching(
 
         // call
         std::size_t symbol_length = 0;
-        deus::utf8_impl::compute_symbol_length_word_batching(
+        deus::utf8_inl::compute_symbol_length_word_batching(
             s,
             byte_length,
             symbol_length
@@ -460,7 +460,7 @@ static void BM_utf8_compute_symbol_length_long_utf8_naive(
 
         // call
         std::size_t symbol_length = 0;
-        deus::utf8_impl::compute_symbol_length_naive(
+        deus::utf8_inl::compute_symbol_length_naive(
             s,
             byte_length,
             symbol_length
@@ -486,7 +486,7 @@ static void BM_utf8_compute_symbol_length_long_utf8_wstring_convert(
 
         // call
         std::size_t symbol_length = 0;
-        deus::utf8_impl::compute_symbol_length_wstring_convert(
+        deus::utf8_inl::compute_symbol_length_wstring_convert(
             s,
             byte_length,
             symbol_length
@@ -512,7 +512,7 @@ static void BM_utf8_compute_symbol_length_long_utf8_byte_jump(
 
         // call
         std::size_t symbol_length = 0;
-        deus::utf8_impl::compute_symbol_length_byte_jump(
+        deus::utf8_inl::compute_symbol_length_byte_jump(
             s,
             byte_length,
             symbol_length
@@ -538,7 +538,7 @@ static void BM_utf8_compute_symbol_length_long_utf8_word_batching(
 
         // call
         std::size_t symbol_length = 0;
-        deus::utf8_impl::compute_symbol_length_word_batching(
+        deus::utf8_inl::compute_symbol_length_word_batching(
             s,
             byte_length,
             symbol_length
@@ -566,7 +566,7 @@ static void BM_utf8_compute_symbol_length_long_ascii_naive(
 
         // call
         std::size_t symbol_length = 0;
-        deus::utf8_impl::compute_symbol_length_naive(
+        deus::utf8_inl::compute_symbol_length_naive(
             s,
             byte_length,
             symbol_length
@@ -592,7 +592,7 @@ static void BM_utf8_compute_symbol_length_long_ascii_wstring_convert(
 
         // call
         std::size_t symbol_length = 0;
-        deus::utf8_impl::compute_symbol_length_wstring_convert(
+        deus::utf8_inl::compute_symbol_length_wstring_convert(
             s,
             byte_length,
             symbol_length
@@ -618,7 +618,7 @@ static void BM_utf8_compute_symbol_length_long_ascii_byte_jump(
 
         // call
         std::size_t symbol_length = 0;
-        deus::utf8_impl::compute_symbol_length_byte_jump(
+        deus::utf8_inl::compute_symbol_length_byte_jump(
             s,
             byte_length,
             symbol_length
@@ -644,7 +644,7 @@ static void BM_utf8_compute_symbol_length_long_ascii_word_batching(
 
         // call
         std::size_t symbol_length = 0;
-        deus::utf8_impl::compute_symbol_length_word_batching(
+        deus::utf8_inl::compute_symbol_length_word_batching(
             s,
             byte_length,
             symbol_length
@@ -676,7 +676,7 @@ static void BM_utf8_compute_symbol_length_xlong_utf8_naive(
 
         // call
         std::size_t symbol_length = 0;
-        deus::utf8_impl::compute_symbol_length_naive(
+        deus::utf8_inl::compute_symbol_length_naive(
             s,
             byte_length,
             symbol_length
@@ -702,7 +702,7 @@ static void BM_utf8_compute_symbol_length_xlong_utf8_wstring_convert(
 
         // call
         std::size_t symbol_length = 0;
-        deus::utf8_impl::compute_symbol_length_wstring_convert(
+        deus::utf8_inl::compute_symbol_length_wstring_convert(
             s,
             byte_length,
             symbol_length
@@ -728,7 +728,7 @@ static void BM_utf8_compute_symbol_length_xlong_utf8_byte_jump(
 
         // call
         std::size_t symbol_length = 0;
-        deus::utf8_impl::compute_symbol_length_byte_jump(
+        deus::utf8_inl::compute_symbol_length_byte_jump(
             s,
             byte_length,
             symbol_length
@@ -754,7 +754,7 @@ static void BM_utf8_compute_symbol_length_xlong_utf8_word_batching(
 
         // call
         std::size_t symbol_length = 0;
-        deus::utf8_impl::compute_symbol_length_word_batching(
+        deus::utf8_inl::compute_symbol_length_word_batching(
             s,
             byte_length,
             symbol_length
@@ -782,7 +782,7 @@ static void BM_utf8_compute_symbol_length_xlong_ascii_naive(
 
         // call
         std::size_t symbol_length = 0;
-        deus::utf8_impl::compute_symbol_length_naive(
+        deus::utf8_inl::compute_symbol_length_naive(
             s,
             byte_length,
             symbol_length
@@ -808,7 +808,7 @@ static void BM_utf8_compute_symbol_length_xlong_ascii_wstring_convert(
 
         // call
         std::size_t symbol_length = 0;
-        deus::utf8_impl::compute_symbol_length_wstring_convert(
+        deus::utf8_inl::compute_symbol_length_wstring_convert(
             s,
             byte_length,
             symbol_length
@@ -834,7 +834,7 @@ static void BM_utf8_compute_symbol_length_xlong_ascii_byte_jump(
 
         // call
         std::size_t symbol_length = 0;
-        deus::utf8_impl::compute_symbol_length_byte_jump(
+        deus::utf8_inl::compute_symbol_length_byte_jump(
             s,
             byte_length,
             symbol_length
@@ -860,7 +860,7 @@ static void BM_utf8_compute_symbol_length_xlong_ascii_word_batching(
 
         // call
         std::size_t symbol_length = 0;
-        deus::utf8_impl::compute_symbol_length_word_batching(
+        deus::utf8_inl::compute_symbol_length_word_batching(
             s,
             byte_length,
             symbol_length
@@ -892,7 +892,7 @@ static void BM_utf8_compute_symbol_length_mixed_utf8_naive(
 
         // call
         std::size_t symbol_length = 0;
-        deus::utf8_impl::compute_symbol_length_naive(
+        deus::utf8_inl::compute_symbol_length_naive(
             s,
             byte_length,
             symbol_length
@@ -918,7 +918,7 @@ static void BM_utf8_compute_symbol_length_mixed_utf8_wstring_convert(
 
         // call
         std::size_t symbol_length = 0;
-        deus::utf8_impl::compute_symbol_length_wstring_convert(
+        deus::utf8_inl::compute_symbol_length_wstring_convert(
             s,
             byte_length,
             symbol_length
@@ -944,7 +944,7 @@ static void BM_utf8_compute_symbol_length_mixed_utf8_byte_jump(
 
         // call
         std::size_t symbol_length = 0;
-        deus::utf8_impl::compute_symbol_length_byte_jump(
+        deus::utf8_inl::compute_symbol_length_byte_jump(
             s,
             byte_length,
             symbol_length
@@ -970,7 +970,7 @@ static void BM_utf8_compute_symbol_length_mixed_utf8_word_batching(
 
         // call
         std::size_t symbol_length = 0;
-        deus::utf8_impl::compute_symbol_length_word_batching(
+        deus::utf8_inl::compute_symbol_length_word_batching(
             s,
             byte_length,
             symbol_length
@@ -998,7 +998,7 @@ static void BM_utf8_compute_symbol_length_mixed_ascii_naive(
 
         // call
         std::size_t symbol_length = 0;
-        deus::utf8_impl::compute_symbol_length_naive(
+        deus::utf8_inl::compute_symbol_length_naive(
             s,
             byte_length,
             symbol_length
@@ -1024,7 +1024,7 @@ static void BM_utf8_compute_symbol_length_mixed_ascii_wstring_convert(
 
         // call
         std::size_t symbol_length = 0;
-        deus::utf8_impl::compute_symbol_length_wstring_convert(
+        deus::utf8_inl::compute_symbol_length_wstring_convert(
             s,
             byte_length,
             symbol_length
@@ -1050,7 +1050,7 @@ static void BM_utf8_compute_symbol_length_mixed_ascii_byte_jump(
 
         // call
         std::size_t symbol_length = 0;
-        deus::utf8_impl::compute_symbol_length_byte_jump(
+        deus::utf8_inl::compute_symbol_length_byte_jump(
             s,
             byte_length,
             symbol_length
@@ -1076,7 +1076,7 @@ static void BM_utf8_compute_symbol_length_mixed_ascii_word_batching(
 
         // call
         std::size_t symbol_length = 0;
-        deus::utf8_impl::compute_symbol_length_word_batching(
+        deus::utf8_inl::compute_symbol_length_word_batching(
             s,
             byte_length,
             symbol_length

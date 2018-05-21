@@ -247,6 +247,21 @@ public:
     std::size_t size_of_symbol(std::size_t symbol_index) const;
 
     /*!
+     * \copydoc deus::UnicodeView::null_terminator_size
+     */
+    std::size_t null_terminator_size() const;
+
+    /*!
+     * \copydoc deus::UnicodeView::symbol_to_byte_index
+     */
+    std::size_t symbol_to_byte_index(std::size_t symbol_index) const;
+
+    /*!
+     * \copydoc deus::UnicodeView::byte_to_symbol_index
+     */
+    std::size_t byte_to_symbol_index(std::size_t byte_index) const;
+
+    /*!
      * \copydoc deus::UnicodeView::starts_with
      */
     bool starts_with(const deus::UnicodeView& other) const;

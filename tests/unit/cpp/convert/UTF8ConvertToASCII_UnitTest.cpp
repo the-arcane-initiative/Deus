@@ -85,7 +85,7 @@ TEST_F(UTF8ConvertToASCII, naive)
 {
     for(const TestData& data : test_data)
     {
-        deus::UnicodeStorage ascii = deus::utf8_impl::convert_to_ascii_naive(
+        deus::UnicodeStorage ascii = deus::utf8_inl::convert_to_ascii_naive(
             data.utf8,
             data.byte_length,
             data.symbol_length

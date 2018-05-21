@@ -24,7 +24,7 @@ static void BM_ascii_compute_byte_length_short_naive(benchmark::State& state)
 
         // call
         std::size_t byte_length = 0;
-        deus::ascii_impl::compute_byte_length_naive(s, byte_length);
+        deus::ascii_inl::compute_byte_length_naive(s, byte_length);
     }
 }
 BENCHMARK(BM_ascii_compute_byte_length_short_naive);
@@ -45,7 +45,7 @@ static void BM_ascii_compute_byte_length_short_strlen(benchmark::State& state)
 
         // call
         std::size_t byte_length = 0;
-        deus::ascii_impl::compute_byte_length_strlen(s, byte_length);
+        deus::ascii_inl::compute_byte_length_strlen(s, byte_length);
     }
 }
 BENCHMARK(BM_ascii_compute_byte_length_short_strlen);
@@ -67,7 +67,7 @@ static void BM_ascii_compute_byte_length_short_std_string(
 
         // call
         std::size_t byte_length = 0;
-        deus::ascii_impl::compute_byte_length_std_string(s, byte_length);
+        deus::ascii_inl::compute_byte_length_std_string(s, byte_length);
     }
 }
 BENCHMARK(BM_ascii_compute_byte_length_short_std_string);
@@ -89,7 +89,7 @@ static void BM_ascii_compute_byte_length_short_word_batching(
 
         // call
         std::size_t byte_length = 0;
-        deus::ascii_impl::compute_byte_length_word_batching(s, byte_length);
+        deus::ascii_inl::compute_byte_length_word_batching(s, byte_length);
     }
 }
 BENCHMARK(BM_ascii_compute_byte_length_short_word_batching);
@@ -114,7 +114,7 @@ static void BM_ascii_compute_byte_length_medium_naive(benchmark::State& state)
 
         // call
         std::size_t byte_length = 0;
-        deus::ascii_impl::compute_byte_length_naive(s, byte_length);
+        deus::ascii_inl::compute_byte_length_naive(s, byte_length);
     }
 }
 BENCHMARK(BM_ascii_compute_byte_length_medium_naive);
@@ -135,7 +135,7 @@ static void BM_ascii_compute_byte_length_medium_strlen(benchmark::State& state)
 
         // call
         std::size_t byte_length = 0;
-        deus::ascii_impl::compute_byte_length_strlen(s, byte_length);
+        deus::ascii_inl::compute_byte_length_strlen(s, byte_length);
     }
 }
 BENCHMARK(BM_ascii_compute_byte_length_medium_strlen);
@@ -157,7 +157,7 @@ static void BM_ascii_compute_byte_length_medium_std_string(
 
         // call
         std::size_t byte_length = 0;
-        deus::ascii_impl::compute_byte_length_std_string(s, byte_length);
+        deus::ascii_inl::compute_byte_length_std_string(s, byte_length);
     }
 }
 BENCHMARK(BM_ascii_compute_byte_length_medium_std_string);
@@ -179,7 +179,7 @@ static void BM_ascii_compute_byte_length_medium_word_batching(
 
         // call
         std::size_t byte_length = 0;
-        deus::ascii_impl::compute_byte_length_word_batching(s, byte_length);
+        deus::ascii_inl::compute_byte_length_word_batching(s, byte_length);
     }
 }
 BENCHMARK(BM_ascii_compute_byte_length_medium_word_batching);
@@ -204,7 +204,7 @@ static void BM_ascii_compute_byte_length_long_naive(benchmark::State& state)
 
         // call
         std::size_t byte_length = 0;
-        deus::ascii_impl::compute_byte_length_naive(s, byte_length);
+        deus::ascii_inl::compute_byte_length_naive(s, byte_length);
     }
 }
 BENCHMARK(BM_ascii_compute_byte_length_long_naive);
@@ -225,7 +225,7 @@ static void BM_ascii_compute_byte_length_long_strlen(benchmark::State& state)
 
         // call
         std::size_t byte_length = 0;
-        deus::ascii_impl::compute_byte_length_strlen(s, byte_length);
+        deus::ascii_inl::compute_byte_length_strlen(s, byte_length);
     }
 }
 BENCHMARK(BM_ascii_compute_byte_length_long_strlen);
@@ -247,7 +247,7 @@ static void BM_ascii_compute_byte_length_long_std_string(
 
         // call
         std::size_t byte_length = 0;
-        deus::ascii_impl::compute_byte_length_std_string(s, byte_length);
+        deus::ascii_inl::compute_byte_length_std_string(s, byte_length);
     }
 }
 BENCHMARK(BM_ascii_compute_byte_length_long_std_string);
@@ -269,7 +269,7 @@ static void BM_ascii_compute_byte_length_long_word_batching(
 
         // call
         std::size_t byte_length = 0;
-        deus::ascii_impl::compute_byte_length_word_batching(s, byte_length);
+        deus::ascii_inl::compute_byte_length_word_batching(s, byte_length);
     }
 }
 BENCHMARK(BM_ascii_compute_byte_length_long_word_batching);
@@ -294,7 +294,7 @@ static void BM_ascii_compute_byte_length_xlong_naive(benchmark::State& state)
 
         // call
         std::size_t byte_length = 0;
-        deus::ascii_impl::compute_byte_length_naive(s, byte_length);
+        deus::ascii_inl::compute_byte_length_naive(s, byte_length);
     }
 }
 BENCHMARK(BM_ascii_compute_byte_length_xlong_naive);
@@ -315,7 +315,7 @@ static void BM_ascii_compute_byte_length_xlong_strlen(benchmark::State& state)
 
         // call
         std::size_t byte_length = 0;
-        deus::ascii_impl::compute_byte_length_strlen(s, byte_length);
+        deus::ascii_inl::compute_byte_length_strlen(s, byte_length);
     }
 }
 BENCHMARK(BM_ascii_compute_byte_length_xlong_strlen);
@@ -337,7 +337,7 @@ static void BM_ascii_compute_byte_length_xlong_std_string(
 
         // call
         std::size_t byte_length = 0;
-        deus::ascii_impl::compute_byte_length_std_string(s, byte_length);
+        deus::ascii_inl::compute_byte_length_std_string(s, byte_length);
     }
 }
 BENCHMARK(BM_ascii_compute_byte_length_xlong_std_string);
@@ -359,7 +359,7 @@ static void BM_ascii_compute_byte_length_xlong_word_batching(
 
         // call
         std::size_t byte_length = 0;
-        deus::ascii_impl::compute_byte_length_word_batching(s, byte_length);
+        deus::ascii_inl::compute_byte_length_word_batching(s, byte_length);
     }
 }
 BENCHMARK(BM_ascii_compute_byte_length_xlong_word_batching);
@@ -384,7 +384,7 @@ static void BM_ascii_compute_byte_length_mixed_naive(benchmark::State& state)
 
         // call
         std::size_t byte_length = 0;
-        deus::ascii_impl::compute_byte_length_naive(s, byte_length);
+        deus::ascii_inl::compute_byte_length_naive(s, byte_length);
     }
 }
 BENCHMARK(BM_ascii_compute_byte_length_mixed_naive);
@@ -405,7 +405,7 @@ static void BM_ascii_compute_byte_length_mixed_strlen(benchmark::State& state)
 
         // call
         std::size_t byte_length = 0;
-        deus::ascii_impl::compute_byte_length_strlen(s, byte_length);
+        deus::ascii_inl::compute_byte_length_strlen(s, byte_length);
     }
 }
 BENCHMARK(BM_ascii_compute_byte_length_mixed_strlen);
@@ -427,7 +427,7 @@ static void BM_ascii_compute_byte_length_mixed_std_string(
 
         // call
         std::size_t byte_length = 0;
-        deus::ascii_impl::compute_byte_length_std_string(s, byte_length);
+        deus::ascii_inl::compute_byte_length_std_string(s, byte_length);
     }
 }
 BENCHMARK(BM_ascii_compute_byte_length_mixed_std_string);
@@ -449,7 +449,7 @@ static void BM_ascii_compute_byte_length_mixed_word_batching(
 
         // call
         std::size_t byte_length = 0;
-        deus::ascii_impl::compute_byte_length_word_batching(s, byte_length);
+        deus::ascii_inl::compute_byte_length_word_batching(s, byte_length);
     }
 }
 BENCHMARK(BM_ascii_compute_byte_length_mixed_word_batching);

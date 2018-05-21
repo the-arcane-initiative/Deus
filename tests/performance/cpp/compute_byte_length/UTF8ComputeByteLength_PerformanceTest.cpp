@@ -25,7 +25,7 @@ static void BM_utf8_compute_byte_length_short_naive(benchmark::State& state)
 
         // call
         std::size_t byte_length = 0;
-        deus::utf8_impl::compute_byte_length_naive(s, byte_length);
+        deus::utf8_inl::compute_byte_length_naive(s, byte_length);
     }
 }
 BENCHMARK(BM_utf8_compute_byte_length_short_naive);
@@ -46,7 +46,7 @@ static void BM_utf8_compute_byte_length_short_strlen(benchmark::State& state)
 
         // call
         std::size_t byte_length = 0;
-        deus::utf8_impl::compute_byte_length_strlen(s, byte_length);
+        deus::utf8_inl::compute_byte_length_strlen(s, byte_length);
     }
 }
 BENCHMARK(BM_utf8_compute_byte_length_short_strlen);
@@ -71,7 +71,7 @@ static void BM_utf8_compute_byte_length_medium_naive(benchmark::State& state)
 
         // call
         std::size_t byte_length = 0;
-        deus::utf8_impl::compute_byte_length_naive(s, byte_length);
+        deus::utf8_inl::compute_byte_length_naive(s, byte_length);
     }
 }
 BENCHMARK(BM_utf8_compute_byte_length_medium_naive);
@@ -92,7 +92,7 @@ static void BM_utf8_compute_byte_length_medium_strlen(benchmark::State& state)
 
         // call
         std::size_t byte_length = 0;
-        deus::utf8_impl::compute_byte_length_strlen(s, byte_length);
+        deus::utf8_inl::compute_byte_length_strlen(s, byte_length);
     }
 }
 BENCHMARK(BM_utf8_compute_byte_length_medium_strlen);
@@ -117,7 +117,7 @@ static void BM_utf8_compute_byte_length_long_naive(benchmark::State& state)
 
         // call
         std::size_t byte_length = 0;
-        deus::utf8_impl::compute_byte_length_naive(s, byte_length);
+        deus::utf8_inl::compute_byte_length_naive(s, byte_length);
     }
 }
 BENCHMARK(BM_utf8_compute_byte_length_long_naive);
@@ -138,7 +138,7 @@ static void BM_utf8_compute_byte_length_long_strlen(benchmark::State& state)
 
         // call
         std::size_t byte_length = 0;
-        deus::utf8_impl::compute_byte_length_strlen(s, byte_length);
+        deus::utf8_inl::compute_byte_length_strlen(s, byte_length);
     }
 }
 BENCHMARK(BM_utf8_compute_byte_length_long_strlen);
@@ -163,7 +163,7 @@ static void BM_utf8_compute_byte_length_xlong_naive(benchmark::State& state)
 
         // call
         std::size_t byte_length = 0;
-        deus::utf8_impl::compute_byte_length_naive(s, byte_length);
+        deus::utf8_inl::compute_byte_length_naive(s, byte_length);
     }
 }
 BENCHMARK(BM_utf8_compute_byte_length_xlong_naive);
@@ -186,7 +186,7 @@ static void BM_utf8_compute_byte_length_xlong_strlen(benchmark::State& state)
 
         // call
         std::size_t byte_length = 0;
-        deus::utf8_impl::compute_byte_length_strlen(s, byte_length);
+        deus::utf8_inl::compute_byte_length_strlen(s, byte_length);
     }
 }
 BENCHMARK(BM_utf8_compute_byte_length_xlong_strlen);
@@ -211,7 +211,7 @@ static void BM_utf8_compute_byte_length_mixed_naive(benchmark::State& state)
 
         // call
         std::size_t byte_length = 0;
-        deus::utf8_impl::compute_byte_length_naive(s, byte_length);
+        deus::utf8_inl::compute_byte_length_naive(s, byte_length);
     }
 }
 BENCHMARK(BM_utf8_compute_byte_length_mixed_naive);
@@ -234,7 +234,7 @@ static void BM_utf8_compute_byte_length_mixed_strlen(benchmark::State& state)
 
         // call
         std::size_t byte_length = 0;
-        deus::utf8_impl::compute_byte_length_strlen(s, byte_length);
+        deus::utf8_inl::compute_byte_length_strlen(s, byte_length);
     }
 }
 BENCHMARK(BM_utf8_compute_byte_length_mixed_strlen);

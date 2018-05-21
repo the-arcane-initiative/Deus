@@ -108,71 +108,20 @@ public:
             deus::Encoding encoding) const override;
 };
 
-//------------------------------------------------------------------------------
-//                                GLOBAL FUNCTIONS
-//------------------------------------------------------------------------------
-
-namespace utf8_impl
-{
-
-//-----------------------FROM CODE POINT IMPLEMENTATIONS------------------------
-
-std::string from_code_point_naive(
-        const std::vector<deus::CodePoint>& code_points);
-
-//---------------------COMPUTE BYTE LENGTH IMPLEMENTATIONS----------------------
-
-void compute_byte_length_naive(
-        const char* in_data,
-        std::size_t& out_byte_length);
-
-void compute_byte_length_strlen(
-        const char* in_data,
-        std::size_t& out_byte_length);
-
-//--------------------COMPUTE SYMBOL LENGTH IMPLEMENTATIONS---------------------
-
-void compute_symbol_length_naive(
-        const char* in_data,
-        std::size_t in_byte_length,
-        std::size_t& out_symbol_length);
-
-void compute_symbol_length_wstring_convert(
-        const char* in_data,
-        std::size_t in_byte_length,
-        std::size_t& out_symbol_length);
-
-void compute_symbol_length_byte_jump(
-        const char* in_data,
-        std::size_t in_byte_length,
-        std::size_t& out_symbol_length);
-
-void compute_symbol_length_word_batching(
-        const char* in_data,
-        std::size_t in_byte_length,
-        std::size_t& out_symbol_length);
-
-//---------------------SYMBOL TO BYTE INDEX IMPLEMENTATIONS---------------------
-
-std::size_t symbol_to_byte_index_naive(
-        const deus::UnicodeView& self,
-        std::size_t symbol_index);
-
-//---------------------BYTE TO SYMBOL INDEX IMPLEMENTATIONS---------------------
-
-std::size_t byte_to_symbol_index_naive(
-        const deus::UnicodeView& self,
-        std::size_t byte_index);
-
-//-----------------------CONVERT TO ASCII IMPLEMENTATIONS-----------------------
-
-deus::UnicodeStorage convert_to_ascii_naive(
-        const char* in_data,
-        std::size_t in_byte_length,
-        std::size_t in_symbol_length);
-
-} // namespace utf8_impl
 DEUS_VERSION_NS_END
 } // namespace deus
+
+//------------------------------------------------------------------------------
+//                             INLINE IMPLEMENTATIONS
+//------------------------------------------------------------------------------
+
+#include "deus/unicode_view_impl/UTF8Util.inl"
+#include "deus/unicode_view_impl/UTF8FromCodePoint.inl"
+#include "deus/unicode_view_impl/UTF8ComputeByteLength.inl"
+#include "deus/unicode_view_impl/UTF8ComputeSymbolLength.inl"
+#include "deus/unicode_view_impl/UTF8SymbolToByteIndex.inl"
+#include "deus/unicode_view_impl/UTF8ByteToSymbolIndex.inl"
+#include "deus/unicode_view_impl/UTF8ConvertToASCII.inl"
+
 
 #endif

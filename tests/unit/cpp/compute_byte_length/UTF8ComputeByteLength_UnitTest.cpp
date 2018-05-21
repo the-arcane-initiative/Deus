@@ -88,7 +88,7 @@ TEST_F(UTF8ComputeByteLengthTest, naive)
     for(const TestData& data : test_data)
     {
         std::size_t byte_length = 0;
-        deus::utf8_impl::compute_byte_length_naive(data.str, byte_length);
+        deus::utf8_inl::compute_byte_length_naive(data.str, byte_length);
 
         EXPECT_EQ(byte_length, data.expected_byte_length)
             << "Incorrect byte length for \"" << data.str << "\"";
@@ -100,7 +100,7 @@ TEST_F(UTF8ComputeByteLengthTest, strlen)
     for(const TestData& data : test_data)
     {
         std::size_t byte_length = 0;
-        deus::utf8_impl::compute_byte_length_strlen(data.str, byte_length);
+        deus::utf8_inl::compute_byte_length_strlen(data.str, byte_length);
 
         EXPECT_EQ(byte_length, data.expected_byte_length)
             << "Incorrect byte length for \"" << data.str << "\"";

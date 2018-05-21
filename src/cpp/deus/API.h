@@ -66,6 +66,18 @@ extern "C"
     #define DEUS_VERSION_NS_END }
 #endif
 
+/*!
+ * \brief Marco used to force inlining of a function.
+ */
+#define DEUS_FORCE_INLINE inline
+#if defined(_MSC_VER)
+    #undef DEUS_FORCE_INLINE
+    #define DEUS_FORCE_INLINE __forceinline
+#elif defined(__clang__) || defined(__GNUC__) || defined(__INTEL_COMPILER)
+    #undef DEUS_FORCE_INLINE
+    #define DEUS_FORCE_INLINE static __attribute__((always_inline))
+#endif
+
 // TODO: DOC
 #define kDeusEncodingASCII    1U
 // TODO: DOC

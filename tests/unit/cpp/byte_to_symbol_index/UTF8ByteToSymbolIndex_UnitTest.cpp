@@ -43,14 +43,16 @@ protected:
     {
         test_data =
         {
-            TestData("", 0, deus::NULL_POS),
+            TestData("", 0, 0),
+            TestData("", 2, 2),
+            TestData("", 87, 87),
             TestData("a", 0, 0),
-            TestData("a", 1, deus::NULL_POS),
-            TestData("a", 5, deus::NULL_POS),
+            TestData("a", 1, 1),
+            TestData("a", 5, 5),
             TestData("ab", 1, 1),
             TestData("Hello world!", 6, 6),
             TestData("Hello world!", 11, 11),
-            TestData("Hello world!", 12, deus::NULL_POS),
+            TestData("Hello world!", 12, 12),
             TestData(
                 "This is a really long string compared to this other strings. "
                 "It contains only ASCII symbols even though it's UTF-8 "
@@ -70,19 +72,19 @@ protected:
                 "It contains only ASCII symbols even though it's UTF-8 "
                 "encoded.",
                 333,
-                deus::NULL_POS
+                333
             ),
             TestData("Ꝋ", 0, 0),
             TestData("Ꝋ", 1, 0),
             TestData("Ꝋ", 2, 0),
-            TestData("Ꝋ", 3, deus::NULL_POS),
+            TestData("Ꝋ", 3, 1),
             TestData("this is a مزيج of text", 3, 3),
             TestData("this is a مزيج of text", 21, 17),
-            TestData("this is a مزيج of text", 26, deus::NULL_POS),
+            TestData("this is a مزيج of text", 26, 22),
             TestData("🌿𝄞ꬍꝊޝΟz@", 0, 0),
             TestData("🌿𝄞ꬍꝊޝΟz@", 14, 4),
             TestData("🌿𝄞ꬍꝊޝΟz@", 19, 7),
-            TestData("🌿𝄞ꬍꝊޝΟz@", 20, deus::NULL_POS),
+            TestData("🌿𝄞ꬍꝊޝΟz@", 20, 8),
             TestData(
                 "This is a long string that is composed of ASCII and a sparse "
                 "amount of Unicode symbols 😺. This means that *most* but not "
@@ -118,10 +120,44 @@ TEST_F(UTF8ByteToSymbolIndexTest, naive)
 {
     for(const TestData& data : test_data)
     {
-        std::size_t result = deus::utf8_impl::byte_to_symbol_index_naive(
+        std::size_t result = deus::utf8_inl::byte_to_symbol_index_naive(
             data.str.get_view(),
             data.byte_index
         );
+        EXPECT_EQ(result, data.expected)
+            << "Incorrect result when getting the symbol index of the byte at "
+            << "index " << data.byte_index << " in the string \""
+            << data.str.get_string() << "\"";
+    }
+}
+
+// TODO: wstring_convert doesn't work on windows when checking mid-way through
+//       a symbol
+// TEST_F(UTF8ByteToSymbolIndexTest, wstring_convert)
+// {
+//     for(const TestData& data : test_data)
+//     {
+//         std::size_t result =
+//             deus::utf8_inl::byte_to_symbol_index_wstring_convert(
+//                 data.str.get_view(),
+//                 data.byte_index
+//             );
+//         EXPECT_EQ(result, data.expected)
+//             << "Incorrect result when getting the symbol index of the byte at "
+//             << "index " << data.byte_index << " in the string \""
+//             << data.str.get_string() << "\"";
+//     }
+// }
+
+TEST_F(UTF8ByteToSymbolIndexTest, word_batching)
+{
+    for(const TestData& data : test_data)
+    {
+        std::size_t result =
+            deus::utf8_inl::byte_to_symbol_index_word_batching(
+                data.str.get_view(),
+                data.byte_index
+            );
         EXPECT_EQ(result, data.expected)
             << "Incorrect result when getting the symbol index of the byte at "
             << "index " << data.byte_index << " in the string \""

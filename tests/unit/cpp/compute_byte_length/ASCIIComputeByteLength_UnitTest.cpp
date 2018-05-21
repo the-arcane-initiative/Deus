@@ -55,7 +55,7 @@ TEST_F(ASCIIComputeByteLengthTest, naive)
 
         std::size_t byte_length = 0;
 
-        deus::ascii_impl::compute_byte_length_naive(
+        deus::ascii_inl::compute_byte_length_naive(
             test_str,
             byte_length
         );
@@ -78,7 +78,7 @@ TEST_F(ASCIIComputeByteLengthTest, strlen)
 
         std::size_t byte_length = 0;
 
-        deus::ascii_impl::compute_byte_length_strlen(
+        deus::ascii_inl::compute_byte_length_strlen(
             test_str,
             byte_length
         );
@@ -101,7 +101,7 @@ TEST_F(ASCIIComputeByteLengthTest, std_string)
 
         std::size_t byte_length = 0;
 
-        deus::ascii_impl::compute_byte_length_std_string(
+        deus::ascii_inl::compute_byte_length_std_string(
             test_str,
             byte_length
         );
@@ -124,7 +124,7 @@ TEST_F(ASCIIComputeByteLengthTest, word_batching)
 
         std::size_t byte_length = 0;
 
-        deus::ascii_impl::compute_byte_length_word_batching(
+        deus::ascii_inl::compute_byte_length_word_batching(
             test_str,
             byte_length
         );

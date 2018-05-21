@@ -28,7 +28,7 @@ ELSE()
     set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/build/linux)
 
     # TODO: clean up compiler flags
-    set(CMAKE_CXX_FLAGS "-Wall -std=c++11 -fPIC -Ofast -msse4.2")
+    set(CMAKE_CXX_FLAGS "-Wall -std=c++11 -fPIC -Ofast -msse4.2 -Wno-unused-function")
 
 ENDIF()
 
@@ -156,9 +156,11 @@ link_directories(
 )
 
 set(DEUS_PERFORMANCE_TESTS_SRC
+    tests/performance/cpp/byte_to_symbol_index/UTF8ByteToSymbolIndex_PerformanceTest.cpp
     tests/performance/cpp/compute_byte_length/ASCIIComputeByteLength_PerformanceTest.cpp
     tests/performance/cpp/compute_byte_length/UTF8ComputeByteLength_PerformanceTest.cpp
     tests/performance/cpp/compute_symbol_length/UTF8ComputeSymbolLength_PerformanceTest.cpp
+    tests/performance/cpp/symbol_to_byte_index/UTF8SymbolToByteIndex_PerformanceTest.cpp
     tests/performance/cpp/PerformanceTestsMain.cpp
     tests/performance/cpp/PerformanceTestsUtil.cpp
 )

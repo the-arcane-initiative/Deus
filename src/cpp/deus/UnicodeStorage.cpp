@@ -72,12 +72,12 @@ UnicodeStorage::UnicodeStorage(
     {
         case deus::Encoding::kASCII:
         {
-            m_str = deus::ascii_impl::from_code_point_naive(code_points);
+            m_str = deus::ascii_inl::from_code_point_naive(code_points);
             break;
         }
         case deus::Encoding::kUTF8:
         {
-            m_str = deus::utf8_impl::from_code_point_naive(code_points);
+            m_str = deus::utf8_inl::from_code_point_naive(code_points);
             break;
         }
         case deus::Encoding::kUTF16_LE:
@@ -288,6 +288,21 @@ bool UnicodeStorage::empty() const
 std::size_t UnicodeStorage::size_of_symbol(std::size_t symbol_index) const
 {
     return m_view->size_of_symbol(symbol_index);
+}
+
+std::size_t UnicodeStorage::null_terminator_size() const
+{
+    return m_view->null_terminator_size();
+}
+
+std::size_t UnicodeStorage::symbol_to_byte_index(std::size_t symbol_index) const
+{
+    return m_view->symbol_to_byte_index(symbol_index);
+}
+
+std::size_t UnicodeStorage::byte_to_symbol_index(std::size_t byte_index) const
+{
+    return m_view->byte_to_symbol_index(byte_index);
 }
 
 bool UnicodeStorage::starts_with(const deus::UnicodeView& other) const

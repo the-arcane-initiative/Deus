@@ -325,6 +325,16 @@ std::size_t UnicodeView::size_of_symbol(std::size_t symbol_index) const
     return m_impl->size_of_symbol(symbol_index);
 }
 
+std::size_t UnicodeView::minimum_symbol_size() const
+{
+    return deus::UnicodeView::EncodingImpl::minimum_symbol_size(encoding());
+}
+
+std::size_t UnicodeView::null_terminator_size() const
+{
+    return deus::UnicodeView::EncodingImpl::null_terminator_size(encoding());
+}
+
 std::size_t UnicodeView::symbol_to_byte_index(std::size_t symbol_index) const
 {
     return m_impl->symbol_to_byte_index(symbol_index);
