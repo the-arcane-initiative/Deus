@@ -62,14 +62,16 @@ typedef uint32_t CodePoint;
 //------------------------------------------------------------------------------
 
 /*!
- * \brief TODO: DOC
+ * \brief Defines the encodings that are supported by Deus.
  */
 enum class Encoding : uint64_t
 {
+    /// Simple 1-byte ASCII text encoding. While ASCII is technically not an
+    /// Unicode encoding, it is important to support it for conversion purposes
+    /// and for interaction with interfaces that don't support Unicode.
     kASCII    = kDeusEncodingASCII,
-    /// TODO: DOC
+    /// Encoding
     kUTF8     = kDeusEncodingUTF8,
-    // TODO: DOC
     /// TODO: DOC
     kUTF16_LE = kDeusEncodingUTF16_LE,
     /// TODO: DOC

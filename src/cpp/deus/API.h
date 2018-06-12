@@ -43,13 +43,20 @@ extern "C"
 {
 #endif
 
-// TODO: DOC
+/*!
+ * \brief Defines the current version number of the Deus API.
+ *
+ * \note The API version is a single number because of it's use in the Deus
+ *       namespace.
+ */
 #define DEUS_API_VERSION 0
 
 #define DEUS_BUILD_VER_NS2(ver) v##ver
 #define DEUS_BUILD_VER_NS(ver) DEUS_BUILD_VER_NS2(ver)
 
-// TODO: DOC
+/*!
+ * \brief The version namespace being used for the Deus API.
+ */
 #define DEUS_VERSION_NS DEUS_BUILD_VER_NS(DEUS_API_VERSION)
 
 // TODO: DOC
@@ -78,17 +85,29 @@ extern "C"
     #define DEUS_FORCE_INLINE static __attribute__((always_inline))
 #endif
 
-// TODO: DOC
+/*!
+ * \brief Defines the value that represents ASCII encoding.
+ */
 #define kDeusEncodingASCII    1U
-// TODO: DOC
+/*!
+ * \brief Defines the value that represents UTF-8 encoding.
+ */
 #define kDeusEncodingUTF8     2U
-// TODO: DOC
+/*!
+ * \brief Defines the value that represents Little Endian UTF-16 encoding.
+ */
 #define kDeusEncodingUTF16_LE 4U
-// TODO: DOC
+/*!
+ * \brief Defines the value that represents Big Endian UTF-16 encoding.
+ */
 #define kDeusEncodingUTF16_BE 8U
-// TODO: DOC
+/*!
+ * \brief Defines the value that represents Little Endian UTF-32 encoding.
+ */
 #define kDeusEncodingUTF32_LE 16U
-// TODO: DOC
+/*!
+ * \brief Defines the value that represents Big Endian UTF-32 encoding.
+ */
 #define kDeusEncodingUTF32_BE 32U
 
 
